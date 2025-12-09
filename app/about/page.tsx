@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react"
 import Footer from "@/components/footer"
 
 export default function AboutPage() {
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(true)
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100)

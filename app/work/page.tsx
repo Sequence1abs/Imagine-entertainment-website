@@ -55,7 +55,7 @@ const categories = [
 ]
 
 export default function WorkPage() {
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(true)
   const [activeCategory, setActiveCategory] = useState("All")
 
   useEffect(() => {

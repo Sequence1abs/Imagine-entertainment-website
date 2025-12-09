@@ -3,11 +3,7 @@
 import { useEffect, useState } from "react"
 
 export default function Hero() {
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    setIsVisible(true)
-  }, [])
+  const [isVisible, setIsVisible] = useState(true)
 
   return (
     <section className="relative min-h-screen bg-[#0a1f1a] text-white overflow-hidden">

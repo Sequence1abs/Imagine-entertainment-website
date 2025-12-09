@@ -51,13 +51,13 @@ export default function About() {
       <div className="max-w-[1400px] mx-auto">
         {/* Main Statement */}
         <div className="mb-20">
-          <p
-            className={`text-sm text-muted-foreground mb-4 transition-all duration-700 ${
+          <div
+            className={`mb-4 transition-all duration-700 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
           >
-            Build More With
-          </p>
+            <span className="text-sm font-semibold tracking-widest text-foreground">BUILD MORE WITH</span>
+          </div>
           <h2
             className={`text-6xl md:text-7xl lg:text-[120px] font-medium tracking-tight leading-none transition-all duration-700 delay-100 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
