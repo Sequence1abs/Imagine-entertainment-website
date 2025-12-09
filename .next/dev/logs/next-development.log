@@ -3013,3 +3013,1510 @@ It can also happen if the client has a browser extension installed which messes 
 [00:20:37.183] Server  LOG      ✓ Compiled in 301ms
 [00:20:41.183] Server  LOG      ✓ Compiled in 143ms
 [00:21:38.887] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765281905754}
+[00:22:43.174] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:22:44.107] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <Head>
+      <__next_root_layout_boundary__>
+        <SegmentViewNode type="layout" pagePath="layout.tsx">
+          <SegmentTrieNode>
+          <link>
+          <script>
+          <script>
+          <RootLayout>
+            <html lang="en" className="inter_5901..." suppressHydrationWarning={true}>
+              <body className="font-sans ..." suppressHydrationWarning={true}>
+                <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={true} disableTransitionOnChange={true}>
+                  <J attribute="class" defaultTheme="dark" enableSystem={true} disableTransitionOnChange={true}>
+                    <V attribute="class" defaultTheme="dark" enableSystem={true} disableTransitionOnChange={true}>
+                      <script>
+                      <Navigation>
+                        <nav>
+                        <div className="fixed inse..." suppressHydrationWarning={true}>
+                          <div className="h-full fle..." suppressHydrationWarning={true}>
+                            <div className="space-y-2" suppressHydrationWarning={true}>
+                              <div
+                                className="overflow-hidden"
+                                style={{opacity:0,transform:"translateY...",transition:"all 0.5s c..."}}
+-                               bis_skin_checked="1"
+                              >
+                              <div
+                                className="overflow-hidden"
+                                style={{opacity:0,transform:"translateY...",transition:"all 0.5s c..."}}
+-                               bis_skin_checked="1"
+                              >
+                              <div
+                                className="overflow-hidden"
+                                style={{opacity:0,transform:"translateY...",transition:"all 0.5s c..."}}
+-                               bis_skin_checked="1"
+                              >
+                              <div
+                                className="overflow-hidden"
+                                style={{opacity:0,transform:"translateY...",transition:"all 0.5s c..."}}
+-                               bis_skin_checked="1"
+                              >
+                      ...
+                        <SegmentViewNode type="page" pagePath="page.tsx">
+                          <SegmentTrieNode>
+                          <ClientPageRoot Component={function Home} serverProvidedParams={{...}}>
+                            <Home params={Promise} searchParams={Promise}>
+                              <main className="min-h-scre..." suppressHydrationWarning={true}>
+                                <section className="relative m...">
+                                  <div
+                                    className="absolute inset-0"
+-                                   bis_skin_checked="1"
+                                  >
+                                    <img>
+                                    <div
+                                      className="absolute inset-0 bg-gradient-to-br from-foreground/60 via-foreground/..."
+-                                     bis_skin_checked="1"
+                                    >
+                                    <div
+                                      className="absolute inset-0 bg-black/30 dark:bg-black/50"
+-                                     bis_skin_checked="1"
+                                    >
+                                  <div
+                                    className="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-10 py-32 md:py-40"
+-                                   bis_skin_checked="1"
+                                  >
+                                    <div
+                                      className="max-w-3xl"
+-                                     bis_skin_checked="1"
+                                    >
+                                      <div
+                                        className="overflow-hidden mb-6"
+-                                       bis_skin_checked="1"
+                                      >
+                                      <h1>
+                                        <div
+                                          className="overflow-hidden"
+-                                         bis_skin_checked="1"
+                                        >
+                                        <div
+                                          className="overflow-hidden mt-1"
+-                                         bis_skin_checked="1"
+                                        >
+                                        <div
+                                          className="overflow-hidden mt-1"
+-                                         bis_skin_checked="1"
+                                        >
+                                      <div
+                                        className="mt-10 max-w-md transition-all duration-700 translate-y-0 opacity-100"
+                                        style={{transitionDelay:"0.7s"}}
+-                                       bis_skin_checked="1"
+                                      >
+                                        <p>
+                                        <div
+                                          className="flex flex-col sm:flex-row items-start sm:items-center gap-6"
+-                                         bis_skin_checked="1"
+                                        >
+                                  <div
+                                    className="absolute bottom-8 left-0 right-0 transition-all duration-700 translate-..."
+                                    style={{transitionDelay:"0.9s"}}
+-                                   bis_skin_checked="1"
+                                  >
+                                    <div
+                                      className="max-w-[1400px] mx-auto px-6 md:px-10"
+-                                     bis_skin_checked="1"
+                                    >
+                                      <div
+                                        className="flex items-center gap-8 md:gap-12 overflow-hidden"
+-                                       bis_skin_checked="1"
+                                      >
+                                <section className="py-24 md:p...">
+                                  <div
+                                    className="max-w-[1400px] mx-auto"
+-                                   bis_skin_checked="1"
+                                  >
+                                    <StatementReveal>
+                                      <div
+                                        ref={{current:null}}
+                                        className="text-center max-w-3xl mx-auto"
+-                                       bis_skin_checked="1"
+                                      >
+                                        <div
+                                          className="flex items-center justify-center gap-4 mb-6"
+-                                         bis_skin_checked="1"
+                                        >
+                                          <div
+                                            className="h-px w-10 bg-border"
+-                                           bis_skin_checked="1"
+                                          >
+                                          <span>
+                                          <div
+                                            className="h-px w-10 bg-border"
+-                                           bis_skin_checked="1"
+                                          >
+                                        ...
+                                <StatsSection>
+                                  <section ref={{current:null}} className="py-20 md:p...">
+                                    <div
+                                      className="max-w-[1400px] mx-auto"
+-                                     bis_skin_checked="1"
+                                    >
+                                      <div
+                                        className="grid lg:grid-cols-12 gap-12 lg:gap-0"
+-                                       bis_skin_checked="1"
+                                      >
+                                        <div
+                                          className="lg:col-span-3"
+-                                         bis_skin_checked="1"
+                                        >
+                                        <div
+                                          className="lg:col-span-9"
+-                                         bis_skin_checked="1"
+                                        >
+                                          <div
+                                            className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="relative transition-all duration-700 translate-y-8 opacity-0"
+                                              style={{transitionDelay:"0s"}}
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="flex items-baseline"
+-                                               bis_skin_checked="1"
+                                              >
+                                              <p>
+                                              <div
+                                                className="absolute -top-4 left-0 w-8 h-px bg-border transition-all du..."
+                                                style={{transitionDelay:"0.2s",transformOrigin:"left"}}
+-                                               bis_skin_checked="1"
+                                              >
+                                            <div
+                                              className="relative transition-all duration-700 translate-y-8 opacity-0"
+                                              style={{transitionDelay:"0.1s"}}
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="flex items-baseline"
+-                                               bis_skin_checked="1"
+                                              >
+                                              <p>
+                                              <div
+                                                className="absolute -top-4 left-0 w-8 h-px bg-border transition-all du..."
+                                                style={{transitionDelay:"0.30000000...",transformOrigin:"left"}}
+-                                               bis_skin_checked="1"
+                                              >
+                                            <div
+                                              className="relative transition-all duration-700 translate-y-8 opacity-0"
+                                              style={{transitionDelay:"0.2s"}}
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="flex items-baseline"
+-                                               bis_skin_checked="1"
+                                              >
+                                              <p>
+                                              <div
+                                                className="absolute -top-4 left-0 w-8 h-px bg-border transition-all du..."
+                                                style={{transitionDelay:"0.4s",transformOrigin:"left"}}
+-                                               bis_skin_checked="1"
+                                              >
+                                            <div
+                                              className="relative transition-all duration-700 translate-y-8 opacity-0"
+                                              style={{transitionDelay:"0.30000000..."}}
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="flex items-baseline"
+-                                               bis_skin_checked="1"
+                                              >
+                                              <p>
+                                              <div
+                                                className="absolute -top-4 left-0 w-8 h-px bg-border transition-all du..."
+                                                style={{transitionDelay:"0.5s",transformOrigin:"left"}}
+-                                               bis_skin_checked="1"
+                                              >
+                                <section className="py-20 md:p...">
+                                  <div
+                                    className="max-w-[1400px] mx-auto"
+-                                   bis_skin_checked="1"
+                                  >
+                                    <div
+                                      className="flex justify-between items-end mb-12"
+-                                     bis_skin_checked="1"
+                                    >
+                                      <div
+-                                       bis_skin_checked="1"
+                                      >
+                                      ...
+                                    <div
+                                      className="grid md:grid-cols-2 gap-5 md:gap-6"
+-                                     bis_skin_checked="1"
+                                    >
+                                      <ProjectCard project={{id:1,title:"BR...", ...}} index={0}>
+                                        <LinkComponent href="/work/1" ref={{current:null}} className="group bloc..." ...>
+                                          <a className="group bloc..." style={{...}} ref={function} ...>
+                                            <div
+                                              className="relative overflow-hidden aspect-[4/3] mb-4 bg-muted rounded-xl"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <img>
+                                              <div
+                                                className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transit..."
+-                                               bis_skin_checked="1"
+                                              >
+                                            <div
+-                                             bis_skin_checked="1"
+                                            >
+                                      <ProjectCard project={{id:2,title:"LO...", ...}} index={1}>
+                                        <LinkComponent href="/work/2" ref={{current:null}} className="group bloc..." ...>
+                                          <a className="group bloc..." style={{...}} ref={function} ...>
+                                            <div
+                                              className="relative overflow-hidden aspect-[4/3] mb-4 bg-muted rounded-xl"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <img>
+                                              <div
+                                                className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transit..."
+-                                               bis_skin_checked="1"
+                                              >
+                                            <div
+-                                             bis_skin_checked="1"
+                                            >
+                                      <ProjectCard project={{id:3,title:"CO...", ...}} index={2}>
+                                        <LinkComponent href="/work/3" ref={{current:null}} className="group bloc..." ...>
+                                          <a className="group bloc..." style={{...}} ref={function} ...>
+                                            <div
+                                              className="relative overflow-hidden aspect-[4/3] mb-4 bg-muted rounded-xl"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <img>
+                                              <div
+                                                className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transit..."
+-                                               bis_skin_checked="1"
+                                              >
+                                            <div
+-                                             bis_skin_checked="1"
+                                            >
+                                      <ProjectCard project={{id:4,title:"WE...", ...}} index={3}>
+                                        <LinkComponent href="/work/4" ref={{current:null}} className="group bloc..." ...>
+                                          <a className="group bloc..." style={{...}} ref={function} ...>
+                                            <div
+                                              className="relative overflow-hidden aspect-[4/3] mb-4 bg-muted rounded-xl"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <img>
+                                              <div
+                                                className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transit..."
+-                                               bis_skin_checked="1"
+                                              >
+                                            <div
+-                                             bis_skin_checked="1"
+                                            >
+                                    <div
+                                      className="mt-10 md:hidden"
+-                                     bis_skin_checked="1"
+                                    >
+                                <section className="py-20 md:p...">
+                                  <div
+                                    className="max-w-[1400px] mx-auto px-6 md:px-10"
+-                                   bis_skin_checked="1"
+                                  >
+                                    <div
+                                      className="grid lg:grid-cols-2 gap-12 lg:gap-20"
+-                                     bis_skin_checked="1"
+                                    >
+                                      <div
+-                                       bis_skin_checked="1"
+                                      >
+                                      <div
+                                        className="grid grid-cols-2 gap-6 md:gap-8"
+-                                       bis_skin_checked="1"
+                                      >
+                                        <div
+-                                         bis_skin_checked="1"
+                                        >
+                                        <div
+-                                         bis_skin_checked="1"
+                                        >
+                                        <div
+-                                         bis_skin_checked="1"
+                                        >
+                                        <div
+-                                         bis_skin_checked="1"
+                                        >
+                                <ClientsMarquee>
+                                  <section ref={{current:null}} className="py-20 md:p...">
+                                    <div
+                                      className="max-w-[1400px] mx-auto px-6 md:px-10 mb-12"
+-                                     bis_skin_checked="1"
+                                    >
+                                    <div
+                                      className="relative mb-4 marquee-mask"
+-                                     bis_skin_checked="1"
+                                    >
+                                      <div
+                                        className="flex animate-marquee"
+-                                       bis_skin_checked="1"
+                                      >
+                                        <ClientCard client={{abbr:"BBC", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"ITV", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"SKY", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"NFX", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"AMZ", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"LN", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"AEG", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"SNY", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"UNI", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"WB", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"MB", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"CH4", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"BBC", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"ITV", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"SKY", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"NFX", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"AMZ", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"LN", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"AEG", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"SNY", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"UNI", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"WB", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"MB", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"CH4", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"BBC", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"ITV", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"SKY", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"NFX", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"AMZ", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"LN", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"AEG", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"SNY", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"UNI", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"WB", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"MB", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"CH4", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                    <div
+                                      className="relative marquee-mask"
+-                                     bis_skin_checked="1"
+                                    >
+                                      <div
+                                        className="flex animate-marquee-reverse"
+-                                       bis_skin_checked="1"
+                                      >
+                                        <ClientCard client={{abbr:"EMI", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"HBO", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"DSN", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"APL", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"BMG", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"O2", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"RAH", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"NTL", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"RSC", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"ENO", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"RFH", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"BP", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"EMI", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"HBO", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"DSN", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"APL", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"BMG", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"O2", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"RAH", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"NTL", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"RSC", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"ENO", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"RFH", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"BP", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"EMI", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"HBO", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"DSN", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"APL", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"BMG", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"O2", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"RAH", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"NTL", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"RSC", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"ENO", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"RFH", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                        <ClientCard client={{abbr:"BP", ...}}>
+                                          <div
+                                            className="flex-shrink-0 px-2"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <div
+                                              className="w-20 md:w-24 flex flex-col items-center gap-2"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border b..."
+-                                               bis_skin_checked="1"
+                                              >
+                                              ...
+                                <Testimonials>
+                                  <section ref={{current:null}} className="py-20 md:p...">
+                                    <div
+                                      className="max-w-[1400px] mx-auto"
+-                                     bis_skin_checked="1"
+                                    >
+                                      <div
+                                        className="grid lg:grid-cols-12 gap-10 lg:gap-16"
+-                                       bis_skin_checked="1"
+                                      >
+                                        <div
+                                          className="lg:col-span-4"
+-                                         bis_skin_checked="1"
+                                        >
+                                          <div
+                                            className="transition-all duration-700 translate-y-6 opacity-0"
+-                                           bis_skin_checked="1"
+                                          >
+                                            <p>
+                                            <h2>
+                                            <div
+                                              className="flex items-center gap-4"
+-                                             bis_skin_checked="1"
+                                            >
+                                        <div
+                                          className="lg:col-span-8"
+-                                         bis_skin_checked="1"
+                                        >
+                                          <div
+                                            className="relative transition-all duration-700 translate-y-6 opacity-0"
+                                            style={{transitionDelay:"0.15s"}}
+-                                           bis_skin_checked="1"
+                                          >
+                                            <span>
+                                            <div
+                                              className="relative pt-12 md:pt-16"
+-                                             bis_skin_checked="1"
+                                            >
+                                              <div
+                                                className="transition-all duration-500 opacity-100 translate-y-0"
+-                                               bis_skin_checked="1"
+                                              >
+                                                <blockquote>
+                                                <div
+                                                  className="flex items-center gap-4"
+-                                                 bis_skin_checked="1"
+                                                >
+                                                  <div
+                                                    className="w-12 h-12 rounded-full bg-foreground text-background fl..."
+-                                                   bis_skin_checked="1"
+                                                  >
+                                                  <div
+-                                                   bis_skin_checked="1"
+                                                  >
+                                              <div
+                                                className="transition-all duration-500 opacity-0 translate-y-4 absolut..."
+-                                               bis_skin_checked="1"
+                                              >
+                                                <blockquote>
+                                                <div
+                                                  className="flex items-center gap-4"
+-                                                 bis_skin_checked="1"
+                                                >
+                                                  <div
+                                                    className="w-12 h-12 rounded-full bg-foreground text-background fl..."
+-                                                   bis_skin_checked="1"
+                                                  >
+                                                  <div
+-                                                   bis_skin_checked="1"
+                                                  >
+                                              <div
+                                                className="transition-all duration-500 opacity-0 translate-y-4 absolut..."
+-                                               bis_skin_checked="1"
+                                              >
+                                                <blockquote>
+                                                <div
+                                                  className="flex items-center gap-4"
+-                                                 bis_skin_checked="1"
+                                                >
+                                                  <div
+                                                    className="w-12 h-12 rounded-full bg-foreground text-background fl..."
+-                                                   bis_skin_checked="1"
+                                                  >
+                                                  <div
+-                                                   bis_skin_checked="1"
+                                                  >
+                                <section className="relative h...">
+                                  <img>
+                                  <div
+                                    className="absolute inset-0 bg-black/50 dark:bg-black/70"
+-                                   bis_skin_checked="1"
+                                  >
+                                  <div
+                                    className="absolute inset-0 flex items-center justify-center"
+-                                   bis_skin_checked="1"
+                                  >
+                                    <div
+                                      className="text-center text-white dark:text-white px-6"
+-                                     bis_skin_checked="1"
+                                    >
+                                <Footer>
+                                  <footer className="bg-backgro...">
+                                    <div
+                                      className="max-w-[1400px] mx-auto px-6 md:px-10"
+-                                     bis_skin_checked="1"
+                                    >
+                                      <div
+                                        className="py-16 md:py-20 grid grid-cols-2 md:grid-cols-4 gap-10"
+-                                       bis_skin_checked="1"
+                                      >
+                                        <div
+                                          className="col-span-2 md:col-span-1"
+-                                         bis_skin_checked="1"
+                                        >
+                                        <div
+-                                         bis_skin_checked="1"
+                                        >
+                                        <div
+-                                         bis_skin_checked="1"
+                                        >
+                                        <div
+-                                         bis_skin_checked="1"
+                                        >
+                                      <div
+                                        className="border-t border-border py-6 flex flex-col md:flex-row justify-betwe..."
+-                                       bis_skin_checked="1"
+                                      >
+                                        <p>
+                                        <div
+                                          className="flex gap-6"
+-                                         bis_skin_checked="1"
+                                        >
+                      ...
+      ...
+
+[00:22:45.044] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:22:45.044] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:22:45.044] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","r":"","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765281971937}
+[00:24:09.604] Server  LOG      ✓ Compiled in 482ms
