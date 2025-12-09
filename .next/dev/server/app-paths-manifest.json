@@ -1,5 +1,6 @@
 {
   "/contact/page": "app/contact/page.js",
   "/page": "app/page.js",
+  "/work/[id]/page": "app/work/[id]/page.js",
   "/work/page": "app/work/page.js"
 }

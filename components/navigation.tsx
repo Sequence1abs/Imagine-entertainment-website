@@ -61,7 +61,13 @@ export default function Navigation() {
 
   // Determine icon color for hero page
   const getIconColor = () => {
-    if (isOpen) return "bg-white"
+    // When menu is open, use theme-appropriate color
+    if (isOpen) {
+      // If on dark page, always use white
+      if (isDarkPage) return "bg-white"
+      // Otherwise use theme-based color
+      return isDarkMode ? "bg-white" : "bg-foreground"
+    }
     // On hero page: white when not scrolled, dark when scrolled
     if (isHeroPage) return scrolled ? "bg-foreground" : "bg-white"
     // If scrolled, use theme-based color
@@ -170,7 +176,7 @@ export default function Navigation() {
       </nav>
 
       <div
-        className={`fixed inset-0 z-40 bg-background text-foreground transition-all duration-700 ease-[cubic-bezier(0.77,0,0.175,1)] ${
+        className={`fixed inset-0 z-40 bg-background dark:bg-background text-foreground dark:text-foreground backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.77,0,0.175,1)] ${
           isOpen ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
         suppressHydrationWarning
@@ -188,7 +194,7 @@ export default function Navigation() {
                 }}
               >
                 <Link href={item.href} onClick={() => setIsOpen(false)} className="block py-2">
-                  <span className="text-4xl md:text-5xl font-medium text-foreground hover:opacity-60 transition-opacity duration-300">
+                  <span className="text-4xl md:text-5xl font-medium text-foreground dark:text-foreground hover:opacity-60 dark:hover:opacity-80 transition-opacity duration-300">
                     {item.label}
                   </span>
                 </Link>

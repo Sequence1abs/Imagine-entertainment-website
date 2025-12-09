@@ -30,7 +30,9 @@ const testimonials = [
 export default function Testimonials() {
   const [isVisible, setIsVisible] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -43,16 +45,47 @@ export default function Testimonials() {
     return () => observer.disconnect()
   }, [])
 
+  // Auto-rotate testimonials
+  useEffect(() => {
+    if (isVisible && !isPaused) {
+      intervalRef.current = setInterval(() => {
+        setActiveIndex((prev) => (prev + 1) % testimonials.length)
+      }, 5000) // Change testimonial every 5 seconds
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+      }
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
+  }, [isVisible, isPaused])
+
   const nextTestimonial = () => {
     setActiveIndex((prev) => (prev + 1) % testimonials.length)
+    // Pause auto-rotation temporarily when user interacts
+    setIsPaused(true)
+    setTimeout(() => setIsPaused(false), 10000) // Resume after 10 seconds
   }
 
   const prevTestimonial = () => {
     setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+    // Pause auto-rotation temporarily when user interacts
+    setIsPaused(true)
+    setTimeout(() => setIsPaused(false), 10000) // Resume after 10 seconds
   }
 
   return (
-    <section ref={ref} className="py-20 md:py-28 px-6 md:px-10 bg-muted mx-4 md:mx-6 rounded-2xl my-6">
+    <section
+      ref={ref}
+      className="py-20 md:py-28 px-6 md:px-10 bg-muted mx-4 md:mx-6 rounded-2xl my-6"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
       <div className="max-w-[1400px] mx-auto">
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-16">
           {/* Left column - title and nav */}

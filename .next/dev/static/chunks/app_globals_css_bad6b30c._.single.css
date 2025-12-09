@@ -6023,6 +6023,10 @@
     }
   }
 
+  .dark\:bg-background:is(.dark *) {
+    background-color: var(--background);
+  }
+
   .dark\:bg-black:is(.dark *) {
     background-color: var(--color-black);
   }
@@ -6279,6 +6283,12 @@
   @media (hover: hover) {
     .dark\:hover\:text-white:is(.dark *):hover {
       color: var(--color-white);
+    }
+  }
+
+  @media (hover: hover) {
+    .dark\:hover\:opacity-80:is(.dark *):hover {
+      opacity: .8;
     }
   }
 
