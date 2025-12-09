@@ -4,30 +4,19 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import { useTheme } from "next-themes"
-import { FlickeringGrid } from "@/components/flickering-grid"
 
 export default function Footer() {
   const [mounted, setMounted] = useState(false)
-  const [tablet, setTablet] = useState(false)
   const { theme, resolvedTheme } = useTheme()
 
   useEffect(() => {
     setMounted(true)
-    const checkTablet = () => {
-      setTablet(window.innerWidth < 1024 && window.innerWidth >= 768)
-    }
-    checkTablet()
-    window.addEventListener("resize", checkTablet)
-    return () => window.removeEventListener("resize", checkTablet)
   }, [])
 
   const isDarkMode = mounted && (resolvedTheme === "dark" || theme === "dark")
   const logoSource = mounted 
     ? (isDarkMode ? "/images/Imagine Logo White Alpha.png" : "/images/Imagine Logo Black Alpha.png")
     : "/images/Imagine Logo Black Alpha.png"
-  
-  // Theme-aware grid color
-  const gridColor = isDarkMode ? "#6B7280" : "#9CA3AF"
 
   return (
     <footer className="bg-background text-foreground border-t border-border mt-6">
@@ -97,29 +86,6 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="py-8 border-t border-border relative overflow-hidden" suppressHydrationWarning>
-          <div className="w-full h-48 md:h-64 relative mt-24 z-0" suppressHydrationWarning>
-            <div 
-              className="absolute inset-0 z-10 pointer-events-none" 
-              style={{ 
-                background: "linear-gradient(to top, transparent 0%, transparent 40%, hsl(var(--background)) 100%)" 
-              }}
-              suppressHydrationWarning
-            />
-            <div className="absolute inset-0 mx-6" suppressHydrationWarning>
-              <FlickeringGrid
-                text="IMAGINE"
-                fontSize={tablet ? 70 : 90}
-                className="h-full w-full"
-                squareSize={2}
-                gridGap={tablet ? 2 : 3}
-                color={gridColor}
-                maxOpacity={0.3}
-                flickerChance={0.1}
-              />
-            </div>
-          </div>
-        </div>
 
         <div className="border-t border-border py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-foreground/50">
           <p>© 2025 IMAGINE ENTERTAINMENT. All rights reserved.</p>

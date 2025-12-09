@@ -3009,3 +3009,7 @@ It can also happen if the client has a browser extension installed which messes 
 [00:16:31.800] Browser WARN    Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
 [00:16:31.800] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/contact color: rgb(120, 120, 120) color: inherit {"dp":"/contact","o":"http://localhost:3000/contact","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765281598691}
 [00:16:39.719] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/work color: rgb(120, 120, 120) color: inherit {"dp":"/work","o":"http://localhost:3000/work","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765281606616}
+[00:20:36.157] Server  LOG      ✓ Compiled in 606ms
+[00:20:37.183] Server  LOG      ✓ Compiled in 301ms
+[00:20:41.183] Server  LOG      ✓ Compiled in 143ms
+[00:21:38.887] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765281905754}
