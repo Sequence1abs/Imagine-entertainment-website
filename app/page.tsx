@@ -43,34 +43,26 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="min-h-screen bg-background">
-      <section className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Background gradient orb - inspired by Amini/Fin AI */}
-        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[600px] h-[600px] md:w-[800px] md:h-[800px] pointer-events-none">
-          <div className="relative w-full h-full">
-            {/* Animated concentric circles */}
-            <div className="absolute inset-0 animate-spin-slow">
-              {[...Array(6)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute rounded-full border border-foreground/5"
-                  style={{
-                    inset: `${i * 12}%`,
-                    animationDelay: `${i * 0.2}s`,
-                  }}
-                />
-              ))}
-            </div>
-            {/* Center glow */}
-            <div className="absolute inset-[30%] rounded-full bg-gradient-to-br from-amber-100/40 via-rose-100/30 to-transparent blur-3xl" />
-          </div>
+    <main className="min-h-screen bg-background" suppressHydrationWarning>
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center overflow-hidden bg-foreground dark:bg-black">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="/dramatic-stage-lighting-corporate-event-dark-green.jpg"
+            alt="Event Production"
+            className="w-full h-full object-cover opacity-70 dark:opacity-70"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-foreground/60 via-foreground/50 to-foreground/30 dark:from-black/80 dark:via-black/60 dark:to-transparent" />
+          <div className="absolute inset-0 bg-black/30 dark:bg-black/50" />
         </div>
 
+        {/* Content */}
         <div className="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-10 py-32 md:py-40">
           <div className="max-w-3xl">
             <div className="overflow-hidden mb-6">
               <p
-                className={`text-muted-foreground text-xs tracking-[0.3em] transition-all duration-700 ${
+                className={`text-white/80 dark:text-white/80 text-xs tracking-[0.3em] transition-all duration-700 ${
                   isLoaded ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
                 }`}
                 style={{ transitionDelay: "0.2s" }}
@@ -82,7 +74,7 @@ export default function Home() {
             <h1>
               <div className="overflow-hidden">
                 <span
-                  className={`block text-5xl md:text-7xl lg:text-8xl font-medium leading-[1] tracking-tight transition-all duration-700 ${
+                  className={`block text-5xl md:text-7xl lg:text-8xl font-medium leading-[1] tracking-tight text-white dark:text-white transition-all duration-700 ${
                     isLoaded ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
                   }`}
                   style={{ transitionDelay: "0.3s" }}
@@ -97,12 +89,12 @@ export default function Home() {
                   }`}
                   style={{ transitionDelay: "0.4s" }}
                 >
-                  <span className="italic font-normal text-muted-foreground">Extraordinary</span>
+                  <span className="italic font-normal text-white/90 dark:text-white/90">Extraordinary</span>
                 </span>
               </div>
               <div className="overflow-hidden mt-1">
                 <span
-                  className={`block text-5xl md:text-7xl lg:text-8xl font-medium leading-[1] tracking-tight transition-all duration-700 ${
+                  className={`block text-5xl md:text-7xl lg:text-8xl font-medium leading-[1] tracking-tight text-white dark:text-white transition-all duration-700 ${
                     isLoaded ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
                   }`}
                   style={{ transitionDelay: "0.5s" }}
@@ -118,22 +110,26 @@ export default function Home() {
               }`}
               style={{ transitionDelay: "0.7s" }}
             >
-              <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-8">
+              <p className="text-white/90 dark:text-white/90 text-base md:text-lg leading-relaxed mb-8">
                 Full-service event production for corporate events, television, film, and theatre. Creating moments that
                 captivate worldwide.
               </p>
 
-              <div className="flex items-center gap-8">
-                <Link href="/work" className="group inline-flex items-center gap-2 text-foreground text-sm font-medium">
-                  <span className="link-slide">Explore Work</span>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                <Link
+                  href="/contact"
+                  className="group inline-flex items-center gap-2 text-white dark:text-white text-sm font-medium border border-white/50 dark:border-white/50 px-6 py-3 rounded-full bg-white/10 dark:bg-white/10 backdrop-blur-sm hover:bg-white hover:text-foreground dark:hover:bg-white dark:hover:text-black transition-all duration-300"
+                >
+                  Talk to Us
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
 
                 <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors"
+                  href="/work"
+                  className="inline-flex items-center gap-2 text-white/90 dark:text-white/90 text-sm hover:text-white dark:hover:text-white transition-colors"
                 >
-                  Talk to Us
+                  Explore Work
+                  <ArrowUpRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>
@@ -150,7 +146,7 @@ export default function Home() {
           <div className="max-w-[1400px] mx-auto px-6 md:px-10">
             <div className="flex items-center gap-8 md:gap-12 overflow-hidden">
               {["BBC", "Netflix", "Sky", "ITV", "Live Nation", "AEG"].map((client) => (
-                <span key={client} className="text-xs tracking-wider text-muted-foreground/50 whitespace-nowrap">
+                <span key={client} className="text-xs tracking-wider text-white/60 dark:text-white/60 whitespace-nowrap">
                   {client}
                 </span>
               ))}
