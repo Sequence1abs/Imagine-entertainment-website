@@ -124,10 +124,6 @@ function Navigation() {
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "Navigation.useEffect": ()=>{
             setMounted(true);
-        }
-    }["Navigation.useEffect"], []);
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
-        "Navigation.useEffect": ()=>{
             const handleScroll = {
                 "Navigation.useEffect.handleScroll": ()=>{
                     setScrolled(window.scrollY > 50);
@@ -188,7 +184,7 @@ function Navigation() {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
-                className: `fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-background/95 backdrop-blur-md" : "bg-transparent"}`,
+                className: `fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${mounted && scrolled ? "bg-background/95 backdrop-blur-md" : "bg-transparent"}`,
                 suppressHydrationWarning: true,
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "max-w-[1400px] mx-auto px-6 md:px-10",
@@ -207,12 +203,12 @@ function Navigation() {
                                     className: "h-8 w-auto transition-all duration-300"
                                 }, void 0, false, {
                                     fileName: "[project]/components/navigation.tsx",
-                                    lineNumber: 75,
+                                    lineNumber: 72,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/components/navigation.tsx",
-                                lineNumber: 74,
+                                lineNumber: 71,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -224,12 +220,12 @@ function Navigation() {
                                         children: item.label
                                     }, item.label, false, {
                                         fileName: "[project]/components/navigation.tsx",
-                                        lineNumber: 84,
+                                        lineNumber: 81,
                                         columnNumber: 17
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/components/navigation.tsx",
-                                lineNumber: 82,
+                                lineNumber: 79,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -238,7 +234,7 @@ function Navigation() {
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$theme$2d$toggle$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ThemeToggle"], {}, void 0, false, {
                                         fileName: "[project]/components/navigation.tsx",
-                                        lineNumber: 107,
+                                        lineNumber: 104,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -250,13 +246,13 @@ function Navigation() {
                                                 className: "w-4 h-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/navigation.tsx",
-                                                lineNumber: 116,
+                                                lineNumber: 113,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/navigation.tsx",
-                                        lineNumber: 109,
+                                        lineNumber: 106,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -271,51 +267,51 @@ function Navigation() {
                                                     className: `block h-[1.5px] w-full transition-all duration-400 ease-[cubic-bezier(0.77,0,0.175,1)] origin-center ${isOpen ? "bg-white rotate-45 translate-y-[5.25px]" : scrolled ? "bg-foreground" : isDarkPage ? "bg-white" : "bg-foreground"}`
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/navigation.tsx",
-                                                    lineNumber: 125,
+                                                    lineNumber: 122,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                     className: `block h-[1.5px] w-full transition-all duration-400 ease-[cubic-bezier(0.77,0,0.175,1)] origin-center ${isOpen ? "bg-white -rotate-45 -translate-y-[5.25px]" : scrolled ? "bg-foreground" : isDarkPage ? "bg-white" : "bg-foreground"}`
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/navigation.tsx",
-                                                    lineNumber: 136,
+                                                    lineNumber: 133,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/navigation.tsx",
-                                            lineNumber: 124,
+                                            lineNumber: 121,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/navigation.tsx",
-                                        lineNumber: 119,
+                                        lineNumber: 116,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/navigation.tsx",
-                                lineNumber: 106,
+                                lineNumber: 103,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/navigation.tsx",
-                        lineNumber: 73,
+                        lineNumber: 70,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/components/navigation.tsx",
-                    lineNumber: 72,
+                    lineNumber: 69,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/navigation.tsx",
-                lineNumber: 66,
+                lineNumber: 63,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: `fixed inset-0 z-40 bg-foreground text-foreground transition-all duration-700 ease-[cubic-bezier(0.77,0,0.175,1)] ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}`,
+                className: `fixed inset-0 z-40 bg-background text-foreground transition-all duration-700 ease-[cubic-bezier(0.77,0,0.175,1)] ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}`,
                 suppressHydrationWarning: true,
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "h-full flex flex-col justify-center px-6 md:px-10",
@@ -341,42 +337,42 @@ function Navigation() {
                                     onClick: ()=>setIsOpen(false),
                                     className: "block py-2",
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "text-4xl md:text-5xl font-medium text-foreground hover:text-foreground/60 transition-colors duration-300",
+                                        className: "text-4xl md:text-5xl font-medium text-foreground hover:opacity-60 transition-opacity duration-300",
                                         children: item.label
                                     }, void 0, false, {
                                         fileName: "[project]/components/navigation.tsx",
-                                        lineNumber: 173,
+                                        lineNumber: 170,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/components/navigation.tsx",
-                                    lineNumber: 172,
+                                    lineNumber: 169,
                                     columnNumber: 17
                                 }, this)
                             }, item.label, false, {
                                 fileName: "[project]/components/navigation.tsx",
-                                lineNumber: 163,
+                                lineNumber: 160,
                                 columnNumber: 15
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/components/navigation.tsx",
-                        lineNumber: 161,
+                        lineNumber: 158,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/components/navigation.tsx",
-                    lineNumber: 160,
+                    lineNumber: 157,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/navigation.tsx",
-                lineNumber: 154,
+                lineNumber: 151,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true);
 }
-_s(Navigation, "FEdf8BEI7E2zc5gN/a68nFxEIEo=", false, function() {
+_s(Navigation, "7t86T9D9pgkY5GH3StjazGWJ5x4=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$themes$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"]

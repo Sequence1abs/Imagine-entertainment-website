@@ -149,7 +149,7 @@ export default function Navigation() {
       </nav>
 
       <div
-        className={`fixed inset-0 z-40 bg-foreground text-foreground transition-all duration-700 ease-[cubic-bezier(0.77,0,0.175,1)] ${
+        className={`fixed inset-0 z-40 bg-background text-foreground transition-all duration-700 ease-[cubic-bezier(0.77,0,0.175,1)] ${
           isOpen ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
         suppressHydrationWarning
@@ -167,7 +167,7 @@ export default function Navigation() {
                 }}
               >
                 <Link href={item.href} onClick={() => setIsOpen(false)} className="block py-2">
-                  <span className="text-4xl md:text-5xl font-medium text-foreground hover:text-foreground/60 transition-colors duration-300">
+                  <span className="text-4xl md:text-5xl font-medium text-foreground hover:opacity-60 transition-opacity duration-300">
                     {item.label}
                   </span>
                 </Link>
