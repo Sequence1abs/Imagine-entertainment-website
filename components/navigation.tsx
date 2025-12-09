@@ -67,9 +67,10 @@ export default function Navigation() {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled ? "bg-background/95 backdrop-blur-md" : "bg-transparent"
         }`}
+        suppressHydrationWarning
       >
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
-          <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10" suppressHydrationWarning>
+          <div className="flex items-center justify-between h-16 md:h-20" suppressHydrationWarning>
             <Link href="/" className="relative z-50 flex items-center gap-2" onClick={() => setIsOpen(false)}>
               <img
                 src={getLogoSource()}
@@ -78,7 +79,7 @@ export default function Navigation() {
               />
             </Link>
 
-            <div className="hidden lg:flex items-center gap-12">
+            <div className="hidden lg:flex items-center gap-12" suppressHydrationWarning>
               {menuItems.map((item) => (
                 <Link
                   key={item.label}
@@ -102,7 +103,7 @@ export default function Navigation() {
               ))}
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4" suppressHydrationWarning>
               <ThemeToggle />
               
               <Link
@@ -120,7 +121,7 @@ export default function Navigation() {
                 className="lg:hidden relative z-50 w-8 h-8 flex items-center justify-center"
                 aria-label="Toggle menu"
               >
-                <div className="relative w-5 h-3 flex flex-col justify-between">
+                <div className="relative w-5 h-3 flex flex-col justify-between" suppressHydrationWarning>
                   <span
                     className={`block h-[1.5px] w-full transition-all duration-400 ease-[cubic-bezier(0.77,0,0.175,1)] origin-center ${
                       isOpen
@@ -154,9 +155,10 @@ export default function Navigation() {
         className={`fixed inset-0 z-40 bg-foreground text-foreground transition-all duration-700 ease-[cubic-bezier(0.77,0,0.175,1)] ${
           isOpen ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
+        suppressHydrationWarning
       >
-        <div className="h-full flex flex-col justify-center px-6 md:px-10">
-          <div className="space-y-2">
+        <div className="h-full flex flex-col justify-center px-6 md:px-10" suppressHydrationWarning>
+          <div className="space-y-2" suppressHydrationWarning>
             {[...menuItems, { label: "Contact", href: "/contact" }].map((item, index) => (
               <div
                 key={item.label}
