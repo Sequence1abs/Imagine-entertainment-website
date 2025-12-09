@@ -27,9 +27,9 @@ export default function RootLayout({
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <body className="font-sans antialiased overflow-x-hidden" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          <Navigation />
-          {children}
-          <Analytics />
+        <Navigation />
+        {children}
+        <Analytics />
         </ThemeProvider>
       </body>
     </html>

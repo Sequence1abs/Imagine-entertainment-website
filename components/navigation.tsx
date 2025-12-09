@@ -42,6 +42,7 @@ export default function Navigation() {
 
   const isDarkPage = pathname === "/" || pathname === "/about"
   const isDarkMode = mounted && (resolvedTheme === "dark" || theme === "dark")
+  const isHeroPage = pathname === "/"
   
   // Determine which logo to show
   const getLogoSource = () => {
@@ -57,6 +58,34 @@ export default function Navigation() {
     // Otherwise use theme-based logo
     return isDarkMode ? "/images/Imagine Logo White Alpha.png" : "/images/Imagine Logo Black Alpha.png"
   }
+
+  // Determine icon color for hero page
+  const getIconColor = () => {
+    if (isOpen) return "bg-white"
+    // On hero page: white when not scrolled, dark when scrolled
+    if (isHeroPage) return scrolled ? "bg-foreground" : "bg-white"
+    // If scrolled, use theme-based color
+    if (scrolled) return "bg-foreground"
+    // If on dark page, use white
+    if (isDarkPage) return "bg-white"
+    // Otherwise use theme-based color
+    return "bg-foreground"
+  }
+
+  // Determine theme toggle icon color
+  const getThemeToggleColor = () => {
+    // On hero page: white when not scrolled, dark when scrolled
+    if (isHeroPage) return scrolled ? "foreground" : "white"
+    // If scrolled, use foreground
+    if (scrolled) return "foreground"
+    // If on dark page, use white
+    if (isDarkPage) return "white"
+    // Otherwise use foreground
+    return "foreground"
+  }
+
+  const iconColor = getIconColor()
+  const themeToggleColor = getThemeToggleColor()
 
   return (
     <>
@@ -101,7 +130,7 @@ export default function Navigation() {
             </div>
 
             <div className="flex items-center gap-4" suppressHydrationWarning>
-              <ThemeToggle />
+              <ThemeToggle iconColor={themeToggleColor} />
               
               <Link
                 href="/contact"
@@ -123,22 +152,14 @@ export default function Navigation() {
                     className={`block h-[1.5px] w-full transition-all duration-400 ease-[cubic-bezier(0.77,0,0.175,1)] origin-center ${
                       isOpen
                         ? "bg-white rotate-45 translate-y-[5.25px]"
-                        : scrolled
-                          ? "bg-foreground"
-                          : isDarkPage
-                            ? "bg-white"
-                            : "bg-foreground"
+                        : iconColor
                     }`}
                   />
                   <span
                     className={`block h-[1.5px] w-full transition-all duration-400 ease-[cubic-bezier(0.77,0,0.175,1)] origin-center ${
                       isOpen
                         ? "bg-white -rotate-45 -translate-y-[5.25px]"
-                        : scrolled
-                          ? "bg-foreground"
-                          : isDarkPage
-                            ? "bg-white"
-                            : "bg-foreground"
+                        : iconColor
                     }`}
                   />
                 </div>

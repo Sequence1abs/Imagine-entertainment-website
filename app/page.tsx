@@ -119,14 +119,6 @@ export default function Home() {
 
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
                 <Link
-                  href="/contact"
-                  className="group inline-flex items-center gap-2 text-white dark:text-white text-sm font-medium border border-white/50 dark:border-white/50 px-6 py-3 rounded-full bg-white/10 dark:bg-white/10 backdrop-blur-sm hover:bg-white hover:text-foreground dark:hover:bg-white dark:hover:text-black transition-all duration-300"
-                >
-                  Talk to Us
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-                </Link>
-
-                <Link
                   href="/work"
                   className="inline-flex items-center gap-2 text-white/90 dark:text-white/90 text-sm hover:text-white dark:hover:text-white transition-colors"
                 >
