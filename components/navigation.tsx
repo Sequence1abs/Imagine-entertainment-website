@@ -64,10 +64,11 @@ export default function Navigation() {
 
   // Determine icon color for hero page
   const getIconColor = () => {
-    // When menu is open, use white on dark pages or in dark mode, black otherwise
+    // When menu is open, match original openIconColor logic
     if (isOpen) {
-      // If on dark page or dark mode, use white
-      return (isDarkMode || isDarkPage) ? "bg-white" : "bg-black"
+      // If dark mode OR dark page OR (hero page AND not scrolled), use white
+      // Otherwise use foreground (not black) to match original behavior
+      return (isDarkMode || isDarkPage || (isHeroPage && !scrolled)) ? "bg-white" : "bg-foreground"
     }
     // On hero page: white when not scrolled, dark when scrolled
     if (isHeroPage) return scrolled ? "bg-foreground" : "bg-white"
