@@ -43,14 +43,15 @@ export default function Navigation() {
   const isDarkPage = pathname === "/" || pathname === "/about"
   const isDarkMode = mounted && (resolvedTheme === "dark" || theme === "dark")
   const isHeroPage = pathname === "/"
-  const openIconColor =
-    isDarkMode || isDarkPage || (isHeroPage && !scrolled) ? "bg-white" : "bg-foreground"
   
   // Determine which logo to show
   const getLogoSource = () => {
     if (!mounted) return "/images/Imagine Logo Black Alpha.png"
-    // If menu is open, always show white logo
-    if (isOpen) return "/images/Imagine Logo White Alpha.png"
+    // If menu is open, use theme-appropriate logo (consider both theme and page background)
+    if (isOpen) {
+      // If on dark page or dark mode, show white logo
+      return (isDarkMode || isDarkPage) ? "/images/Imagine Logo White Alpha.png" : "/images/Imagine Logo Black Alpha.png"
+    }
     // If scrolled, use theme-based logo
     if (scrolled) {
       return isDarkMode ? "/images/Imagine Logo White Alpha.png" : "/images/Imagine Logo Black Alpha.png"
@@ -63,12 +64,10 @@ export default function Navigation() {
 
   // Determine icon color for hero page
   const getIconColor = () => {
-    // When menu is open, use theme-appropriate color
+    // When menu is open, use white on dark pages or in dark mode, black otherwise
     if (isOpen) {
-      // If on dark page, always use white
-      if (isDarkPage) return "bg-white"
-      // Otherwise use theme-based color
-      return isDarkMode ? "bg-white" : "bg-foreground"
+      // If on dark page or dark mode, use white
+      return (isDarkMode || isDarkPage) ? "bg-white" : "bg-black"
     }
     // On hero page: white when not scrolled, dark when scrolled
     if (isHeroPage) return scrolled ? "bg-foreground" : "bg-white"
@@ -76,8 +75,8 @@ export default function Navigation() {
     if (scrolled) return "bg-foreground"
     // If on dark page, use white
     if (isDarkPage) return "bg-white"
-    // Otherwise use theme-based color
-    return "bg-foreground"
+    // Otherwise use theme-based color (black in light mode)
+    return "bg-black dark:bg-foreground"
   }
 
   // Determine theme toggle icon color
@@ -159,14 +158,14 @@ export default function Navigation() {
                   <span
                     className={`block h-[1.5px] w-full transition-all duration-400 ease-[cubic-bezier(0.77,0,0.175,1)] origin-center ${
                       isOpen
-                        ? `${openIconColor} rotate-45 translate-y-[5.25px]`
+                        ? `${iconColor} rotate-45 translate-y-[5.25px]`
                         : iconColor
                     }`}
                   />
                   <span
                     className={`block h-[1.5px] w-full transition-all duration-400 ease-[cubic-bezier(0.77,0,0.175,1)] origin-center ${
                       isOpen
-                        ? `${openIconColor} -rotate-45 -translate-y-[5.25px]`
+                        ? `${iconColor} -rotate-45 -translate-y-[5.25px]`
                         : iconColor
                     }`}
                   />
