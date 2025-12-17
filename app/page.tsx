@@ -50,10 +50,14 @@ export default function Home() {
       <section className="relative min-h-screen flex items-center overflow-hidden bg-foreground dark:bg-black">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <img
-            src="/dramatic-stage-lighting-corporate-event-dark-green.jpg"
-            alt="Event Production"
+          <video
             className="w-full h-full object-cover opacity-70 dark:opacity-70"
+            src="/images/Imagine Entertainment Commercial 30 Sec.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-label="Imagine Entertainment showreel"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-foreground/60 via-foreground/50 to-foreground/30 dark:from-black/80 dark:via-black/60 dark:to-transparent" />
           <div className="absolute inset-0 bg-black/30 dark:bg-black/50" />
