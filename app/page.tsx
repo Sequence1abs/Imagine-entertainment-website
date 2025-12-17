@@ -57,6 +57,8 @@ export default function Home() {
             loop
             muted
             playsInline
+            preload="auto"
+            poster="/dramatic-stage-lighting-corporate-event-dark-green.jpg"
             aria-label="Imagine Entertainment showreel"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-foreground/60 via-foreground/50 to-foreground/30 dark:from-black/80 dark:via-black/60 dark:to-transparent" />

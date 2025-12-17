@@ -15,7 +15,10 @@ export const metadata: Metadata = {
   title: "IMAGINE ENTERTAINMENT | Event Production & Creative Experiences",
   description:
     "Full-service event production for corporate events, television, film, and theatre. We create extraordinary experiences that captivate audiences worldwide.",
-    generator: 'v0.app'
+  generator: "v0.app",
+  icons: {
+    icon: "/images/Imagine Logo Black Alpha.png",
+  },
 }
 
 export default function RootLayout({
