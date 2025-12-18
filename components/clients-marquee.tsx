@@ -48,7 +48,7 @@ export default function ClientsMarquee() {
   }, [])
 
   return (
-    <section ref={ref} className="py-20 md:py-28 overflow-hidden border-t border-border">
+    <section ref={ref} className="py-20 md:py-28 overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 mb-12">
         <p
           className={`text-muted-foreground text-xs tracking-[0.2em] text-center mb-4 transition-all duration-700 ${
@@ -91,10 +91,18 @@ export default function ClientsMarquee() {
 
 function ClientCard({ client }: { client: { abbr: string; name: string } }) {
   return (
-    <div className="flex-shrink-0 px-2">
-      <div className="w-20 md:w-24 flex flex-col items-center gap-2">
-        <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-border bg-muted/30 flex items-center justify-center hover:border-foreground/30 hover:bg-muted/50 transition-all duration-300">
-          <span className="text-sm md:text-base font-medium text-foreground/70">{client.abbr}</span>
+    <div className="flex-shrink-0 px-4 md:px-6">
+      <div className="flex flex-col items-center gap-3">
+        <div className="h-12 md:h-16 w-auto flex items-center justify-center">
+          <img
+            src={`/images/logos/${client.abbr.toLowerCase()}-logo.png`}
+            alt={client.name}
+            className="h-full w-auto object-contain opacity-70 hover:opacity-100 transition-opacity duration-300"
+            onError={(e) => {
+              // Hide image if logo doesn't exist
+              e.currentTarget.style.display = 'none'
+            }}
+          />
         </div>
         <span className="text-[10px] md:text-xs text-muted-foreground text-center whitespace-nowrap">
           {client.name}

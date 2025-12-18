@@ -339,7 +339,7 @@ export default function WorkDetailPage() {
       {/* Lightbox Modal */}
       {lightboxOpen && project && (
         <div
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/95 p-4"
           onClick={closeLightbox}
         >
           <button
@@ -373,14 +373,16 @@ export default function WorkDetailPage() {
           </button>
 
           <div
-            className="relative max-w-7xl max-h-[90vh] w-full h-full flex items-center justify-center"
+            className="w-full h-full flex items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <img
-              src={project.images[currentImageIndex]}
-              alt={`${project.title} - Image ${currentImageIndex + 1}`}
-              className="max-w-full max-h-full object-contain"
-            />
+            <div className="relative w-full h-full max-w-7xl max-h-[90vh]">
+              <img
+                src={project.images[currentImageIndex]}
+                alt={`${project.title} - Image ${currentImageIndex + 1}`}
+                className="absolute inset-0 w-full h-full object-cover rounded-lg"
+              />
+            </div>
           </div>
 
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/80 text-sm">

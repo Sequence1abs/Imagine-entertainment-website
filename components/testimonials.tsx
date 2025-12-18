@@ -82,12 +82,12 @@ export default function Testimonials() {
   return (
     <section
       ref={ref}
-      className="py-20 md:py-28 px-6 md:px-10 bg-muted mx-4 md:mx-6 rounded-2xl my-6"
+      className="py-24 lg:py-32 px-6 lg:px-12 bg-muted/30"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
       <div className="max-w-[1400px] mx-auto">
-        <div className="grid lg:grid-cols-12 gap-10 lg:gap-16">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-16">
           {/* Left column - title and nav */}
           <div className="lg:col-span-4">
             <div
@@ -95,7 +95,7 @@ export default function Testimonials() {
                 isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
               }`}
             >
-              <p className="text-muted-foreground text-xs tracking-[0.15em] mb-3">//Testimonials</p>
+              <p className="text-muted-foreground text-xs tracking-[0.2em] mb-4">//Testimonials</p>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-8">
                 What Our
                 <br />
@@ -103,7 +103,7 @@ export default function Testimonials() {
               </h2>
 
               {/* Navigation */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 <button
                   onClick={prevTestimonial}
                   className="w-10 h-10 rounded-full border border-border bg-background flex items-center justify-center hover:bg-foreground hover:text-background hover:border-foreground transition-all duration-300"
@@ -118,7 +118,7 @@ export default function Testimonials() {
                 >
                   <ArrowRight className="w-4 h-4" />
                 </button>
-                <span className="text-sm text-muted-foreground ml-2">
+                <span className="text-sm text-muted-foreground ml-3 font-mono">
                   {String(activeIndex + 1).padStart(2, "0")} / {String(testimonials.length).padStart(2, "0")}
                 </span>
               </div>
@@ -133,43 +133,37 @@ export default function Testimonials() {
               }`}
               style={{ transitionDelay: "0.15s" }}
             >
-              {/* Large decorative quote */}
-              <span className="text-[120px] md:text-[180px] font-serif text-foreground/5 absolute -top-8 md:-top-12 -left-2 leading-none select-none">
-                "
-              </span>
+              {testimonials.map((testimonial, index) => (
+                <div
+                  key={index}
+                  className={`transition-all duration-500 ${
+                    index === activeIndex
+                      ? "opacity-100 translate-y-0 pointer-events-auto"
+                      : "opacity-0 translate-y-4 absolute inset-0 pointer-events-none"
+                  }`}
+                >
+                  <blockquote className="text-xl md:text-2xl lg:text-3xl font-medium leading-relaxed mb-8 text-foreground">
+                    {testimonial.quote}
+                  </blockquote>
 
-              {/* Quote content */}
-              <div className="relative pt-12 md:pt-16">
-                {testimonials.map((testimonial, index) => (
-                  <div
-                    key={index}
-                    className={`transition-all duration-500 ${
-                      index === activeIndex ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 absolute inset-0"
-                    }`}
-                  >
-                    <blockquote className="text-xl md:text-2xl lg:text-3xl font-medium leading-relaxed mb-8">
-                      {testimonial.quote}
-                    </blockquote>
-
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-foreground text-background flex items-center justify-center">
-                        <span className="text-sm font-medium">
-                          {testimonial.author
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="font-medium">{testimonial.author}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {testimonial.role}, {testimonial.company}
-                        </p>
-                      </div>
+                  <div className="flex items-center gap-4 pt-6 border-t border-border">
+                    <div className="w-12 h-12 rounded-full bg-foreground text-background flex items-center justify-center flex-shrink-0">
+                      <span className="text-sm font-medium">
+                        {testimonial.author
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-base mb-0.5">{testimonial.author}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {testimonial.role}, {testimonial.company}
+                      </p>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
