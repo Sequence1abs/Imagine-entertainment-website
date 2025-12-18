@@ -4599,3 +4599,14 @@ It can also happen if the client has a browser extension installed which messes 
 [01:02:22.381] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
 [01:02:22.381] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
 [01:02:22.381] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/#philosophy color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/#philosophy","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1766049813156}
+[00:49:22.019] Server  LOG      ✓ Compiled in 442ms
+[00:49:35.008] Server  LOG      ✓ Compiled in 1616ms
+[00:49:39.613] Server  LOG      ✓ Compiled in 1031ms
+[00:52:02.164] Server  LOG      ✓ Compiled in 308ms
+[00:52:05.004] Server  LOG      ✓ Compiled in 794ms
+[00:52:14.355] Server  LOG      ✓ Compiled in 406ms
+[00:52:16.511] Server  LOG      ✓ Compiled in 295ms
+[00:53:01.438] Server  LOG      ✓ Compiled in 496ms
+[00:53:59.181] Server  LOG      ✓ Compiled in 793ms
+[00:55:09.340] Server  LOG      ✓ Compiled in 769ms
+[00:56:35.241] Server  LOG      ✓ Compiled in 1052ms
