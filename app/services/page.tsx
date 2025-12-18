@@ -10,18 +10,61 @@ const services = [
     number: "01",
     title: "Corporate Events",
     description: "From intimate board meetings to large-scale conferences, we deliver seamless corporate experiences.",
-    items: ["Events & Meetings", "Product Launches", "Brand Activation", "Automotive Events", "Fashion Shows"],
+    items: [
+      "Corporate Galas & Award Ceremonies",
+      "Luxury Product Launches & Brand Activations",
+      "Executive Conferences & Summits",
+      "Exhibition Booth Design & Trade Shows",
+      "Fashion Shows & Runway Experiences",
+      "Hybrid & Virtual Events",
+      "Total Studio Production",
+    ],
     image: "/corporate-event-stage-blue-lighting-conference.jpg",
   },
   {
     number: "02",
-    title: "Television & Film",
+    title: "Television & Film Production",
     description: "Award-winning production support for broadcasts, live entertainment, and film projects.",
-    items: ["Light Entertainment", "Factual Television", "Awards Shows", "Film Production", "Live Broadcasts"],
+    items: [
+      "Feature Film Production",
+      "Reality Television Shows",
+      "Documentary Films & Docuseries",
+      "News & Current Affairs Programming",
+      "Game Shows & Competition Series",
+      "Music Video Production",
+      "Animated TV & Films",
+      "Televised Theatre & Performing Arts",
+    ],
     image: "/brit-awards-stage-red-lighting-production.jpg",
   },
   {
     number: "03",
+    title: "Music",
+    description: "Full production services for concerts, festivals, and music events of all scales.",
+    items: ["Concerts & Tours", "Music Festivals", "Dance Music Events", "Classical Music Concerts"],
+    image: "/music-festival-outdoor-stage-crowd-night-lights.jpg",
+  },
+  {
+    number: "04",
+    title: "Rigging Services",
+    description: "Professional rigging solutions for safe and efficient event production.",
+    items: [
+      "Stage Rigging Systems",
+      "Automation Rigging",
+      "Pyrotechnics & Special Effects Rigging",
+      "Custom Rigging Solutions",
+    ],
+    image: "/professional-event-production-team-working-stage-s.jpg",
+  },
+  {
+    number: "05",
+    title: "Public, Sports & Major Events",
+    description: "Large-scale event production for public gatherings, sporting events, and ceremonies.",
+    items: ["Sporting Events", "Public Events", "Opening & Closing Ceremonies"],
+    image: "/dramatic-stage-lighting-corporate-event-dark-green.jpg",
+  },
+  {
+    number: "06",
     title: "Theatre Production",
     description: "West End quality technical production for theatrical performances of all scales.",
     items: ["West End Theatre", "Touring Theatre", "Regional Theatre", "Dance Productions", "Opera"],
@@ -159,7 +202,7 @@ function ServiceCard({ service, index }: { service: (typeof services)[0]; index:
     return () => observer.disconnect()
   }, [])
 
-  const serviceId = service.title.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "and")
+  const serviceId = service.title.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "and").replace(/,/g, "").replace(/\s*,\s*/g, "-")
 
   return (
     <div

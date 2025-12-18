@@ -8,30 +8,48 @@ import ClientsMarquee from "@/components/clients-marquee"
 import Testimonials from "@/components/testimonials"
 import Footer from "@/components/footer"
 
-const featuredProjects = [
+const services = [
   {
     id: 1,
-    title: "BRIT AWARDS 2024",
-    category: "Television Production",
-    image: "/brit-awards-stage-red-lighting-production.jpg",
+    title: "Corporate Events",
+    eventType: "Corporate",
+    image: "/corporate-event-stage-blue-lighting-conference.jpg",
+    span: "lg:col-span-1 lg:row-span-2",
   },
   {
     id: 2,
-    title: "LONDON FASHION WEEK",
-    category: "Fashion Shows",
-    image: "/fashion-runway-show-pink-dramatic-lighting.jpg",
+    title: "Television & Film Production",
+    eventType: "Television & Film",
+    image: "/brit-awards-stage-red-lighting-production.jpg",
+    span: "lg:col-span-1 lg:row-span-1",
   },
   {
     id: 3,
-    title: "CORPORATE SUMMIT",
-    category: "Corporate Events",
-    image: "/corporate-event-stage-blue-lighting-conference.jpg",
+    title: "Music",
+    eventType: "Music",
+    image: "/music-festival-outdoor-stage-crowd-night-lights.jpg",
+    span: "lg:col-span-1 lg:row-span-1",
   },
   {
     id: 4,
-    title: "WEST END PREMIERE",
-    category: "Theatre",
+    title: "Rigging Services",
+    eventType: "Rigging",
+    image: "/professional-event-production-team-working-stage-s.jpg",
+    span: "lg:col-span-1 lg:row-span-2",
+  },
+  {
+    id: 5,
+    title: "Public, Sports & Major Events",
+    eventType: "Major Events",
+    image: "/dramatic-stage-lighting-corporate-event-dark-green.jpg",
+    span: "sm:col-span-2 lg:col-span-2 lg:row-span-1",
+  },
+  {
+    id: 6,
+    title: "Theatre Production",
+    eventType: "Theatre",
     image: "/theatre-stage-dramatic-spotlight-performance.jpg",
+    span: "lg:col-span-1 lg:row-span-1",
   },
 ]
 
@@ -49,32 +67,34 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Projects */}
+      <StatsSection />
+
+      {/* Services Bento Grid */}
       <section className="py-20 md:py-28 px-6 md:px-10">
         <div className="max-w-[1400px] mx-auto">
           <div className="flex justify-between items-end mb-12">
             <div>
-              <p className="text-muted-foreground text-xs tracking-[0.15em] mb-3">//Featured Work</p>
-              <h2 className="text-2xl md:text-3xl font-medium">Selected Projects</h2>
+              <p className="text-muted-foreground text-xs tracking-[0.15em] mb-3">//What We Do</p>
+              <h2 className="text-2xl md:text-3xl font-medium">Our Services</h2>
             </div>
             <Link
-              href="/work"
+              href="/services"
               className="hidden md:flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              View All
+              View All Services
               <ArrowUpRight className="w-4 h-4" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
-            {featuredProjects.map((project, index) => (
-              <ProjectCard key={project.id} project={project} index={index} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 auto-rows-[minmax(300px,auto)]">
+            {services.map((service, index) => (
+              <ServiceBentoCard key={service.id} service={service} index={index} />
             ))}
           </div>
 
           <div className="mt-10 md:hidden">
-            <Link href="/work" className="flex items-center gap-2 text-sm font-medium">
-              View All Projects
+            <Link href="/services" className="flex items-center gap-2 text-sm font-medium">
+              View All Services
               <ArrowUpRight className="w-4 h-4" />
             </Link>
           </div>
@@ -101,12 +121,14 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-6 md:gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {[
-                { label: "Corporate", items: ["Events", "Launches", "Activations"] },
-                { label: "Television", items: ["Entertainment", "Awards", "Factual"] },
+                { label: "Corporate", items: ["Galas & Awards", "Product Launches", "Conferences"] },
+                { label: "Television & Film", items: ["Feature Films", "Reality TV", "Documentaries"] },
+                { label: "Music", items: ["Concerts & Tours", "Festivals", "Classical"] },
+                { label: "Rigging Services", items: ["Stage Rigging", "Automation", "Special Effects"] },
+                { label: "Major Events", items: ["Sports Events", "Public Events", "Ceremonies"] },
                 { label: "Theatre", items: ["West End", "Touring", "Regional"] },
-                { label: "Technical", items: ["Audio", "Lighting", "Staging"] },
               ].map((service) => (
                 <div key={service.label}>
                   <h3 className="text-base font-medium mb-2">{service.label}</h3>
@@ -281,7 +303,7 @@ function StatementReveal() {
   )
 }
 
-function ProjectCard({ project, index }: { project: (typeof featuredProjects)[0]; index: number }) {
+function ServiceBentoCard({ service, index }: { service: (typeof services)[0]; index: number }) {
   const [isVisible, setIsVisible] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -298,38 +320,38 @@ function ProjectCard({ project, index }: { project: (typeof featuredProjects)[0]
 
   return (
     <Link
-      href={`/work/${project.id}`}
+      href={`/services#${service.title.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "and").replace(/,/g, "").replace(/\s*,\s*/g, "-")}`}
       ref={ref}
-      className={`group relative block transition-all duration-700 ${
+      className={`group relative block h-full min-h-[300px] md:min-h-[350px] overflow-hidden rounded-xl transition-all duration-700 ${
         isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-      }`}
+      } ${service.span} w-full`}
       style={{ transitionDelay: `${index * 0.1}s` }}
     >
-      {/* Hover preview "file" layer */}
-      <div
-        className="pointer-events-none absolute inset-2 rounded-xl shadow-lg opacity-0 scale-95 blur-sm transition-all duration-500 group-hover:opacity-80 group-hover:scale-100 group-hover:blur-0"
-        style={{
-          backgroundImage: `url(${project.image || "/placeholder.svg"})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          zIndex: 0,
-        }}
-        aria-hidden
-      />
-
-      <div className="relative overflow-hidden aspect-[4/3] mb-4 bg-muted rounded-xl">
+      {/* Background Image */}
+      <div className="absolute inset-0">
         <img
-          src={project.image || "/placeholder.svg"}
-          alt={project.title}
-          className="w-full h-full object-cover img-scale relative z-10"
+          src={service.image || "/placeholder.svg"}
+          alt={service.title}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 z-10" />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20 group-hover:from-black/70 group-hover:via-black/30 group-hover:to-black/10 transition-all duration-500" />
       </div>
 
-      <div>
-        <p className="text-xs text-muted-foreground mb-1">{project.category}</p>
-        <h3 className="text-base font-medium group-hover:text-muted-foreground transition-colors">{project.title}</h3>
+      {/* Content Overlay */}
+      <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-8">
+        <div className="relative z-10">
+          <p className="text-xs md:text-sm text-white/80 dark:text-white/80 tracking-[0.15em] uppercase mb-2">
+            {service.eventType}
+          </p>
+          <h3 className="text-xl md:text-2xl lg:text-3xl font-medium text-white dark:text-white leading-tight">
+            {service.title}
+          </h3>
+        </div>
       </div>
+
+      {/* Hover Effect Border */}
+      <div className="absolute inset-0 border-2 border-transparent group-hover:border-white/20 rounded-xl transition-all duration-500 pointer-events-none" />
     </Link>
   )
 }
