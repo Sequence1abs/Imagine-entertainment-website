@@ -1,16 +1,36 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 
 export default function Hero() {
-  const [isVisible, setIsVisible] = useState(true)
+  const [isVisible, setIsVisible] = useState(false)
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (video) {
+      const handleLoadedData = () => {
+        setIsVideoLoaded(true)
+      }
+      video.addEventListener("loadeddata", handleLoadedData)
+      return () => {
+        video.removeEventListener("loadeddata", handleLoadedData)
+      }
+    }
+  }, [])
 
   return (
-    <section className="relative min-h-screen bg-[#0a1f1a] text-white overflow-hidden">
+    <section className="relative min-h-screen bg-[#0a1f1a] text-white overflow-hidden flex items-center">
       {/* Background Video with Overlay */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 w-full h-full">
         <video
-          className="w-full h-full min-h-screen object-cover"
+          ref={videoRef}
+          className="absolute inset-0 w-full h-full object-cover"
           src="/images/Imagine Entertainment Commercial 30 Sec.mp4"
           autoPlay
           loop
@@ -20,12 +40,12 @@ export default function Hero() {
           poster="/dramatic-stage-lighting-corporate-event-dark-green.jpg"
           aria-label="Imagine Entertainment showreel"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1f1a]/70 via-[#0a1f1a]/50 to-transparent" />
-        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1f1a]/80 via-[#0a1f1a]/60 to-[#0a1f1a]/40" />
+        <div className="absolute inset-0 bg-black/20" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-32 lg:pt-40">
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-10 lg:px-12 py-20 md:py-32">
         <div className="max-w-3xl">
           <p
             className={`text-xs tracking-[0.3em] text-white/60 mb-6 transition-all duration-700 ${

@@ -67,8 +67,6 @@ export default function Home() {
         </div>
       </section>
 
-      <StatsSection />
-
       {/* Services Bento Grid */}
       <section className="py-20 md:py-28 px-6 md:px-10">
         <div className="max-w-[1400px] mx-auto">

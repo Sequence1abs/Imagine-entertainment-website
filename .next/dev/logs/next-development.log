@@ -4560,3 +4560,15 @@ It can also happen if the client has a browser extension installed which messes 
 [00:44:49.873] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/services#corporate-events color: rgb(120, 120, 120) color: inherit {"dp":"/services","o":"http://localhost:3000/services#corporate-events","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1766048761164}
 [00:44:58.432] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/work color: rgb(120, 120, 120) color: inherit {"dp":"/work","o":"http://localhost:3000/work","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1766048769721}
 [00:45:00.623] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1766048771914}
+[00:49:38.118] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/services#corporate-events color: rgb(120, 120, 120) color: inherit {"dp":"/services","o":"http://localhost:3000/services#corporate-events","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1766049049409}
+[00:49:46.036] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/work color: rgb(120, 120, 120) color: inherit {"dp":"/work","o":"http://localhost:3000/work","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1766049057328}
+[00:49:49.734] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1766049061027}
+[00:50:38.015] Server  LOG      ✓ Compiled in 105ms
+[00:50:54.846] Server  LOG      ✓ Compiled in 106ms
+[00:50:59.309] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/services#corporate-events color: rgb(120, 120, 120) color: inherit {"dp":"/services","o":"http://localhost:3000/services#corporate-events","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1766049130602}
+[00:51:01.018] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1766049132315}
+[00:51:22.992] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/work color: rgb(120, 120, 120) color: inherit {"dp":"/work","o":"http://localhost:3000/work","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1766049154285}
+[00:51:26.562] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1766049157856}
+[00:52:23.886] Server  LOG      ✓ Compiled in 184ms
+[00:53:20.091] Server  LOG      ✓ Compiled in 143ms
+[00:53:22.036] Server  LOG      ✓ Compiled in 135ms
