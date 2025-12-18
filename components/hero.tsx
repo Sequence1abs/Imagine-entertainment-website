@@ -7,14 +7,21 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen bg-[#0a1f1a] text-white overflow-hidden">
-      {/* Background Image with Overlay */}
+      {/* Background Video with Overlay */}
       <div className="absolute inset-0">
-        <img
-          src="/dramatic-stage-lighting-corporate-event-dark-green.jpg"
-          alt="Event Production"
-          className="w-full h-full object-cover opacity-60"
+        <video
+          className="w-full h-full min-h-screen object-cover"
+          src="/images/Imagine Entertainment Commercial 30 Sec.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          poster="/dramatic-stage-lighting-corporate-event-dark-green.jpg"
+          aria-label="Imagine Entertainment showreel"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1f1a]/90 via-[#0a1f1a]/70 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1f1a]/70 via-[#0a1f1a]/50 to-transparent" />
+        <div className="absolute inset-0 bg-black/30" />
       </div>
 
       {/* Content */}
@@ -30,21 +37,21 @@ export default function Hero() {
 
           <h1 className="mb-8">
             <span
-              className={`block text-4xl md:text-5xl lg:text-6xl font-medium leading-tight transition-all duration-700 delay-100 ${
+              className={`block text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight transition-all duration-700 delay-100 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               }`}
             >
               We Create Extraordinary
             </span>
             <span
-              className={`block text-4xl md:text-5xl lg:text-6xl font-medium leading-tight transition-all duration-700 delay-200 ${
+              className={`block text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight transition-all duration-700 delay-200 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               }`}
             >
               Experiences <span className="font-serif italic text-white/80">For</span> Corporate
             </span>
             <span
-              className={`block text-4xl md:text-5xl lg:text-6xl font-medium leading-tight transition-all duration-700 delay-300 ${
+              className={`block text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight transition-all duration-700 delay-300 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               }`}
             >

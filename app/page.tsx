@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import { ArrowRight, ArrowUpRight, ArrowDown } from "lucide-react"
+import Hero from "@/components/hero"
 import ClientsMarquee from "@/components/clients-marquee"
 import Testimonials from "@/components/testimonials"
 import Footer from "@/components/footer"
@@ -35,76 +36,11 @@ const featuredProjects = [
 ]
 
 export default function Home() {
-  const [isLoaded, setIsLoaded] = useState(true)
-  const [isMounted, setIsMounted] = useState(false)
-
-  useEffect(() => {
-    setIsMounted(true)
-    const timer = setTimeout(() => setIsLoaded(true), 100)
-    return () => clearTimeout(timer)
-  }, [])
 
   return (
     <main className="min-h-screen bg-background" suppressHydrationWarning>
       {/* Hero Section */}
-      <section
-        className="relative min-h-screen flex items-center overflow-hidden bg-foreground dark:bg-black"
-        suppressHydrationWarning
-      >
-        {/* Background Image */}
-        <div className="absolute inset-0" suppressHydrationWarning>
-          <video
-            className="w-full h-full min-h-[80vh] object-cover opacity-70 dark:opacity-70"
-            src="/images/Imagine Entertainment Commercial 30 Sec.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            poster="/dramatic-stage-lighting-corporate-event-dark-green.jpg"
-            aria-label="Imagine Entertainment showreel"
-          />
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-foreground/60 via-foreground/50 to-foreground/30 dark:from-black/80 dark:via-black/60 dark:to-transparent"
-            suppressHydrationWarning
-          />
-          <div className="absolute inset-0 bg-black/30 dark:bg-black/50" suppressHydrationWarning />
-        </div>
-
-        {/* Content */}
-        {/* Hero content intentionally minimal (video focus) */}
-
-        {/* Client logos at bottom */}
-        <div
-          className={`absolute bottom-8 left-0 right-0 transition-all duration-700 ${
-            isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-          }`}
-          style={{ transitionDelay: "0.9s" }}
-          suppressHydrationWarning
-        >
-          <div className="max-w-[1400px] mx-auto px-6 md:px-10">
-            <div className="flex items-center gap-8 md:gap-12 overflow-hidden">
-              {["BBC", "Netflix", "Sky", "ITV", "Live Nation", "AEG"].map((client) => (
-                <span key={client} className="text-xs tracking-wider text-white/60 dark:text-white/60 whitespace-nowrap">
-                  {client}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Scroll down indicator */}
-        <div className="absolute bottom-6 left-0 right-0 flex justify-center" suppressHydrationWarning>
-          <a
-            href="#philosophy"
-            className="flex items-center gap-2 text-white/80 dark:text-white/80 text-xs tracking-[0.2em] uppercase transition-opacity hover:opacity-70"
-            aria-label="Scroll down"
-          >
-            Scroll Down
-            <ArrowDown className="w-4 h-4 animate-bounce" />
-          </a>
-        </div>
-      </section>
+      <Hero />
 
       {/* Philosophy section */}
       <section id="philosophy" className="py-24 md:py-32 px-6 md:px-10">
