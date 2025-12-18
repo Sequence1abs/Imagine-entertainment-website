@@ -23,7 +23,7 @@ export function ThemeToggle({ iconColor = "foreground" }: ThemeToggleProps) {
   if (!mounted) {
     return (
       <button
-        className="relative h-9 w-9 flex items-center justify-center transition-all duration-300 hover:opacity-70"
+        className="relative h-9 w-9 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20"
         aria-label="Toggle theme"
       >
         <Sun className={`h-4 w-4 ${iconClass}`} />
@@ -34,7 +34,7 @@ export function ThemeToggle({ iconColor = "foreground" }: ThemeToggleProps) {
   return (
     <button
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="relative h-9 w-9 flex items-center justify-center transition-all duration-300 hover:opacity-70 hover:scale-105 active:scale-95"
+      className="relative h-9 w-9 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:scale-105 active:scale-95"
       aria-label="Toggle theme"
     >
       <Sun className={`h-4 w-4 ${iconClass} rotate-0 scale-100 transition-all duration-500 dark:-rotate-90 dark:scale-0 dark:opacity-0 absolute`} />

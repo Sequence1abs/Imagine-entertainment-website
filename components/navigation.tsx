@@ -137,9 +137,7 @@ export default function Navigation() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          mounted && scrolled ? "bg-background/95 backdrop-blur-md" : "bg-transparent"
-        }`}
+        className="fixed top-0 left-0 right-0 z-50 bg-transparent transition-all duration-500"
         suppressHydrationWarning
       >
         <div className="max-w-[1400px] mx-auto px-6 md:px-10" suppressHydrationWarning>
@@ -259,13 +257,15 @@ export default function Navigation() {
               })}
             </div>
 
-            <div className="flex items-center gap-4" suppressHydrationWarning>
+            <div className="flex items-center gap-3" suppressHydrationWarning>
               <ThemeToggle iconColor={themeToggleColor} />
               
               <Link
                 href="/contact"
-                className={`hidden lg:flex items-center gap-2 text-sm font-medium transition-colors duration-300 ${
-                  scrolled ? "text-foreground" : isDarkPage ? "text-white" : "text-foreground"
+                className={`hidden lg:flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                  isDarkPage
+                    ? "bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20"
+                    : "bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20"
                 }`}
               >
                 Talk to Us
