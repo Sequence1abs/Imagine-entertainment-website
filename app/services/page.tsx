@@ -159,10 +159,13 @@ function ServiceCard({ service, index }: { service: (typeof services)[0]; index:
     return () => observer.disconnect()
   }, [])
 
+  const serviceId = service.title.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "and")
+
   return (
     <div
+      id={serviceId}
       ref={ref}
-      className={`grid lg:grid-cols-2 gap-6 lg:gap-12 py-12 md:py-16 border-t border-border transition-all duration-700 ${
+      className={`grid lg:grid-cols-2 gap-6 lg:gap-12 py-12 md:py-16 border-t border-border transition-all duration-700 scroll-mt-20 ${
         isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
       }`}
     >

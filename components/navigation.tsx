@@ -3,14 +3,22 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { ArrowUpRight } from "lucide-react"
+import { ArrowUpRight, ChevronDown } from "lucide-react"
 import { useTheme } from "next-themes"
 import { ThemeToggle } from "@/components/theme-toggle"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu"
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [servicesOpen, setServicesOpen] = useState(false)
   const pathname = usePathname()
   const { theme, resolvedTheme } = useTheme()
 
@@ -36,9 +44,15 @@ export default function Navigation() {
 
   const menuItems = [
     { label: "Work", href: "/work" },
-    { label: "Services", href: "/services" },
+    { label: "Services", href: "/services", hasDropdown: true },
     { label: "About", href: "/about" },
     { label: "Gallery", href: "/gallery" },
+  ]
+
+  const servicesItems = [
+    { label: "Corporate Events", href: "/services#corporate-events" },
+    { label: "Television & Film", href: "/services#television-and-film" },
+    { label: "Theatre Production", href: "/services#theatre-production" },
   ]
 
   const isDarkPage = pathname === "/" || pathname === "/about"
@@ -115,27 +129,85 @@ export default function Navigation() {
             </Link>
 
             <div className="hidden lg:flex items-center gap-12" suppressHydrationWarning>
-              {menuItems.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className={`text-sm font-medium transition-colors duration-300 ${
-                    pathname === item.href
-                      ? scrolled
-                        ? "text-foreground"
-                        : isDarkPage
-                          ? "text-white"
-                          : "text-foreground"
-                      : scrolled
-                        ? "text-muted-foreground hover:text-foreground"
-                        : isDarkPage
-                          ? "text-white/70 hover:text-white"
-                          : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {menuItems.map((item) => {
+                if (item.hasDropdown) {
+                  return (
+                    <DropdownMenu key={item.label} onOpenChange={setServicesOpen}>
+                      <DropdownMenuTrigger asChild>
+                        <button
+                          className={`text-sm font-medium transition-colors duration-300 flex items-center gap-1 ${
+                            pathname === item.href || pathname.startsWith("/services")
+                              ? scrolled
+                                ? "text-foreground"
+                                : isDarkPage
+                                  ? "text-white"
+                                  : "text-foreground"
+                              : scrolled
+                                ? "text-muted-foreground hover:text-foreground"
+                                : isDarkPage
+                                  ? "text-white/70 hover:text-white"
+                                  : "text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          {item.label}
+                          <ChevronDown
+                            className={`w-3 h-3 transition-transform duration-200 ${
+                              servicesOpen ? "rotate-180" : ""
+                            }`}
+                          />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        align="start"
+                        className="w-56 bg-background border-border"
+                      >
+                        {servicesItems.map((service) => (
+                          <DropdownMenuItem key={service.label} asChild>
+                            <Link
+                              href={service.href}
+                              className="cursor-pointer"
+                              onClick={() => setServicesOpen(false)}
+                            >
+                              {service.label}
+                            </Link>
+                          </DropdownMenuItem>
+                        ))}
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href="/services"
+                            className="cursor-pointer font-medium"
+                            onClick={() => setServicesOpen(false)}
+                          >
+                            View All Services
+                          </Link>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )
+                }
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className={`text-sm font-medium transition-colors duration-300 ${
+                      pathname === item.href
+                        ? scrolled
+                          ? "text-foreground"
+                          : isDarkPage
+                            ? "text-white"
+                            : "text-foreground"
+                        : scrolled
+                          ? "text-muted-foreground hover:text-foreground"
+                          : isDarkPage
+                            ? "text-white/70 hover:text-white"
+                            : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              })}
             </div>
 
             <div className="flex items-center gap-4" suppressHydrationWarning>
@@ -186,24 +258,93 @@ export default function Navigation() {
       >
         <div className="h-full flex flex-col justify-center px-6 md:px-10" suppressHydrationWarning>
           <div className="space-y-2" suppressHydrationWarning>
-            {[...menuItems, { label: "Contact", href: "/contact" }].map((item, index) => (
-              <div
-                key={item.label}
-                className="overflow-hidden"
-                suppressHydrationWarning
-                style={{
-                  opacity: isOpen ? 1 : 0,
-                  transform: isOpen ? "translateY(0)" : "translateY(100%)",
-                  transition: `all 0.5s cubic-bezier(0.77, 0, 0.175, 1) ${isOpen ? index * 0.08 : 0}s`,
-                }}
-              >
-                <Link href={item.href} onClick={() => setIsOpen(false)} className="block py-2">
-                  <span className="text-4xl md:text-5xl font-medium text-foreground dark:text-foreground hover:opacity-60 dark:hover:opacity-80 transition-opacity duration-300">
-                    {item.label}
-                  </span>
-                </Link>
-              </div>
-            ))}
+            {menuItems.map((item, index) => {
+              if (item.hasDropdown) {
+                return (
+                  <div
+                    key={item.label}
+                    className="overflow-hidden"
+                    suppressHydrationWarning
+                    style={{
+                      opacity: isOpen ? 1 : 0,
+                      transform: isOpen ? "translateY(0)" : "translateY(100%)",
+                      transition: `all 0.5s cubic-bezier(0.77, 0, 0.175, 1) ${isOpen ? index * 0.08 : 0}s`,
+                    }}
+                  >
+                    <div className="py-2">
+                      <Link
+                        href={item.href}
+                        onClick={() => setIsOpen(false)}
+                        className="block mb-3"
+                      >
+                        <span className="text-4xl md:text-5xl font-medium text-foreground dark:text-foreground hover:opacity-60 dark:hover:opacity-80 transition-opacity duration-300">
+                          {item.label}
+                        </span>
+                      </Link>
+                      <div className="pl-4 space-y-1">
+                        {servicesItems.map((service, serviceIndex) => (
+                          <div
+                            key={service.label}
+                            className="overflow-hidden"
+                            suppressHydrationWarning
+                            style={{
+                              opacity: isOpen ? 1 : 0,
+                              transform: isOpen ? "translateY(0)" : "translateY(100%)",
+                              transition: `all 0.5s cubic-bezier(0.77, 0, 0.175, 1) ${
+                                isOpen ? index * 0.08 + (serviceIndex + 1) * 0.05 : 0
+                              }s`,
+                            }}
+                          >
+                            <Link
+                              href={service.href}
+                              onClick={() => setIsOpen(false)}
+                              className="block py-1"
+                            >
+                              <span className="text-xl md:text-2xl font-normal text-muted-foreground hover:text-foreground dark:hover:text-foreground transition-colors duration-300">
+                                {service.label}
+                              </span>
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )
+              }
+              return (
+                <div
+                  key={item.label}
+                  className="overflow-hidden"
+                  suppressHydrationWarning
+                  style={{
+                    opacity: isOpen ? 1 : 0,
+                    transform: isOpen ? "translateY(0)" : "translateY(100%)",
+                    transition: `all 0.5s cubic-bezier(0.77, 0, 0.175, 1) ${isOpen ? index * 0.08 : 0}s`,
+                  }}
+                >
+                  <Link href={item.href} onClick={() => setIsOpen(false)} className="block py-2">
+                    <span className="text-4xl md:text-5xl font-medium text-foreground dark:text-foreground hover:opacity-60 dark:hover:opacity-80 transition-opacity duration-300">
+                      {item.label}
+                    </span>
+                  </Link>
+                </div>
+              )
+            })}
+            <div
+              className="overflow-hidden"
+              suppressHydrationWarning
+              style={{
+                opacity: isOpen ? 1 : 0,
+                transform: isOpen ? "translateY(0)" : "translateY(100%)",
+                transition: `all 0.5s cubic-bezier(0.77, 0, 0.175, 1) ${isOpen ? menuItems.length * 0.08 : 0}s`,
+              }}
+            >
+              <Link href="/contact" onClick={() => setIsOpen(false)} className="block py-2">
+                <span className="text-4xl md:text-5xl font-medium text-foreground dark:text-foreground hover:opacity-60 dark:hover:opacity-80 transition-opacity duration-300">
+                  Contact
+                </span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
