@@ -194,7 +194,7 @@ export default function Navigation() {
                         <DropdownMenuContent
                           align="start"
                           sideOffset={12}
-                          className="w-64 bg-white dark:bg-background border border-border shadow-lg rounded-lg p-4 min-w-[240px]"
+                          className="w-64 bg-background/80 dark:bg-background/80 backdrop-blur-md border border-border/50 shadow-lg rounded-lg p-4 min-w-[240px]"
                           onMouseEnter={handleServicesMouseEnter}
                           onMouseLeave={handleServicesMouseLeave}
                         >
@@ -207,12 +207,9 @@ export default function Navigation() {
                               >
                                 <Link
                                   href={service.href}
-                                  className="cursor-pointer flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-muted/50 transition-colors"
+                                  className="cursor-pointer flex items-center px-3 py-2.5 rounded-md hover:bg-muted/50 transition-colors"
                                   onClick={() => setServicesOpen(false)}
                                 >
-                                  <span className="text-sm font-normal text-muted-foreground">
-                                    {service.number}
-                                  </span>
                                   <span className="text-sm font-medium text-foreground">
                                     {service.label}
                                   </span>
