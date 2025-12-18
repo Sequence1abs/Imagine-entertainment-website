@@ -43,14 +43,6 @@ export default function Navigation() {
     }
   }, [isOpen])
 
-  useEffect(() => {
-    return () => {
-      if (servicesTimeoutRef.current) {
-        clearTimeout(servicesTimeoutRef.current)
-      }
-    }
-  }, [])
-
   const menuItems = [
     { label: "Work", href: "/work" },
     { label: "Services", href: "/services", hasDropdown: true },
@@ -64,6 +56,7 @@ export default function Navigation() {
     { label: "Theatre Production", href: "/services#theatre-production" },
   ]
 
+  // Handle hover with delay to prevent flickering
   const handleServicesMouseEnter = () => {
     if (servicesTimeoutRef.current) {
       clearTimeout(servicesTimeoutRef.current)
@@ -75,8 +68,16 @@ export default function Navigation() {
   const handleServicesMouseLeave = () => {
     servicesTimeoutRef.current = setTimeout(() => {
       setServicesOpen(false)
-    }, 150) // Small delay to prevent flickering
+    }, 200) // Small delay to prevent flickering when moving between trigger and content
   }
+
+  useEffect(() => {
+    return () => {
+      if (servicesTimeoutRef.current) {
+        clearTimeout(servicesTimeoutRef.current)
+      }
+    }
+  }, [])
 
   const isDarkPage = pathname === "/" || pathname === "/about"
   const isDarkMode = mounted && (resolvedTheme === "dark" || theme === "dark")
@@ -168,7 +169,7 @@ export default function Navigation() {
                       >
                         <DropdownMenuTrigger asChild>
                           <button
-                            className={`text-sm font-medium transition-colors duration-300 flex items-center gap-1 ${
+                            className={`text-sm font-medium transition-colors duration-300 flex items-center gap-1.5 ${
                               pathname === item.href || pathname.startsWith("/services")
                                 ? scrolled
                                   ? "text-foreground"
@@ -184,7 +185,7 @@ export default function Navigation() {
                           >
                             {item.label}
                             <ChevronDown
-                              className={`w-3 h-3 transition-transform duration-200 ${
+                              className={`w-3.5 h-3.5 transition-transform duration-300 ${
                                 servicesOpen ? "rotate-180" : ""
                               }`}
                             />
@@ -192,30 +193,39 @@ export default function Navigation() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
                           align="start"
-                          sideOffset={8}
-                          className="w-56 bg-background border-border"
+                          sideOffset={12}
+                          className="w-64 bg-background/95 backdrop-blur-xl border border-border/50 shadow-lg rounded-lg p-2 min-w-[200px]"
                           onMouseEnter={handleServicesMouseEnter}
                           onMouseLeave={handleServicesMouseLeave}
                         >
-                          {servicesItems.map((service) => (
-                            <DropdownMenuItem key={service.label} asChild>
+                          {servicesItems.map((service, idx) => (
+                            <DropdownMenuItem
+                              key={service.label}
+                              asChild
+                              className="rounded-md focus:bg-accent/50 transition-colors"
+                            >
                               <Link
                                 href={service.href}
-                                className="cursor-pointer"
+                                className="cursor-pointer px-3 py-2.5 text-sm flex items-center group"
                                 onClick={() => setServicesOpen(false)}
                               >
-                                {service.label}
+                                <span className="group-hover:translate-x-1 transition-transform duration-200">
+                                  {service.label}
+                                </span>
                               </Link>
                             </DropdownMenuItem>
                           ))}
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem asChild>
+                          <DropdownMenuSeparator className="my-2 bg-border/50" />
+                          <DropdownMenuItem asChild className="rounded-md focus:bg-accent/50 transition-colors">
                             <Link
                               href="/services"
-                              className="cursor-pointer font-medium"
+                              className="cursor-pointer px-3 py-2.5 text-sm font-medium flex items-center gap-2 group"
                               onClick={() => setServicesOpen(false)}
                             >
-                              View All Services
+                              <span className="group-hover:translate-x-1 transition-transform duration-200">
+                                View All Services
+                              </span>
+                              <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                             </Link>
                           </DropdownMenuItem>
                         </DropdownMenuContent>
