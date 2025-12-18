@@ -189,6 +189,7 @@ export default function Navigation() {
               <div
                 key={item.label}
                 className="overflow-hidden"
+                suppressHydrationWarning
                 style={{
                   opacity: isOpen ? 1 : 0,
                   transform: isOpen ? "translateY(0)" : "translateY(100%)",
