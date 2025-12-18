@@ -205,13 +205,13 @@ export default function GalleryPage() {
             {!hasMore && masonryItems.length > 0 && (
               <div className="flex items-center justify-center py-8">
                 <p className="text-muted-foreground text-sm">All images loaded</p>
-              </div>
+            </div>
             )}
           </>
         ) : (
           <div className="min-h-[600px] flex items-center justify-center">
             <p className="text-muted-foreground">No images found in the gallery.</p>
-          </div>
+        </div>
         )}
       </section>
     </main>

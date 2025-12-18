@@ -8,13 +8,13 @@ export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null)
 
   return (
-    <section className="relative h-screen bg-black dark:bg-black overflow-hidden">
+    <section className="relative min-h-screen h-[100dvh] bg-black dark:bg-black overflow-hidden">
       {/* Background Video */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
         <video
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover scale-[1.3]"
-          src="/images/Imagine Entertainment Commercial 30 Sec.mp4"
+          src="/Imagine Entertainment Commercial 30 Sec.mp4"
           autoPlay
           loop
           muted
@@ -28,16 +28,16 @@ export default function Hero() {
       </div>
 
       {/* Content Overlay - Bottom Section */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 px-4 sm:px-6 md:px-10 lg:px-12 pb-12 sm:pb-6 md:pb-8 lg:pb-13">
+      <div className="absolute bottom-0 left-0 right-0 z-10 px-4 sm:px-6 md:px-10 lg:px-12 pb-12 sm:pb-6 md:pb-8 lg:pb-13 hero-content-bottom">
         <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row items-start md:items-end justify-between gap-4 sm:gap-6 md:gap-8">
           {/* Left Side - Text */}
           <div className="text-white flex-1 w-full md:w-auto">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-1 sm:mb-0.5 text-white leading-tight">
-              IMAGINE ENTERTAINMENT
-            </h1>
+            IMAGINE ENTERTAINMENT
+          </h1>
             <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white/90 max-w-2xl leading-relaxed mt-1 sm:mt-0">
               Sri Lanka's premier destination for immersive production and creative storytelling.
-            </p>
+          </p>
           </div>
 
           {/* Right Side - Button */}

@@ -16,6 +16,12 @@ export const metadata: Metadata = {
   description:
     "Full-service event production for corporate events, television, film, and theatre. We create extraordinary experiences that captivate audiences worldwide.",
   generator: "v0.app",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  },
   icons: {
     icon: [
       { url: "/Imagine Logo White Alpha.png", type: "image/png" },

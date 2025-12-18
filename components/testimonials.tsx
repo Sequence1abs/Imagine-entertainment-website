@@ -88,86 +88,86 @@ export default function Testimonials() {
     >
       <div className="max-w-[1400px] mx-auto px-6 md:px-10">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-16">
-            {/* Left column - title and nav */}
-            <div className="lg:col-span-4">
-              <div
-                className={`transition-all duration-700 ${
-                  isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-                }`}
-              >
-                <p className="text-muted-foreground text-xs tracking-[0.2em] mb-4">//Testimonials</p>
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-8">
-                  What Our
-                  <br />
-                  <span className="italic font-normal text-muted-foreground">Clients Say</span>
-                </h2>
+          {/* Left column - title and nav */}
+          <div className="lg:col-span-4">
+            <div
+              className={`transition-all duration-700 ${
+                isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+              }`}
+            >
+              <p className="text-muted-foreground text-xs tracking-[0.2em] mb-4">//Testimonials</p>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-8">
+                What Our
+                <br />
+                <span className="italic font-normal text-muted-foreground">Clients Say</span>
+              </h2>
 
-                {/* Navigation */}
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={prevTestimonial}
-                    className="w-10 h-10 rounded-full border border-border bg-background flex items-center justify-center hover:bg-foreground hover:text-background hover:border-foreground transition-all duration-300"
-                    aria-label="Previous testimonial"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={nextTestimonial}
-                    className="w-10 h-10 rounded-full border border-border bg-background flex items-center justify-center hover:bg-foreground hover:text-background hover:border-foreground transition-all duration-300"
-                    aria-label="Next testimonial"
-                  >
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                  <span className="text-sm text-muted-foreground ml-3 font-mono">
-                    {String(activeIndex + 1).padStart(2, "0")} / {String(testimonials.length).padStart(2, "0")}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right column - testimonial content */}
-            <div className="lg:col-span-8">
-              <div
-                className={`relative transition-all duration-700 ${
-                  isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-                }`}
-                style={{ transitionDelay: "0.15s" }}
-              >
-                {testimonials.map((testimonial, index) => (
-                  <div
-                    key={index}
-                    className={`transition-all duration-500 ${
-                      index === activeIndex
-                        ? "opacity-100 translate-y-0 pointer-events-auto"
-                        : "opacity-0 translate-y-4 absolute inset-0 pointer-events-none"
-                    }`}
-                  >
-                    <blockquote className="text-xl md:text-2xl lg:text-3xl font-medium leading-relaxed mb-8 text-foreground">
-                      {testimonial.quote}
-                    </blockquote>
-
-                    <div className="flex items-center gap-4 pt-6 border-t border-border">
-                      <div className="w-12 h-12 rounded-full bg-foreground text-background flex items-center justify-center flex-shrink-0">
-                        <span className="text-sm font-medium">
-                          {testimonial.author
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="font-medium text-base mb-0.5">{testimonial.author}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {testimonial.role}, {testimonial.company}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+              {/* Navigation */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={prevTestimonial}
+                  className="w-10 h-10 rounded-full border border-border bg-background flex items-center justify-center hover:bg-foreground hover:text-background hover:border-foreground transition-all duration-300"
+                  aria-label="Previous testimonial"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={nextTestimonial}
+                  className="w-10 h-10 rounded-full border border-border bg-background flex items-center justify-center hover:bg-foreground hover:text-background hover:border-foreground transition-all duration-300"
+                  aria-label="Next testimonial"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+                <span className="text-sm text-muted-foreground ml-3 font-mono">
+                  {String(activeIndex + 1).padStart(2, "0")} / {String(testimonials.length).padStart(2, "0")}
+                </span>
               </div>
             </div>
           </div>
+
+          {/* Right column - testimonial content */}
+          <div className="lg:col-span-8">
+            <div
+              className={`relative transition-all duration-700 ${
+                isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+              }`}
+              style={{ transitionDelay: "0.15s" }}
+            >
+              {testimonials.map((testimonial, index) => (
+                <div
+                  key={index}
+                  className={`transition-all duration-500 ${
+                    index === activeIndex
+                      ? "opacity-100 translate-y-0 pointer-events-auto"
+                      : "opacity-0 translate-y-4 absolute inset-0 pointer-events-none"
+                  }`}
+                >
+                  <blockquote className="text-xl md:text-2xl lg:text-3xl font-medium leading-relaxed mb-8 text-foreground">
+                    {testimonial.quote}
+                  </blockquote>
+
+                  <div className="flex items-center gap-4 pt-6 border-t border-border">
+                    <div className="w-12 h-12 rounded-full bg-foreground text-background flex items-center justify-center flex-shrink-0">
+                      <span className="text-sm font-medium">
+                        {testimonial.author
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-base mb-0.5">{testimonial.author}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {testimonial.role}, {testimonial.company}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
+      </div>
     </section>
   )
 }

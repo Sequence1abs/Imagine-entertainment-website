@@ -89,6 +89,8 @@ export default function Navigation() {
   const isDarkPage = pathname === "/" || pathname === "/about"
   const isDarkMode = mounted && (resolvedTheme === "dark" || theme === "dark")
   const isHeroPage = pathname === "/"
+  // Pages with hero sections (images/videos at the top): home page, about page, and work detail pages
+  const hasHeroSection = pathname === "/" || pathname === "/about" || pathname.startsWith("/work/")
   
   // Determine which logo to show
   const getLogoSource = () => {
@@ -102,6 +104,8 @@ export default function Navigation() {
     if (scrolled) {
       return isDarkMode ? "/Imagine Logo White Alpha.png" : "/Imagine Logo Black Alpha.png"
     }
+    // On work detail page with hero image: show white logo when not scrolled
+    if (pathname.startsWith("/work/") && !scrolled) return "/Imagine Logo White Alpha.png"
     // If on dark page, show white logo
     if (isDarkPage) return "/Imagine Logo White Alpha.png"
     // Otherwise use theme-based logo
@@ -116,6 +120,8 @@ export default function Navigation() {
     }
     // On hero page: white when not scrolled, dark when scrolled
     if (isHeroPage) return scrolled ? "text-foreground" : "text-white"
+    // On work detail page with hero image: white when not scrolled
+    if (pathname.startsWith("/work/") && !scrolled) return "text-white"
     // If scrolled, use theme-based color
     if (scrolled) return "text-foreground"
     // If on dark page, use white
@@ -128,8 +134,14 @@ export default function Navigation() {
   const getThemeToggleColor = () => {
     // When menu is open, use foreground color (visible on menu overlay background)
     if (isOpen) return "foreground"
+    // On hero page: white when not scrolled
+    if (isHeroPage && !scrolled) return "white"
+    // On work detail page with hero image: white when not scrolled
+    if (pathname.startsWith("/work/") && !scrolled) return "white"
     // If on dark page, use white
-    if (isDarkPage) return "white"
+    if (isDarkPage && !scrolled) return "white"
+    // If scrolled, use theme-based color
+    if (scrolled) return isDarkMode ? "white" : "foreground"
     // Otherwise use foreground (consistent regardless of scroll)
     return "foreground"
   }
@@ -186,12 +198,12 @@ export default function Navigation() {
                               pathname === item.href || pathname.startsWith("/services")
                                 ? scrolled
                                   ? "text-foreground"
-                                  : isDarkPage
+                                  : isDarkPage || (pathname.startsWith("/work/") && !scrolled)
                                     ? "text-white"
                                     : "text-foreground"
                                 : scrolled
                                   ? "text-muted-foreground hover:text-foreground"
-                                  : isDarkPage
+                                  : isDarkPage || (pathname.startsWith("/work/") && !scrolled)
                                     ? "text-white/70 hover:text-white"
                                     : "text-muted-foreground hover:text-foreground"
                             }`}
@@ -256,12 +268,12 @@ export default function Navigation() {
                       pathname === item.href
                         ? scrolled
                           ? "text-foreground"
-                          : isDarkPage
+                          : isDarkPage || (pathname.startsWith("/work/") && !scrolled)
                             ? "text-white"
                             : "text-foreground"
                         : scrolled
                           ? "text-muted-foreground hover:text-foreground"
-                          : isDarkPage
+                          : isDarkPage || (pathname.startsWith("/work/") && !scrolled)
                             ? "text-white/70 hover:text-white"
                             : "text-muted-foreground hover:text-foreground"
                     }`}
@@ -283,13 +295,11 @@ export default function Navigation() {
               <Link
                 href="/contact"
                 className={`hidden lg:flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 flex-shrink-0 ${
-                  scrolled
+                  scrolled || !hasHeroSection
                     ? isDarkMode
                       ? "bg-white text-black hover:bg-white/90 border border-white"
                       : "bg-black text-white hover:bg-black/90 border border-black"
-                    : isDarkPage
-                      ? "bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20"
-                      : "bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20"
+                    : "bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20"
                 }`}
               >
                 Talk to Us

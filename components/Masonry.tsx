@@ -154,7 +154,7 @@ const Masonry: React.FC<MasonryProps> = ({
       
       // Get current y position for this column
       const y = colHeights[col];
-      
+
       // Update column height (add item height + gap for next item)
       colHeights[col] += height + gap;
 
@@ -187,7 +187,7 @@ const Masonry: React.FC<MasonryProps> = ({
 
     // Wait a frame to ensure all refs are set
     requestAnimationFrame(() => {
-      grid.forEach((item, index) => {
+    grid.forEach((item, index) => {
         const element = itemRefs.current.get(item.id);
         if (!element) return;
 
@@ -230,9 +230,9 @@ const Masonry: React.FC<MasonryProps> = ({
           overwrite: 'auto'
         });
       }
-      });
+    });
 
-      hasMounted.current = true;
+    hasMounted.current = true;
     });
   }, [grid, imagesReady, stagger, animateFrom, blurToFocus, duration, ease]);
 

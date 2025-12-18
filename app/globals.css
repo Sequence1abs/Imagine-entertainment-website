@@ -163,6 +163,13 @@ body {
   overflow-x: hidden;
 }
 
+/* Mobile safe area inset for hero content - only applies on small screens */
+@media (max-width: 640px) {
+  .hero-content-bottom {
+    padding-bottom: max(3rem, env(safe-area-inset-bottom, 0px) + 1.5rem);
+  }
+}
+
 /* Prevent layout shifts */
 nav {
   contain: layout style paint;
