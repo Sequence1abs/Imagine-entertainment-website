@@ -4572,3 +4572,8 @@ It can also happen if the client has a browser extension installed which messes 
 [00:52:23.886] Server  LOG      ✓ Compiled in 184ms
 [00:53:20.091] Server  LOG      ✓ Compiled in 143ms
 [00:53:22.036] Server  LOG      ✓ Compiled in 135ms
+[00:55:45.225] Server  LOG      ✓ Compiled in 267ms
+[00:56:01.000] Server  LOG      ✓ Compiled in 71ms
+[00:56:47.187] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/services#corporate-events color: rgb(120, 120, 120) color: inherit {"dp":"/services","o":"http://localhost:3000/services#corporate-events","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1766049478475}
+[00:56:50.129] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/work color: rgb(120, 120, 120) color: inherit {"dp":"/work","o":"http://localhost:3000/work","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1766049481413}
+[00:56:51.571] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1766049482853}
