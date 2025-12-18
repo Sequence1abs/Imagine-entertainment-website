@@ -38,6 +38,7 @@ export default function Navigation() {
     { label: "Work", href: "/work" },
     { label: "Services", href: "/services" },
     { label: "About", href: "/about" },
+    { label: "Gallery", href: "/gallery" },
   ]
 
   const isDarkPage = pathname === "/" || pathname === "/about"

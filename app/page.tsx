@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
-import { ArrowRight, ArrowUpRight } from "lucide-react"
+import { ArrowRight, ArrowUpRight, ArrowDown } from "lucide-react"
 import ClientsMarquee from "@/components/clients-marquee"
 import Testimonials from "@/components/testimonials"
 import Footer from "@/components/footer"
@@ -47,11 +47,14 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-background" suppressHydrationWarning>
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center overflow-hidden bg-foreground dark:bg-black">
+      <section
+        className="relative min-h-screen flex items-center overflow-hidden bg-foreground dark:bg-black"
+        suppressHydrationWarning
+      >
         {/* Background Image */}
-        <div className="absolute inset-0">
+        <div className="absolute inset-0" suppressHydrationWarning>
           <video
-            className="w-full h-full object-cover opacity-70 dark:opacity-70"
+            className="w-full h-full min-h-[80vh] object-cover opacity-70 dark:opacity-70"
             src="/images/Imagine Entertainment Commercial 30 Sec.mp4"
             autoPlay
             loop
@@ -61,80 +64,15 @@ export default function Home() {
             poster="/dramatic-stage-lighting-corporate-event-dark-green.jpg"
             aria-label="Imagine Entertainment showreel"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-foreground/60 via-foreground/50 to-foreground/30 dark:from-black/80 dark:via-black/60 dark:to-transparent" />
-          <div className="absolute inset-0 bg-black/30 dark:bg-black/50" />
+          <div
+            className="absolute inset-0 bg-gradient-to-br from-foreground/60 via-foreground/50 to-foreground/30 dark:from-black/80 dark:via-black/60 dark:to-transparent"
+            suppressHydrationWarning
+          />
+          <div className="absolute inset-0 bg-black/30 dark:bg-black/50" suppressHydrationWarning />
         </div>
 
         {/* Content */}
-        <div className="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-10 py-32 md:py-40">
-          <div className="max-w-3xl">
-            <div className="overflow-hidden mb-6">
-              <p
-                className={`text-white/80 dark:text-white/80 text-xs tracking-[0.3em] transition-all duration-700 ${
-                  isLoaded ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
-                }`}
-                style={{ transitionDelay: "0.2s" }}
-              >
-                IMAGINE ENTERTAINMENT
-              </p>
-            </div>
-
-            <h1>
-              <div className="overflow-hidden">
-                <span
-                  className={`block text-5xl md:text-7xl lg:text-8xl font-medium leading-[1] tracking-tight text-white dark:text-white transition-all duration-700 ${
-                    isLoaded ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
-                  }`}
-                  style={{ transitionDelay: "0.3s" }}
-                >
-                  We Create
-                </span>
-              </div>
-              <div className="overflow-hidden mt-1">
-                <span
-                  className={`block text-5xl md:text-7xl lg:text-8xl font-medium leading-[1] tracking-tight transition-all duration-700 ${
-                    isLoaded ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
-                  }`}
-                  style={{ transitionDelay: "0.4s" }}
-                >
-                  <span className="italic font-normal text-white/90 dark:text-white/90">Extraordinary</span>
-                </span>
-              </div>
-              <div className="overflow-hidden mt-1">
-                <span
-                  className={`block text-5xl md:text-7xl lg:text-8xl font-medium leading-[1] tracking-tight text-white dark:text-white transition-all duration-700 ${
-                    isLoaded ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
-                  }`}
-                  style={{ transitionDelay: "0.5s" }}
-                >
-                  Experiences
-                </span>
-              </div>
-            </h1>
-
-            <div
-              className={`mt-10 max-w-md transition-all duration-700 ${
-                isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-              }`}
-              style={{ transitionDelay: "0.7s" }}
-            >
-              <p className="text-white/90 dark:text-white/90 text-base md:text-lg leading-relaxed mb-8">
-                Full-service event production for corporate events, television, film, and theatre. Creating moments that
-                captivate worldwide.
-              </p>
-
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                <Link
-                  href="/work"
-                  className="inline-flex items-center gap-2 text-white/90 dark:text-white/90 text-sm hover:text-white dark:hover:text-white transition-colors"
-                >
-                  Explore Work
-                  <ArrowUpRight className="w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Hero content intentionally minimal (video focus) */}
 
         {/* Client logos at bottom */}
         <div
@@ -142,6 +80,7 @@ export default function Home() {
             isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           }`}
           style={{ transitionDelay: "0.9s" }}
+          suppressHydrationWarning
         >
           <div className="max-w-[1400px] mx-auto px-6 md:px-10">
             <div className="flex items-center gap-8 md:gap-12 overflow-hidden">
@@ -153,10 +92,22 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* Scroll down indicator */}
+        <div className="absolute bottom-6 left-0 right-0 flex justify-center" suppressHydrationWarning>
+          <a
+            href="#philosophy"
+            className="flex items-center gap-2 text-white/80 dark:text-white/80 text-xs tracking-[0.2em] uppercase transition-opacity hover:opacity-70"
+            aria-label="Scroll down"
+          >
+            Scroll Down
+            <ArrowDown className="w-4 h-4 animate-bounce" />
+          </a>
+        </div>
       </section>
 
       {/* Philosophy section */}
-      <section className="py-24 md:py-32 px-6 md:px-10">
+      <section id="philosophy" className="py-24 md:py-32 px-6 md:px-10">
         <div className="max-w-[1400px] mx-auto">
           <StatementReveal />
         </div>
@@ -181,7 +132,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-5 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
             {featuredProjects.map((project, index) => (
               <ProjectCard key={project.id} project={project} index={index} />
             ))}
@@ -413,18 +364,30 @@ function ProjectCard({ project, index }: { project: (typeof featuredProjects)[0]
     <Link
       href={`/work/${project.id}`}
       ref={ref}
-      className={`group block transition-all duration-700 ${
+      className={`group relative block transition-all duration-700 ${
         isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
       }`}
       style={{ transitionDelay: `${index * 0.1}s` }}
     >
+      {/* Hover preview "file" layer */}
+      <div
+        className="pointer-events-none absolute inset-2 rounded-xl shadow-lg opacity-0 scale-95 blur-sm transition-all duration-500 group-hover:opacity-80 group-hover:scale-100 group-hover:blur-0"
+        style={{
+          backgroundImage: `url(${project.image || "/placeholder.svg"})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          zIndex: 0,
+        }}
+        aria-hidden
+      />
+
       <div className="relative overflow-hidden aspect-[4/3] mb-4 bg-muted rounded-xl">
         <img
           src={project.image || "/placeholder.svg"}
           alt={project.title}
-          className="w-full h-full object-cover img-scale"
+          className="w-full h-full object-cover img-scale relative z-10"
         />
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500" />
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 z-10" />
       </div>
 
       <div>
