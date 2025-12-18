@@ -1,32 +1,34 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     setIsVisible(true)
   }, [])
 
-  const clients = ["BBC", "Netflix", "Sky", "ITV", "Live Nation", "AEG"]
-
   return (
     <section className="relative min-h-screen bg-white dark:bg-background overflow-hidden flex items-center">
-      {/* Circular Graphic on Right */}
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] md:w-[800px] md:h-[800px] opacity-30 dark:opacity-10 pointer-events-none">
-        <div className="absolute inset-0 rounded-full border border-gray-200 dark:border-gray-800" style={{ transform: 'scale(1)' }} />
-        <div className="absolute inset-0 rounded-full border border-gray-200 dark:border-gray-800" style={{ transform: 'scale(0.75)' }} />
-        <div className="absolute inset-0 rounded-full border border-gray-200 dark:border-gray-800" style={{ transform: 'scale(0.5)' }} />
-        <div className="absolute inset-0 rounded-full border border-gray-200 dark:border-gray-800" style={{ transform: 'scale(0.25)' }} />
-        <div 
-          className="absolute inset-0 rounded-full" 
-          style={{
-            background: 'radial-gradient(circle, rgba(255, 237, 213, 0.2) 0%, transparent 70%)'
-          }}
+      {/* Background Video */}
+      <div className="absolute inset-0 w-full h-full">
+        <video
+          ref={videoRef}
+          className="absolute inset-0 w-full h-full object-cover"
+          src="/images/Imagine Entertainment Commercial 30 Sec.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          poster="/dramatic-stage-lighting-corporate-event-dark-green.jpg"
+          aria-label="Imagine Entertainment showreel"
         />
+        <div className="absolute inset-0 dark:bg-background/40" />
       </div>
 
       {/* Content */}
@@ -91,22 +93,6 @@ export default function Hero() {
             >
               Talk to Us
             </Link>
-          </div>
-
-          {/* Client Logos */}
-          <div
-            className={`flex items-center gap-8 md:gap-12 flex-wrap transition-all duration-700 delay-500 ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            }`}
-          >
-            {clients.map((client) => (
-              <span
-                key={client}
-                className="text-xs md:text-sm tracking-wider text-gray-400 dark:text-muted-foreground font-light"
-              >
-                {client}
-              </span>
-            ))}
           </div>
         </div>
       </div>
