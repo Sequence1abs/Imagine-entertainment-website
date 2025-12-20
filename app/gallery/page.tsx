@@ -22,17 +22,25 @@ const getImageDimensions = (src: string): Promise<{ width: number; height: numbe
 }
 
 export default function GalleryPage() {
+  /* Masonry item type definition */
+  type MasonryItem = {
+    id: string
+    img: string
+    url?: string
+    height: number
+    loaded?: boolean
+  }
+
   const [allImages, setAllImages] = useState<string[]>([])
-  const [masonryItems, setMasonryItems] = useState<
-    Array<{ id: string; img: string; url?: string; height: number; loaded?: boolean }>
-  >([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const [masonryItems, setMasonryItems] = useState<MasonryItem[]>([])
+  const [initialLoaded, setInitialLoaded] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  
   const currentIndexRef = useRef(0)
   const observerTarget = useRef<HTMLDivElement>(null)
   const itemIdCounter = useRef(0)
-  const imageLoadStates = useRef<Map<string, boolean>>(new Map())
+  const processedImages = useRef<Set<string>>(new Set())
 
   // Fisher-Yates shuffle algorithm
   const shuffleArray = <T,>(array: T[]): T[] => {
@@ -44,81 +52,65 @@ export default function GalleryPage() {
     return shuffled
   }
 
-  // Preload images for faster display
-  const preloadImage = (src: string): Promise<void> => {
-    return new Promise((resolve) => {
-      const img = new Image()
-      img.onload = () => resolve()
-      img.onerror = () => resolve() // Resolve even on error to not block
-      img.src = src
-    })
+  // Generate a random height for the skeleton (to create the masonry layout effect immediately)
+  const getRandomHeight = () => {
+    const ratios = [0.75, 1, 1.25, 1.5] // 4:3, 1:1, 4:5, 2:3
+    const ratio = ratios[Math.floor(Math.random() * ratios.length)]
+    const baseWidth = 400
+    return baseWidth * ratio
   }
 
-  // Load images with dimensions - optimized for faster loading
-  const loadImageItems = useCallback(async (imageSources: string[], showPlaceholders: boolean = true) => {
-    // Load dimensions in parallel
-    const items = await Promise.all(
-      imageSources.map(async (src: string) => {
-        const dimensions = await getImageDimensions(src)
-        const aspectRatio = dimensions.height / dimensions.width
-        const baseWidth = 400
-        const calculatedHeight = baseWidth * aspectRatio
-
-        // Check if image is already loaded
-        const isLoaded = imageLoadStates.current.get(src) || false
-
-        return {
-          id: `gallery-item-${itemIdCounter.current++}-${src}`,
-          img: src,
-          height: calculatedHeight,
-          loaded: isLoaded,
+  // Load actual image dimensions and update the item
+  const updateItemDimensions = useCallback(async (item: MasonryItem) => {
+    try {
+      const dimensions = await getImageDimensions(item.img)
+      const aspectRatio = dimensions.height / dimensions.width
+      const baseWidth = 400
+      const calculatedHeight = baseWidth * aspectRatio
+      
+      setMasonryItems(prev => prev.map(p => {
+        if (p.id === item.id) {
+          return { ...p, height: calculatedHeight, loaded: true }
         }
-      })
-    )
-    
-    // Start preloading images in background and track loading state
-    imageSources.forEach((src) => {
-      if (!imageLoadStates.current.has(src)) {
-        imageLoadStates.current.set(src, false)
-        const img = new Image()
-        img.onload = () => {
-          imageLoadStates.current.set(src, true)
-          // Update the item's loaded state
-          setMasonryItems(prevItems => 
-            prevItems.map(item => 
-              item.img === src ? { ...item, loaded: true } : item
-            )
-          )
-        }
-        img.onerror = () => {
-          imageLoadStates.current.set(src, true) // Mark as "loaded" even on error to stop showing placeholder
-          setMasonryItems(prevItems => 
-            prevItems.map(item => 
-              item.img === src ? { ...item, loaded: true } : item
-            )
-          )
-        }
-        img.src = src
-      }
-    })
-    
-    return items
+        return p
+      }))
+    } catch (e) {
+      // If error, just mark as loaded so skeleton disappears (or keep default random height)
+      setMasonryItems(prev => prev.map(p => {
+        if (p.id === item.id) return { ...p, loaded: true }
+        return p
+      }))
+    }
   }, [])
+
+  // Add items with placeholder heights immediately, then load real dimensions
+  const addItems = useCallback((imageSources: string[]) => {
+    const newItems: MasonryItem[] = imageSources.map(src => ({
+      id: `gallery-item-${itemIdCounter.current++}-${src}`,
+      img: src,
+      height: getRandomHeight(), // Random height for skeleton
+      loaded: false
+    }))
+
+    setMasonryItems(prev => [...prev, ...newItems])
+
+    // Trigger dimension loading in background
+    newItems.forEach(item => {
+      updateItemDimensions(item)
+    })
+  }, [updateItemDimensions])
 
   // Initial load
   useEffect(() => {
     const loadInitialImages = async () => {
       try {
-        setIsLoading(true)
         const response = await fetch('/api/gallery')
         const data = await response.json()
         
         if (data.images && Array.isArray(data.images) && data.images.length > 0) {
-          // Ensure images are strings and filter out invalid entries
           const imageStrings: string[] = data.images.filter((img: unknown): img is string => typeof img === 'string')
           
           if (imageStrings.length > 0) {
-            // Shuffle all images
             const shuffledImages = shuffleArray(imageStrings)
             setAllImages(shuffledImages)
             
@@ -127,37 +119,31 @@ export default function GalleryPage() {
             currentIndexRef.current = INITIAL_LOAD_COUNT
             setHasMore(shuffledImages.length > INITIAL_LOAD_COUNT)
             
-            // Preload next batch in background for smoother experience
-            if (shuffledImages.length > INITIAL_LOAD_COUNT) {
-              const nextBatch = shuffledImages.slice(INITIAL_LOAD_COUNT, INITIAL_LOAD_COUNT + LOAD_MORE_COUNT)
-              nextBatch.forEach(src => {
-                const img = new Image()
-                img.src = src
-              })
-            }
-            
-            // Load dimensions for initial batch
-            const items = await loadImageItems(initialBatch)
-            setMasonryItems(items)
+            addItems(initialBatch)
+            setInitialLoaded(true)
+          } else {
+             setInitialLoaded(true)
           }
+        } else {
+          setInitialLoaded(true)
         }
       } catch (error) {
         console.error('Error loading images:', error)
-      } finally {
-        setIsLoading(false)
+        setInitialLoaded(true)
       }
     }
 
     loadInitialImages()
-  }, [loadImageItems])
+  }, [addItems])
 
   // Load more images when scrolling
-  const loadMoreImages = useCallback(async () => {
+  const loadMore = useCallback(() => {
     if (isLoadingMore || !hasMore) return
 
     setIsLoadingMore(true)
     
-    try {
+    // Small delay to prevent thrashing if observer fires too quickly
+    setTimeout(() => {
       const currentIndex = currentIndexRef.current
       const images = allImages
       
@@ -170,40 +156,30 @@ export default function GalleryPage() {
       const nextBatch = images.slice(currentIndex, currentIndex + LOAD_MORE_COUNT)
       
       if (nextBatch.length > 0) {
-        // Update index immediately to show placeholders right away
         currentIndexRef.current = currentIndex + nextBatch.length
+        addItems(nextBatch)
         setHasMore(currentIndexRef.current < images.length)
-        
-        // Load dimensions for new batch (this will show placeholders immediately)
-        const newItems = await loadImageItems(nextBatch, true)
-        setMasonryItems(prevItems => [...prevItems, ...newItems])
       } else {
         setHasMore(false)
       }
-    } catch (error) {
-      console.error('Error loading more images:', error)
-      setHasMore(false)
-    } finally {
       setIsLoadingMore(false)
-    }
-  }, [allImages, isLoadingMore, hasMore, loadImageItems])
+    }, 100)
+  }, [allImages, isLoadingMore, hasMore, addItems])
 
-  // Intersection Observer for infinite scroll
+  // Intersection Observer
   useEffect(() => {
     const currentTarget = observerTarget.current
     if (!currentTarget || !hasMore) return
 
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && hasMore && !isLoadingMore) {
-            loadMoreImages()
-          }
-        })
+        if (entries[0].isIntersecting && !isLoadingMore) {
+          loadMore()
+        }
       },
       { 
-        threshold: 0.01,
-        rootMargin: '600px' // Start loading 600px before reaching the target for faster loading
+        threshold: 0.1,
+        rootMargin: '400px' // Preload before reaching bottom
       }
     )
 
@@ -212,7 +188,7 @@ export default function GalleryPage() {
     return () => {
       observer.disconnect()
     }
-  }, [hasMore, isLoadingMore, loadMoreImages])
+  }, [hasMore, isLoadingMore, loadMore])
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -225,11 +201,11 @@ export default function GalleryPage() {
           </p>
         </div>
 
-        {isLoading ? (
+        {initialLoaded && masonryItems.length === 0 ? (
           <div className="min-h-[600px] flex items-center justify-center">
-            <p className="text-muted-foreground">Loading gallery...</p>
+            <p className="text-muted-foreground">No images found in the gallery.</p>
           </div>
-        ) : masonryItems.length > 0 ? (
+        ) : (
           <>
             <div className="min-h-[600px]">
               <Masonry
@@ -242,28 +218,22 @@ export default function GalleryPage() {
                 stagger={0.03}
               />
             </div>
-            {/* Intersection Observer target for infinite scroll */}
+            
+            {/* Observer target */}
             {hasMore && (
               <div 
                 ref={observerTarget} 
-                className="flex items-center justify-center py-8 min-h-[200px] w-full"
-                aria-label="Load more images"
-              >
-                {isLoadingMore && (
-                  <p className="text-muted-foreground">Loading more images...</p>
-                )}
-              </div>
+                className="flex items-center justify-center py-12 w-full h-20"
+                aria-hidden="true"
+              />
             )}
+            
             {!hasMore && masonryItems.length > 0 && (
               <div className="flex items-center justify-center py-8">
                 <p className="text-muted-foreground text-sm">All images loaded</p>
-            </div>
+              </div>
             )}
           </>
-        ) : (
-          <div className="min-h-[600px] flex items-center justify-center">
-            <p className="text-muted-foreground">No images found in the gallery.</p>
-        </div>
         )}
       </section>
     </main>

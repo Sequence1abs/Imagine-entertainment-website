@@ -9,11 +9,15 @@ if (typeof window !== 'undefined') {
 }
 
 const useMedia = (queries: string[], values: number[], defaultValue: number): number => {
-  const get = () => values[queries.findIndex(q => matchMedia(q).matches)] ?? defaultValue;
+  const get = () => {
+    if (typeof window === 'undefined') return defaultValue;
+    return values[queries.findIndex(q => matchMedia(q).matches)] ?? defaultValue;
+  };
 
-  const [value, setValue] = useState<number>(get);
+  const [value, setValue] = useState<number>(defaultValue);
 
   useEffect(() => {
+    setValue(get());
     const handler = () => setValue(get);
     queries.forEach(q => matchMedia(q).addEventListener('change', handler));
     return () => queries.forEach(q => matchMedia(q).removeEventListener('change', handler));
@@ -40,6 +44,7 @@ const useMeasure = <T extends HTMLElement>() => {
 };
 
 const preloadImages = async (urls: string[]): Promise<void> => {
+  if (typeof window === 'undefined') return;
   await Promise.all(
     urls.map(
       src =>
@@ -101,11 +106,11 @@ const Masonry: React.FC<MasonryProps> = ({
   const itemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
   const getInitialPosition = (item: GridItem) => {
-    const containerRect = containerRef.current?.getBoundingClientRect();
-    if (!containerRect) return { x: item.x, y: item.y };
-
+    // Relative positioning instead of absolute window items
+    const offset = 200;
+    
+    // For random direction
     let direction = animateFrom;
-
     if (animateFrom === 'random') {
       const directions = ['top', 'bottom', 'left', 'right'];
       direction = directions[Math.floor(Math.random() * directions.length)] as typeof animateFrom;
@@ -113,20 +118,21 @@ const Masonry: React.FC<MasonryProps> = ({
 
     switch (direction) {
       case 'top':
-        return { x: item.x, y: -200 };
+        return { x: item.x, y: item.y - offset };
       case 'bottom':
-        return { x: item.x, y: window.innerHeight + 200 };
+        return { x: item.x, y: item.y + offset };
       case 'left':
-        return { x: -200, y: item.y };
+        return { x: item.x - offset, y: item.y };
       case 'right':
-        return { x: window.innerWidth + 200, y: item.y };
+        return { x: item.x + offset, y: item.y };
       case 'center':
         return {
-          x: containerRect.width / 2 - item.w / 2,
-          y: containerRect.height / 2 - item.h / 2
+          x: item.x + (item.w / 2),
+          y: item.y + (item.h / 2)
         };
       default:
-        return { x: item.x, y: item.y + 100 };
+        // Default fallthrough to bottom animation
+        return { x: item.x, y: item.y + offset };
     }
   };
 
@@ -183,6 +189,8 @@ const Masonry: React.FC<MasonryProps> = ({
     return Math.max(...colHeights, 0) + 20 // Add some padding
   }, [grid, columns, width])
 
+  const animatedIds = useRef<Set<string>>(new Set());
+
   useLayoutEffect(() => {
     if (!imagesReady || grid.length === 0) return;
 
@@ -199,7 +207,10 @@ const Masonry: React.FC<MasonryProps> = ({
         height: item.h
       };
 
-      if (!hasMounted.current) {
+      const isNewItem = !animatedIds.current.has(item.id);
+
+      if (isNewItem) {
+        // It's a new item (or first load), animate entry
         const initialPos = getInitialPosition(item);
         const initialState = {
           opacity: 0,
@@ -220,10 +231,13 @@ const Masonry: React.FC<MasonryProps> = ({
           ...(blurToFocus && { filter: 'blur(0px)' }),
           duration: 0.8,
           ease: 'power3.out',
-          delay: index * stagger
+          delay: isNewItem ? (index % columns) * stagger : 0 
         });
+
+        // Mark as animated
+        animatedIds.current.add(item.id);
       } else {
-        // Update position on resize
+        // Existing item update (resize or reorder)
         gsap.to(element, {
           ...animationProps,
           duration: duration,
@@ -235,7 +249,7 @@ const Masonry: React.FC<MasonryProps> = ({
 
     hasMounted.current = true;
     });
-  }, [grid, imagesReady, stagger, animateFrom, blurToFocus, duration, ease]);
+  }, [grid, imagesReady, stagger, animateFrom, blurToFocus, duration, ease, columns]);
 
   const handleMouseEnter = (e: React.MouseEvent, item: GridItem) => {
     const element = itemRefs.current.get(item.id);
