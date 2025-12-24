@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import Footer from "@/components/footer"
@@ -46,19 +47,31 @@ const allProjects = [
     id: 7,
     title: "SUMMER MUSIC FESTIVAL",
     category: "Music",
-    image: "/music-festival-stage-crowd-lights.jpg", // Placeholder path
+    image: "/music-festival-outdoor-stage-crowd-night-lights.jpg",
   },
   {
     id: 8,
     title: "STADIUM RIGGING INSTALL",
     category: "Rigging Services",
-    image: "/large-scale-rigging-truss-system.jpg", // Placeholder path
+    image: "/professional-event-production-team-working-stage-s.jpg",
   },
   {
     id: 9,
     title: "NATIONAL SPORTS CEREMONY",
     category: "Public, Sports & Major Events",
-    image: "/stadium-sports-event-ceremony.jpg", // Placeholder path
+    image: "/dramatic-stage-lighting-corporate-event-dark-green.jpg",
+  },
+  {
+    id: 10,
+    title: "LED INSTALLATION PROJECT",
+    category: "Fixed Installation",
+    image: "/professional-event-production-team-working-stage-s.jpg",
+  },
+  {
+    id: 11,
+    title: "LUXURY WEDDING CELEBRATION",
+    category: "Weddings & Private Celebrations",
+    image: "/dramatic-stage-lighting-corporate-event-dark-green.jpg",
   },
 ]
 
@@ -69,16 +82,27 @@ const categories = [
   "Music",
   "Rigging Services",
   "Public, Sports & Major Events",
+  "Fixed Installation",
+  "Weddings & Private Celebrations",
 ]
 
-export default function WorkPage() {
+function WorkPageContent() {
   const [isLoaded, setIsLoaded] = useState(true)
+  const searchParams = useSearchParams()
   const [activeCategory, setActiveCategory] = useState("All")
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100)
     return () => clearTimeout(timer)
   }, [])
+
+  // Set active category from URL parameter
+  useEffect(() => {
+    const categoryParam = searchParams.get("category")
+    if (categoryParam && categories.includes(categoryParam)) {
+      setActiveCategory(categoryParam)
+    }
+  }, [searchParams])
 
   const filteredProjects =
     activeCategory === "All" ? allProjects : allProjects.filter((p) => p.category === activeCategory)
@@ -127,7 +151,7 @@ export default function WorkPage() {
         </div>
       </section>
 
-      <section className="px-6 md:px-10 pb-8">
+      <section className="px-6 md:px-10 pb-8" data-filter-section>
         <div className="max-w-[1400px] mx-auto">
           <div
             className={`flex flex-wrap gap-2 transition-all duration-700 ${
@@ -178,6 +202,18 @@ export default function WorkPage() {
 
       <Footer />
     </main>
+  )
+}
+
+export default function WorkPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-muted-foreground">Loading...</div>
+      </main>
+    }>
+      <WorkPageContent />
+    </Suspense>
   )
 }
 

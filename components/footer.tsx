@@ -113,42 +113,54 @@ export default function Footer() {
           <div>
             <p className="text-xs tracking-[0.15em] text-foreground/50 mb-4">FOLLOW US</p>
             <div className="flex items-center gap-4">
-              <a
-                href={socialLinks.facebook}
-                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-300"
-                aria-label="Facebook"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FacebookIcon className="w-6 h-6" />
-              </a>
-              <a
-                href={socialLinks.instagram}
-                className="text-pink-600 hover:text-pink-700 dark:text-pink-400 dark:hover:text-pink-300 transition-colors duration-300"
-                aria-label="Instagram"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <InstagramIcon className="w-6 h-6" />
-              </a>
-              <a
-                href={socialLinks.linkedin}
-                className="text-blue-700 hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-200 transition-colors duration-300"
-                aria-label="LinkedIn"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <LinkedInIcon className="w-6 h-6" />
-              </a>
-              <a
-                href={socialLinks.twitter}
-                className="text-sky-500 hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300 transition-colors duration-300"
-                aria-label="Twitter"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <TwitterIcon className="w-6 h-6" />
-              </a>
+              {mounted ? (
+                <>
+                  <a
+                    href={socialLinks.facebook}
+                    className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-300"
+                    aria-label="Facebook"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FacebookIcon className="w-6 h-6" />
+                  </a>
+                  <a
+                    href={socialLinks.instagram}
+                    className="text-pink-600 hover:text-pink-700 dark:text-pink-400 dark:hover:text-pink-300 transition-colors duration-300"
+                    aria-label="Instagram"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <InstagramIcon className="w-6 h-6" />
+                  </a>
+                  <a
+                    href={socialLinks.linkedin}
+                    className="text-blue-700 hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-200 transition-colors duration-300"
+                    aria-label="LinkedIn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <LinkedInIcon className="w-6 h-6" />
+                  </a>
+                  <a
+                    href={socialLinks.twitter}
+                    className="text-sky-500 hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300 transition-colors duration-300"
+                    aria-label="Twitter"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <TwitterIcon className="w-6 h-6" />
+                  </a>
+                </>
+              ) : (
+                // Placeholder to prevent layout shift
+                <div className="flex items-center gap-4">
+                  <div className="w-6 h-6" />
+                  <div className="w-6 h-6" />
+                  <div className="w-6 h-6" />
+                  <div className="w-6 h-6" />
+                </div>
+              )}
             </div>
           </div>
         </div>

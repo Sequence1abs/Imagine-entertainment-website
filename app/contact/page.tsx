@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
+import type React from "react"
 import { ArrowRight, ChevronDown, Check } from "lucide-react"
 import Footer from "@/components/footer"
 
@@ -147,6 +148,15 @@ export default function ContactPage() {
 function ContactForm() {
   const [selectedType, setSelectedType] = useState<string | null>(null)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    company: "",
+    message: "",
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
+  const [errorMessage, setErrorMessage] = useState<string>("")
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   // Close dropdown when clicking outside
@@ -162,13 +172,88 @@ function ContactForm() {
 
   const selectedLabel = projectTypes.find((t) => t.value === selectedType)?.label
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    // Validate required fields
+    if (!formData.name || !formData.email || !formData.message) {
+      setSubmitStatus("error")
+      return
+    }
+
+    setIsSubmitting(true)
+    setSubmitStatus("idle")
+    setErrorMessage("")
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          eventType: selectedLabel || null,
+          message: formData.message,
+        }),
+      })
+
+      let data: any = {}
+      try {
+        const text = await response.text()
+        if (text) {
+          data = JSON.parse(text)
+        }
+      } catch (e) {
+        // If response is not JSON, use empty object
+        console.warn("Response is not valid JSON:", e)
+      }
+
+      if (response.ok) {
+        setSubmitStatus("success")
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          company: "",
+          message: "",
+        })
+        setSelectedType(null)
+        // Reset status after 5 seconds
+        setTimeout(() => {
+          setSubmitStatus("idle")
+          setErrorMessage("")
+        }, 5000)
+      } else {
+        const errorMsg = data?.error || `Failed to send message (Status: ${response.status}). Please try again or contact us directly.`
+        setErrorMessage(errorMsg)
+        setSubmitStatus("error")
+        // Only log meaningful errors for debugging (not empty objects)
+        if (data?.error && typeof data.error === 'string' && data.error.length > 0) {
+          console.error("Form submission error:", data.error)
+        }
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error)
+      setErrorMessage("Network error. Please check your connection and try again.")
+      setSubmitStatus("error")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
-    <form className="space-y-8">
+    <form className="space-y-8" onSubmit={handleSubmit}>
       <div className="grid md:grid-cols-2 gap-8">
         <div>
           <label className="block text-xs tracking-[0.15em] text-muted-foreground mb-3">NAME</label>
           <input
             type="text"
+            required
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             className="w-full bg-transparent border-b border-border pb-3 focus:border-foreground outline-none transition-colors text-base placeholder:text-muted-foreground/50"
             placeholder="Your name"
           />
@@ -177,6 +262,9 @@ function ContactForm() {
           <label className="block text-xs tracking-[0.15em] text-muted-foreground mb-3">EMAIL</label>
           <input
             type="email"
+            required
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             className="w-full bg-transparent border-b border-border pb-3 focus:border-foreground outline-none transition-colors text-base placeholder:text-muted-foreground/50"
             placeholder="your@email.com"
           />
@@ -187,6 +275,8 @@ function ContactForm() {
         <label className="block text-xs tracking-[0.15em] text-muted-foreground mb-3">COMPANY</label>
         <input
           type="text"
+          value={formData.company}
+          onChange={(e) => setFormData({ ...formData, company: e.target.value })}
           className="w-full bg-transparent border-b border-border pb-3 focus:border-foreground outline-none transition-colors text-base placeholder:text-muted-foreground/50"
           placeholder="Company name"
         />
@@ -236,17 +326,39 @@ function ContactForm() {
         <label className="block text-xs tracking-[0.15em] text-muted-foreground mb-3">MESSAGE</label>
         <textarea
           rows={4}
+          required
+          value={formData.message}
+          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
           className="w-full bg-transparent border-b border-border pb-3 focus:border-foreground outline-none transition-colors resize-none text-base placeholder:text-muted-foreground/50"
           placeholder="Tell us about your project..."
         />
       </div>
 
+      {submitStatus === "success" && (
+        <div className="text-green-600 dark:text-green-400 text-sm">
+          Thank you! Your message has been sent successfully.
+        </div>
+      )}
+
+      {submitStatus === "error" && (
+        <div className="text-red-600 dark:text-red-400 text-sm space-y-1">
+          <p className="font-medium">Failed to send message.</p>
+          {errorMessage && (
+            <p className="text-xs opacity-90">{errorMessage}</p>
+          )}
+          {!errorMessage && (
+            <p className="text-xs opacity-90">Please try again or contact us directly at info@imaginesl.com</p>
+          )}
+        </div>
+      )}
+
       <button
         type="submit"
-        className="group inline-flex items-center gap-3 bg-foreground text-background px-8 py-4 rounded-full hover:bg-foreground/90 transition-colors text-sm font-medium mt-4"
+        disabled={isSubmitting}
+        className="group inline-flex items-center gap-3 bg-foreground text-background px-8 py-4 rounded-full hover:bg-foreground/90 transition-colors text-sm font-medium mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Send Message
-        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        {isSubmitting ? "Sending..." : "Send Message"}
+        {!isSubmitting && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
       </button>
     </form>
   )

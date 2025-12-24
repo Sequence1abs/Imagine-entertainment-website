@@ -14,6 +14,7 @@ const services = [
     id: 1,
     title: "Corporate Events",
     eventType: "Corporate",
+    filterCategory: "Corporate",
     image: "/corporate-event-stage-blue-lighting-conference.jpg",
     span: "lg:col-start-1 lg:col-span-1 lg:row-start-1 lg:row-span-2",
   },
@@ -21,6 +22,7 @@ const services = [
     id: 2,
     title: "Television & Film Production",
     eventType: "Television & Film",
+    filterCategory: "Television & Film Production",
     image: "/brit-awards-stage-red-lighting-production.jpg",
     span: "lg:col-start-2 lg:col-span-1 lg:row-start-1 lg:row-span-1",
   },
@@ -28,6 +30,7 @@ const services = [
     id: 3,
     title: "Musical Concert",
     eventType: "Musical Concert",
+    filterCategory: "Music",
     image: "/music-festival-outdoor-stage-crowd-night-lights.jpg",
     span: "lg:col-start-3 lg:col-span-1 lg:row-start-1 lg:row-span-1",
   },
@@ -35,6 +38,7 @@ const services = [
     id: 6,
     title: "Fixed Installation",
     eventType: "Fixed Installation",
+    filterCategory: "Fixed Installation",
     image: "/professional-event-production-team-working-stage-s.jpg",
     span: "lg:col-start-1 lg:col-span-1 lg:row-start-3 lg:row-span-1",
   },
@@ -42,6 +46,7 @@ const services = [
     id: 7,
     title: "Weddings & Private Celebrations",
     eventType: "Weddings & Private Celebrations",
+    filterCategory: "Weddings & Private Celebrations",
     image: "/dramatic-stage-lighting-corporate-event-dark-green.jpg",
     span: "sm:col-span-2 lg:col-start-2 lg:col-span-2 lg:row-start-3 lg:row-span-1",
   },
@@ -49,6 +54,7 @@ const services = [
     id: 4,
     title: "Rigging Services",
     eventType: "Rigging",
+    filterCategory: "Rigging Services",
     image: "/professional-event-production-team-working-stage-s.jpg",
     span: "lg:col-start-4 lg:col-span-1 lg:row-start-1 lg:row-span-1",
   },
@@ -56,6 +62,7 @@ const services = [
     id: 5,
     title: "Public, Sports & Major Events",
     eventType: "Major Events",
+    filterCategory: "Public, Sports & Major Events",
     image: "/dramatic-stage-lighting-corporate-event-dark-green.jpg",
     span: "sm:col-span-2 lg:col-start-2 lg:col-span-2 lg:row-start-2 lg:row-span-1",
   },
@@ -314,7 +321,7 @@ function ServiceBentoCard({ service, index }: { service: (typeof services)[0]; i
 
   return (
     <Link
-      href={`/services#${service.title.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "and").replace(/,/g, "").replace(/\s*,\s*/g, "-")}`}
+      href={`/work?category=${encodeURIComponent(service.filterCategory || service.eventType)}`}
       ref={ref}
       className={`group relative block h-full min-h-[300px] md:min-h-[350px] overflow-hidden rounded-xl transition-all duration-700 ${
         isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"

@@ -171,21 +171,12 @@ export default function Navigation() {
       >
         <div className="max-w-[1400px] mx-auto px-6 md:px-10" suppressHydrationWarning>
           <div className="flex items-center justify-between h-16 md:h-20 min-h-[4rem] md:min-h-[5rem] w-full" suppressHydrationWarning>
-            <Link href="/" className="relative z-50 flex items-center gap-3" onClick={() => setIsOpen(false)}>
+            <Link href="/" className="relative z-50 flex items-center gap-2" onClick={() => setIsOpen(false)}>
               <img
                 src={getLogoSource()}
                 alt="Imagine Entertainment"
-                className="h-10 md:h-12 lg:h-14 w-auto transition-all duration-300"
+                className="h-8 md:h-9 w-auto transition-all duration-300"
               />
-              <span className={`hidden md:block text-lg md:text-xl font-semibold transition-colors duration-300 ${
-                scrolled || !hasHeroSection
-                  ? isDarkMode
-                    ? "text-white"
-                    : "text-black"
-                  : "text-white"
-              }`}>
-                Imagine Entertainment
-              </span>
             </Link>
 
             <div className="hidden lg:flex items-center gap-12" suppressHydrationWarning>
