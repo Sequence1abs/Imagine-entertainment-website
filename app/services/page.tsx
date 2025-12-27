@@ -198,7 +198,7 @@ export default function ServicesPage() {
           <h2 className="text-3xl md:text-4xl font-medium mb-6 text-white dark:text-white">Let's create something extraordinary</h2>
           <Link
             href="/contact"
-            className="group inline-flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all rounded-full"
+            className="cursor-target group inline-flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all rounded-full"
           >
             <span className="text-xl md:text-2xl font-medium text-white dark:text-white">Talk to Us</span>
             <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />

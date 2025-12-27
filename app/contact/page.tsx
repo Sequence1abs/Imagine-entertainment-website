@@ -355,7 +355,7 @@ function ContactForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="group inline-flex items-center gap-3 bg-foreground text-background px-8 py-4 rounded-full hover:bg-foreground/90 transition-colors text-sm font-medium mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="cursor-target group inline-flex items-center gap-3 bg-foreground text-background px-8 py-4 rounded-full hover:bg-foreground/90 transition-colors text-sm font-medium mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isSubmitting ? "Sending..." : "Send Message"}
         {!isSubmitting && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}

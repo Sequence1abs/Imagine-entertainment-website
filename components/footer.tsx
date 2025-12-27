@@ -150,7 +150,7 @@ export default function Footer() {
                 <>
                   <a
                     href={socialLinks.facebook}
-                    className="flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20 transition-all duration-300 hover:opacity-80"
+                    className="cursor-target flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20 transition-all duration-300 hover:opacity-80"
                     aria-label="Facebook"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -159,7 +159,7 @@ export default function Footer() {
                   </a>
                   <a
                     href={socialLinks.instagram}
-                    className="flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20 transition-all duration-300 hover:opacity-80"
+                    className="cursor-target flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20 transition-all duration-300 hover:opacity-80"
                     aria-label="Instagram"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -168,7 +168,7 @@ export default function Footer() {
                   </a>
                   <a
                     href="https://tiktok.com/@imagineentertainment"
-                    className="flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20 transition-all duration-300 hover:opacity-80 text-black dark:text-white"
+                    className="cursor-target flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20 transition-all duration-300 hover:opacity-80 text-black dark:text-white"
                     aria-label="TikTok"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -179,7 +179,7 @@ export default function Footer() {
                   </a>
                   <a
                     href="https://youtube.com/@imagineentertainment"
-                    className="flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20 transition-all duration-300 hover:opacity-80 text-[#FF0000]"
+                    className="cursor-target flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20 transition-all duration-300 hover:opacity-80 text-[#FF0000]"
                     aria-label="YouTube"
                     target="_blank"
                     rel="noopener noreferrer"

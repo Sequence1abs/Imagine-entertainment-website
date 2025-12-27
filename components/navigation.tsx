@@ -413,7 +413,7 @@ export default function Navigation() {
               >
                 <Link
                   href="/contact"
-                  className={`flex items-center gap-2 h-11 md:h-12 px-6 rounded-full text-sm font-bold transition-all duration-300 shadow-lg hover:shadow-2xl ${
+                  className={`cursor-target flex items-center gap-2 h-11 md:h-12 px-6 rounded-full text-sm font-bold transition-all duration-300 shadow-lg hover:shadow-2xl ${
                     isHeroMode || isDarkMode
                       ? "bg-white text-black hover:bg-white/90 border-2 border-white"
                       : "bg-black text-white hover:bg-black/90 border-2 border-black"
@@ -595,7 +595,7 @@ export default function Navigation() {
                 className="mt-8 flex flex-col gap-6"
               >
                 <motion.div variants={menuItemVariants} className="w-full">
-                  <Link href="/contact" onClick={() => setIsOpen(false)} className="block w-full">
+                  <Link href="/contact" onClick={() => setIsOpen(false)} className="block w-full cursor-target">
                     <motion.div 
                       className={`w-full flex items-center justify-center gap-2 py-4 rounded-full text-base font-medium transition-all ${
                         isDarkMode 

@@ -74,7 +74,7 @@ export default function Hero() {
           >
             <Link
               href="/gallery"
-              className="inline-flex items-center justify-start md:justify-center gap-2 px-5 md:px-6 py-2.5 md:py-3 bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-md border-2 border-white/30 text-white hover:from-white/30 hover:to-white/20 hover:border-white/40 transition-all rounded-full font-semibold text-sm md:text-base shadow-lg hover:shadow-xl w-auto"
+              className="cursor-target inline-flex items-center justify-start md:justify-center gap-2 px-5 md:px-6 py-2.5 md:py-3 bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-md border-2 border-white/30 text-white hover:from-white/30 hover:to-white/20 hover:border-white/40 transition-all rounded-full font-semibold text-sm md:text-base shadow-lg hover:shadow-xl w-auto"
             >
               View Our Work
               <ArrowUpRight className="w-4 h-4" />

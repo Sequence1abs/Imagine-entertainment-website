@@ -345,13 +345,13 @@ export default function WorkDetailPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/work"
-              className="inline-flex items-center gap-2 text-sm font-medium border border-border px-6 py-3 rounded-full hover:bg-foreground hover:text-background transition-all duration-300"
+              className="cursor-target inline-flex items-center gap-2 text-sm font-medium border border-border px-6 py-3 rounded-full hover:bg-foreground hover:text-background transition-all duration-300"
             >
               All Projects
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 text-sm font-medium px-6 py-3 rounded-full bg-foreground text-background hover:opacity-90 transition-all duration-300"
+              className="cursor-target inline-flex items-center gap-2 text-sm font-medium px-6 py-3 rounded-full bg-foreground text-background hover:opacity-90 transition-all duration-300"
             >
               Start Your Project
               <ArrowUpRight className="w-4 h-4" />

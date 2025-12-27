@@ -192,7 +192,7 @@ function WorkPageContent() {
           <h2 className="text-2xl md:text-4xl font-medium mb-6">Have a project in mind?</h2>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background text-lg md:text-xl font-medium hover:bg-foreground/90 transition-colors"
+            className="cursor-target inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background text-lg md:text-xl font-medium hover:bg-foreground/90 transition-colors"
           >
             Let's Talk
             <ArrowUpRight className="w-5 h-5" />
@@ -236,7 +236,7 @@ function ProjectCard({ project, index }: { project: (typeof allProjects)[0]; ind
     <Link
       href={`/work/${project.id}`}
       ref={ref}
-      className={`group block transition-all duration-700 ${
+      className={`cursor-target group block transition-all duration-700 ${
         isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
       }`}
       style={{ transitionDelay: `${(index % 4) * 0.1}s` }}

@@ -127,14 +127,14 @@ export default function Testimonials() {
               <div className="flex items-center gap-3">
                 <button
                   onClick={prevTestimonial}
-                  className="w-10 h-10 rounded-full border border-border bg-background flex items-center justify-center hover:bg-foreground hover:text-background hover:border-foreground transition-all duration-300"
+                  className="cursor-target w-10 h-10 rounded-full border border-border bg-background flex items-center justify-center hover:bg-foreground hover:text-background hover:border-foreground transition-all duration-300"
                   aria-label="Previous testimonial"
                 >
                   <ArrowLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={nextTestimonial}
-                  className="w-10 h-10 rounded-full border border-border bg-background flex items-center justify-center hover:bg-foreground hover:text-background hover:border-foreground transition-all duration-300"
+                  className="cursor-target w-10 h-10 rounded-full border border-border bg-background flex items-center justify-center hover:bg-foreground hover:text-background hover:border-foreground transition-all duration-300"
                   aria-label="Next testimonial"
                 >
                   <ArrowRight className="w-4 h-4" />

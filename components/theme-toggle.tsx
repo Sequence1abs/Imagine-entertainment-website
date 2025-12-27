@@ -48,7 +48,7 @@ export function ThemeToggle({ iconColor = "foreground", noGlass = false }: Theme
   if (!mounted) {
     return (
       <button
-        className={`relative h-[42px] w-[42px] flex items-center justify-center rounded-full transition-all duration-300 flex-shrink-0 ${glassClasses}`}
+        className={`cursor-target relative h-[42px] w-[42px] flex items-center justify-center rounded-full transition-all duration-300 flex-shrink-0 ${glassClasses}`}
         style={{ minWidth: '42px', minHeight: '42px' }}
         aria-label="Toggle theme"
       >
@@ -60,7 +60,7 @@ export function ThemeToggle({ iconColor = "foreground", noGlass = false }: Theme
   return (
     <button
       onClick={toggleTheme}
-      className={`relative h-[42px] w-[42px] flex items-center justify-center rounded-full transition-all duration-300 hover:scale-105 active:scale-95 flex-shrink-0 ${glassClasses}`}
+      className={`cursor-target relative h-[42px] w-[42px] flex items-center justify-center rounded-full transition-all duration-300 hover:scale-105 active:scale-95 flex-shrink-0 ${glassClasses}`}
       style={{ minWidth: '42px', minHeight: '42px' }}
       aria-label="Toggle theme"
     >

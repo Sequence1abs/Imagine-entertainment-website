@@ -123,7 +123,7 @@ export default function Home() {
           {/* CTA Button */}
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-all shadow-md hover:shadow-lg mb-10"
+            className="cursor-target inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-all shadow-md hover:shadow-lg mb-10"
           >
             Start Your Project
             <ArrowRight className="w-4 h-4" />
@@ -204,7 +204,7 @@ export default function Home() {
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center text-white dark:text-white px-6">
             <p className="text-sm tracking-[0.2em] mb-4 text-white/70 dark:text-white/80">READY TO CREATE?</p>
-            <Link href="/contact" className="group inline-flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all rounded-full">
+            <Link href="/contact" className="cursor-target group inline-flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all rounded-full">
               <span className="text-xl md:text-2xl font-medium text-white dark:text-white">Let's Talk</span>
               <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
             </Link>
@@ -345,7 +345,7 @@ function ServiceBentoCard({ service, index }: { service: (typeof services)[0]; i
     <Link
       href={`/work?category=${encodeURIComponent(service.filterCategory || service.eventType)}`}
       ref={ref}
-      className={`group relative block h-full overflow-hidden rounded-xl transition-all duration-700 ${
+      className={`cursor-target group relative block h-full overflow-hidden rounded-xl transition-all duration-700 ${
         isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
       } ${service.span} w-full`}
       style={{ transitionDelay: `${index * 0.1}s` }}
@@ -397,7 +397,7 @@ function ViewServicesCard({ index }: { index: number }) {
     <Link
       href="/services"
       ref={ref}
-      className={`group relative block h-full overflow-hidden rounded-xl transition-all duration-700 md:col-span-1 w-full ${
+      className={`cursor-target group relative block h-full overflow-hidden rounded-xl transition-all duration-700 md:col-span-1 w-full ${
         isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
       }`}
       style={{ transitionDelay: `${index * 0.1}s` }}
