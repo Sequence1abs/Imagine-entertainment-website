@@ -116,6 +116,7 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [servicesOpen, setServicesOpen] = useState(false)
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false)
   const servicesTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const pathname = usePathname()
   const { theme, resolvedTheme } = useTheme()
@@ -487,10 +488,9 @@ export default function Navigation() {
                         suppressHydrationWarning
                       >
                         <div className="py-2">
-                          <Link
-                            href={item.href}
-                            onClick={() => setIsOpen(false)}
-                            className="block mb-3"
+                          <button
+                            onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+                            className="flex items-center gap-3 mb-3 w-full text-left"
                           >
                             <motion.span 
                               className="text-2xl sm:text-3xl md:text-5xl font-medium text-foreground dark:text-foreground"
@@ -499,33 +499,58 @@ export default function Navigation() {
                             >
                               {item.label}
                             </motion.span>
-                          </Link>
+                            <motion.div
+                              animate={{ rotate: mobileServicesOpen ? 180 : 0 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              <ChevronDown className="w-5 h-5 md:w-8 md:h-8 text-foreground" />
+                            </motion.div>
+                          </button>
+                          
                           <motion.div 
-                            className="pl-4 grid grid-cols-2 gap-x-4 gap-y-1 mt-2 pr-2"
-                            variants={menuContainerVariants}
+                            initial={false}
+                            animate={{ 
+                              height: mobileServicesOpen ? "auto" : 0,
+                              opacity: mobileServicesOpen ? 1 : 0
+                            }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="overflow-hidden"
                           >
-                            {servicesItems.map((service, index) => (
+                            <div className="pl-4 flex flex-col gap-2 mt-2 border-l border-border/50 ml-2">
+                              {servicesItems.map((service, index) => (
+                                <motion.div
+                                  key={service.label}
+                                  initial={{ x: -20, opacity: 0 }}
+                                  animate={mobileServicesOpen ? { x: 0, opacity: 1 } : { x: -20, opacity: 0 }}
+                                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                                >
+                                  <Link
+                                    href={service.href}
+                                    onClick={() => setIsOpen(false)}
+                                    className="block py-2"
+                                  >
+                                    <span className="text-base sm:text-lg md:text-2xl font-normal text-muted-foreground hover:text-foreground transition-colors break-words">
+                                      {service.label}
+                                    </span>
+                                  </Link>
+                                </motion.div>
+                              ))}
+                              
                               <motion.div
-                                key={service.label}
-                                variants={subMenuItemVariants}
-                                className={`overflow-hidden ${index === servicesItems.length - 1 ? "col-span-2" : ""}`}
-                                suppressHydrationWarning
+                                initial={{ x: -20, opacity: 0 }}
+                                animate={mobileServicesOpen ? { x: 0, opacity: 1 } : { x: -20, opacity: 0 }}
+                                transition={{ duration: 0.3, delay: servicesItems.length * 0.05 }}
                               >
                                 <Link
-                                  href={service.href}
+                                  href="/services"
                                   onClick={() => setIsOpen(false)}
-                                  className="block py-1.5"
+                                  className="flex items-center gap-2 py-3 mt-2 text-foreground font-medium group"
                                 >
-                                  <motion.span 
-                                    className="text-xs sm:text-sm md:text-xl font-normal text-muted-foreground/80 leading-tight block truncate"
-                                    whileHover={{ color: "var(--foreground)" }}
-                                    transition={{ duration: 0.2 }}
-                                  >
-                                    {service.label}
-                                  </motion.span>
+                                  <span className="text-base sm:text-lg md:text-2xl">View all services</span>
+                                  <ArrowUpRight className="w-4 h-4 md:w-6 md:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                                 </Link>
                               </motion.div>
-                            ))}
+                            </div>
                           </motion.div>
                         </div>
                       </motion.div>
