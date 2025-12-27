@@ -468,7 +468,7 @@ export default function Navigation() {
             className="fixed inset-0 z-40 bg-background dark:bg-background text-foreground dark:text-foreground backdrop-blur-md"
             suppressHydrationWarning
           >
-            <div className="h-full flex flex-col justify-start pt-32 pb-10 px-6 md:px-10 overflow-y-auto no-scrollbar" suppressHydrationWarning>
+            <div className="h-full flex flex-col justify-start pt-24 pb-6 px-6 md:px-10 overflow-y-auto no-scrollbar" suppressHydrationWarning>
               <motion.div 
                 className="space-y-2"
                 variants={menuContainerVariants}
@@ -501,23 +501,23 @@ export default function Navigation() {
                             </motion.span>
                           </Link>
                           <motion.div 
-                            className="pl-4 space-y-2 mt-2"
+                            className="pl-4 grid grid-cols-2 gap-x-4 gap-y-1 mt-2 pr-2"
                             variants={menuContainerVariants}
                           >
-                            {servicesItems.map((service) => (
+                            {servicesItems.map((service, index) => (
                               <motion.div
                                 key={service.label}
                                 variants={subMenuItemVariants}
-                                className="overflow-hidden"
+                                className={`overflow-hidden ${index === servicesItems.length - 1 ? "col-span-2" : ""}`}
                                 suppressHydrationWarning
                               >
                                 <Link
                                   href={service.href}
                                   onClick={() => setIsOpen(false)}
-                                  className="block py-1"
+                                  className="block py-1.5"
                                 >
                                   <motion.span 
-                                    className="text-base sm:text-lg md:text-2xl font-normal text-muted-foreground"
+                                    className="text-xs sm:text-sm md:text-xl font-normal text-muted-foreground/80 leading-tight block truncate"
                                     whileHover={{ color: "var(--foreground)" }}
                                     transition={{ duration: 0.2 }}
                                   >
@@ -557,7 +557,7 @@ export default function Navigation() {
                 >
                   <Link href="/contact" onClick={() => setIsOpen(false)} className="block py-2">
                     <motion.span 
-                      className={`inline-block text-3xl sm:text-4xl md:text-5xl font-medium px-6 py-2 rounded-full ${
+                      className={`inline-block text-xl sm:text-2xl md:text-4xl font-medium px-5 py-1.5 rounded-full ${
                         isDarkMode 
                           ? "bg-white text-black" 
                           : "bg-black text-white"
@@ -573,7 +573,7 @@ export default function Navigation() {
                 {/* Social Icons */}
                 <motion.div
                   variants={menuItemVariants}
-                  className="flex items-center gap-6 pt-12 mt-4"
+                  className="flex items-center gap-6 pt-4 mt-auto"
                   suppressHydrationWarning
                 >
                   <a
