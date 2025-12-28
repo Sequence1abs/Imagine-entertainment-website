@@ -58,19 +58,47 @@ export default function Hero() {
       <div className="absolute bottom-0 left-0 right-0 z-10 px-4 sm:px-6 md:px-10 lg:px-12 pb-12 sm:pb-6 md:pb-8 lg:pb-13 hero-content-bottom">
         <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row items-start md:items-end justify-between gap-4 sm:gap-6 md:gap-8">
           <div className="text-white flex-1 w-full md:w-auto">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 text-white leading-tight tracking-tight">
+            {/* Staggered Title Animation */}
+            <motion.h1 
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 text-white leading-tight tracking-tight"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ 
+                duration: 0.8, 
+                delay: 0.3,
+                ease: [0.25, 0.46, 0.45, 0.94]
+              }}
+            >
               IMAGINE ENTERTAINMENT
-            </h1>
-            <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white/80 max-w-2xl leading-relaxed">
+            </motion.h1>
+            
+            {/* Staggered Description Animation */}
+            <motion.p 
+              className="text-xs sm:text-sm md:text-base lg:text-lg text-white/80 max-w-2xl leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ 
+                duration: 0.7, 
+                delay: 0.6,
+                ease: [0.25, 0.46, 0.45, 0.94]
+              }}
+            >
               Imagine Entertainment creates unforgettable live experiences with end-to-end production. Spanning creative design, lighting, sound, LEDs, visuals, staging, rentals, and rigging, we ensure flawless execution to bring every concert, corporate event, or large-scale production to life.
-            </p>
+            </motion.p>
           </div>
 
+          {/* Staggered CTA Button Animation */}
           <motion.div 
             className="w-full md:w-auto flex md:block"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 0.6, 
+              delay: 0.9,
+              ease: [0.25, 0.46, 0.45, 0.94]
+            }}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
             <Link
               href="/gallery"

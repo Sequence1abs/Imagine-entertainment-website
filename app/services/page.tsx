@@ -184,27 +184,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <section className="relative py-28 md:py-36 overflow-hidden mx-4 md:mx-6 mt-16 rounded-2xl">
-        <div className="absolute inset-0 bg-foreground dark:bg-black">
-          <img
-            src="/dramatic-concert-stage-lighting-dark-atmospheric-p.jpg"
-            alt="Production"
-            className="w-full h-full object-cover opacity-30 dark:opacity-50"
-          />
-        </div>
-        <div className="absolute inset-0 bg-black/40 dark:bg-black/70" />
-        <div className="relative z-10 text-center text-white px-6">
-          <p className="text-white/70 dark:text-white/80 text-xs tracking-[0.15em] mb-4">READY TO START?</p>
-          <h2 className="text-3xl md:text-4xl font-medium mb-6 text-white dark:text-white">Let's create something extraordinary</h2>
-          <Link
-            href="/contact"
-            className="cursor-target group inline-flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all rounded-full"
-          >
-            <span className="text-xl md:text-2xl font-medium text-white dark:text-white">Talk to Us</span>
-            <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
-          </Link>
-        </div>
-      </section>
+      <ServicesCTASection />
 
       <Footer />
     </main>
@@ -303,5 +283,65 @@ function TechCard({ item, index }: { item: { title: string; desc: string }; inde
       <h4 className="text-base font-medium mb-1">{item.title}</h4>
       <p className="text-sm text-muted-foreground">{item.desc}</p>
     </div>
+  )
+}
+
+function ServicesCTASection() {
+  const [isVisible, setIsVisible] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setIsVisible(true)
+      },
+      { threshold: 0.3 },
+    )
+    if (ref.current) observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <section ref={ref} className="relative py-28 md:py-36 overflow-hidden mx-4 md:mx-6 mt-16 rounded-2xl">
+      <div className="absolute inset-0 bg-foreground dark:bg-black">
+        <img
+          src="/dramatic-concert-stage-lighting-dark-atmospheric-p.jpg"
+          alt="Production"
+          className="w-full h-full object-cover opacity-30 dark:opacity-50"
+        />
+      </div>
+      <div className="absolute inset-0 bg-black/40 dark:bg-black/70" />
+      <div className="relative z-10 text-center text-white px-6">
+        <p 
+          className={`text-white/70 dark:text-white/80 text-xs tracking-[0.15em] mb-4 transition-all duration-700 ${
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+          }`}
+        >
+          READY TO START?
+        </p>
+        <h2 
+          className={`text-3xl md:text-4xl font-medium mb-6 text-white dark:text-white transition-all duration-700 ${
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+          }`}
+          style={{ transitionDelay: "0.1s" }}
+        >
+          Let's create something extraordinary
+        </h2>
+        <div 
+          className={`transition-all duration-700 ${
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+          }`}
+          style={{ transitionDelay: "0.2s" }}
+        >
+          <Link
+            href="/contact"
+            className="cursor-target group inline-flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all rounded-full"
+          >
+            <span className="text-xl md:text-2xl font-medium text-white dark:text-white">Talk to Us</span>
+            <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+          </Link>
+        </div>
+      </div>
+    </section>
   )
 }

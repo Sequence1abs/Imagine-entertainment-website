@@ -101,89 +101,7 @@ export default function Home() {
       </section>
 
       {/* Expertise Section */}
-      <section className="py-16 md:py-20 bg-muted mx-4 md:mx-6 rounded-2xl">
-        <div className="max-w-[1200px] mx-auto px-6 md:px-10 text-center">
-          {/* Label */}
-          <p className="text-muted-foreground text-xs tracking-[0.2em] mb-4 font-medium uppercase">
-            //Why Choose Us
-          </p>
-          
-          {/* Heading */}
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium leading-[1.15] mb-4 tracking-tight">
-            One Vision. One Team.
-            <br />
-            <span className="text-muted-foreground italic font-normal">One Flawless Event.</span>
-          </h2>
-          
-          {/* Description */}
-          <p className="text-muted-foreground leading-relaxed mb-6 max-w-2xl mx-auto text-sm md:text-base">
-            At Imagine Entertainment, a single, seasoned team of producers, directors, and technicians brings your ideas to life from concept to execution. With our full-service, cross-functional crew working side by side under one roof, you get one accountable partner delivering seamless, unforgettable experiences.
-          </p>
-          
-          {/* CTA Button */}
-          <Link
-            href="/contact"
-            className="cursor-target inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-all shadow-md hover:shadow-lg mb-10"
-          >
-            Start Your Project
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-          
-          {/* Tags - Single Row Layout */}
-          <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-10">
-            {/* Services */}
-            <div className="flex flex-col items-center">
-              <p className="text-muted-foreground text-xs tracking-[0.15em] mb-3 font-medium uppercase">
-                Services
-              </p>
-              <div className="flex flex-wrap justify-center gap-1.5">
-                {[
-                  "Creative Direction",
-                  "Technical Production",
-                  "Event Management",
-                  "Audio & Video",
-                  "Lighting Design",
-                  "Staging & Scenic",
-                ].map((item) => (
-                  <span 
-                    key={item} 
-                    className="px-3 py-1.5 rounded-full bg-background/50 dark:bg-background/30 text-xs font-medium text-foreground/80 border border-border/40"
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div className="hidden md:block w-px bg-border/30 self-stretch" />
-
-            {/* Industries */}
-            <div className="flex flex-col items-center">
-              <p className="text-muted-foreground text-xs tracking-[0.15em] mb-3 font-medium uppercase">
-                Industries
-              </p>
-              <div className="flex flex-wrap justify-center gap-1.5">
-                {[
-                  "Corporate",
-                  "Television & Film",
-                  "Theatre",
-                  "Fashion",
-                  "Music & Live",
-                  "Automotive",
-                ].map((item) => (
-                  <span 
-                    key={item} 
-                    className="px-3 py-1.5 rounded-full bg-background/50 dark:bg-background/30 text-xs font-medium text-foreground/80 border border-border/40"
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ExpertiseSection />
 
       {/* Clients & Testimonials */}
       <ClientsMarquee />
@@ -192,25 +110,7 @@ export default function Home() {
       <StatsSection />
 
       {/* Pre-footer CTA */}
-      <section className="relative h-[45vh] md:h-[60vh] overflow-hidden mx-4 md:mx-6 rounded-2xl">
-        <Image
-          src="/dramatic-concert-stage-lighting-dark-atmospheric-p.jpg"
-          alt="Let's talk"
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, 100vw"
-        />
-        <div className="absolute inset-0 bg-black/50 dark:bg-black/70" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center text-white dark:text-white px-6">
-            <p className="text-sm tracking-[0.2em] mb-4 text-white/70 dark:text-white/80">READY TO CREATE?</p>
-            <Link href="/contact" className="cursor-target group inline-flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all rounded-full">
-              <span className="text-xl md:text-2xl font-medium text-white dark:text-white">Let's Talk</span>
-              <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
-            </Link>
-          </div>
-        </div>
-      </section>
+      <CTASection />
 
       <Footer />
     </main>
@@ -233,10 +133,10 @@ function StatsSection() {
   }, [])
 
   const stats = [
-    { number: "37", suffix: "+", label: "Years of Excellence" },
-    { number: "1000", suffix: "+", label: "Projects Delivered" },
-    { number: "100", suffix: "+", label: "Creative Experts" },
-    { number: "98", suffix: "%", label: "Client Satisfaction" },
+    { number: 37, suffix: "+", label: "Years of Excellence" },
+    { number: 1000, suffix: "+", label: "Projects Delivered" },
+    { number: 100, suffix: "+", label: "Creative Experts" },
+    { number: 98, suffix: "%", label: "Client Satisfaction" },
   ]
 
   return (
@@ -265,9 +165,13 @@ function StatsSection() {
                   }`}
                   style={{ transitionDelay: `${index * 0.1}s` }}
                 >
-                  {/* Large number */}
+                  {/* Large number with count-up animation */}
                   <div className="flex items-baseline">
-                    <span className="text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight">{stat.number}</span>
+                    <AnimatedCounter 
+                      target={stat.number} 
+                      isVisible={isVisible} 
+                      delay={index * 100}
+                    />
                     <span className="text-3xl md:text-4xl lg:text-5xl font-medium text-muted-foreground">
                       {stat.suffix}
                     </span>
@@ -282,6 +186,193 @@ function StatsSection() {
                     style={{ transitionDelay: `${index * 0.1 + 0.2}s`, transformOrigin: "left" }}
                   />
                 </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// Animated counter component for stats
+function AnimatedCounter({ target, isVisible, delay = 0 }: { target: number; isVisible: boolean; delay?: number }) {
+  const [count, setCount] = useState(0)
+  const countRef = useRef(0)
+  const frameRef = useRef<number | undefined>(undefined)
+  const startTimeRef = useRef<number | undefined>(undefined)
+
+  useEffect(() => {
+    if (!isVisible) return
+
+    const duration = 2000 // 2 seconds for the count-up
+    const startDelay = delay
+
+    const timer = setTimeout(() => {
+      const animate = (timestamp: number) => {
+        if (!startTimeRef.current) startTimeRef.current = timestamp
+        const progress = timestamp - startTimeRef.current
+        const percentage = Math.min(progress / duration, 1)
+        
+        // Custom easing - very slow at the end for dramatic effect
+        // Using easeOutExpo for more pronounced deceleration
+        const easeOutExpo = percentage === 1 ? 1 : 1 - Math.pow(2, -10 * percentage)
+        
+        countRef.current = Math.floor(easeOutExpo * target)
+        setCount(countRef.current)
+
+        if (percentage < 1) {
+          frameRef.current = requestAnimationFrame(animate)
+        } else {
+          setCount(target)
+        }
+      }
+
+      frameRef.current = requestAnimationFrame(animate)
+    }, startDelay)
+
+    return () => {
+      clearTimeout(timer)
+      if (frameRef.current) cancelAnimationFrame(frameRef.current)
+    }
+  }, [isVisible, target, delay])
+
+  return (
+    <span className="text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight tabular-nums">
+      {count}
+    </span>
+  )
+}
+
+function ExpertiseSection() {
+  const [isVisible, setIsVisible] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setIsVisible(true)
+      },
+      { threshold: 0.2 },
+    )
+    if (ref.current) observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [])
+
+  const services = [
+    "Creative Direction",
+    "Technical Production",
+    "Event Management",
+    "Audio & Video",
+    "Lighting Design",
+    "Staging & Scenic",
+  ]
+
+  const industries = [
+    "Corporate",
+    "Television & Film",
+    "Theatre",
+    "Fashion",
+    "Music & Live",
+    "Automotive",
+  ]
+
+  return (
+    <section ref={ref} className="py-16 md:py-20 bg-muted mx-4 md:mx-6 rounded-2xl">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-10 text-center">
+        {/* Label */}
+        <p 
+          className={`text-muted-foreground text-xs tracking-[0.2em] mb-4 font-medium uppercase transition-all duration-700 ${
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+          }`}
+        >
+          //Why Choose Us
+        </p>
+        
+        {/* Heading */}
+        <h2 
+          className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium leading-[1.15] mb-4 tracking-tight transition-all duration-700 ${
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+          }`}
+          style={{ transitionDelay: "0.1s" }}
+        >
+          One Vision. One Team.
+          <br />
+          <span className="text-muted-foreground italic font-normal">One Flawless Event.</span>
+        </h2>
+        
+        {/* Description */}
+        <p 
+          className={`text-muted-foreground leading-relaxed mb-6 max-w-2xl mx-auto text-sm md:text-base transition-all duration-700 ${
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+          }`}
+          style={{ transitionDelay: "0.2s" }}
+        >
+          At Imagine Entertainment, a single, seasoned team of producers, directors, and technicians brings your ideas to life from concept to execution. With our full-service, cross-functional crew working side by side under one roof, you get one accountable partner delivering seamless, unforgettable experiences.
+        </p>
+        
+        {/* CTA Button */}
+        <div 
+          className={`mb-10 transition-all duration-700 ${
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+          }`}
+          style={{ transitionDelay: "0.3s" }}
+        >
+          <Link
+            href="/contact"
+            className="cursor-target inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-all shadow-md hover:shadow-lg"
+          >
+            Start Your Project
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+        
+        {/* Tags - Single Row Layout */}
+        <div 
+          className={`flex flex-col md:flex-row justify-center gap-6 md:gap-10 transition-all duration-700 ${
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+          }`}
+          style={{ transitionDelay: "0.4s" }}
+        >
+          {/* Services */}
+          <div className="flex flex-col items-center">
+            <p className="text-muted-foreground text-xs tracking-[0.15em] mb-3 font-medium uppercase">
+              Services
+            </p>
+            <div className="flex flex-wrap justify-center gap-1.5">
+              {services.map((item, index) => (
+                <span 
+                  key={item} 
+                  className={`px-3 py-1.5 rounded-full bg-background/50 dark:bg-background/30 text-xs font-medium text-foreground/80 border border-border/40 transition-all duration-500 ${
+                    isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                  }`}
+                  style={{ transitionDelay: `${0.5 + index * 0.05}s` }}
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="hidden md:block w-px bg-border/30 self-stretch" />
+
+          {/* Industries */}
+          <div className="flex flex-col items-center">
+            <p className="text-muted-foreground text-xs tracking-[0.15em] mb-3 font-medium uppercase">
+              Industries
+            </p>
+            <div className="flex flex-wrap justify-center gap-1.5">
+              {industries.map((item, index) => (
+                <span 
+                  key={item} 
+                  className={`px-3 py-1.5 rounded-full bg-background/50 dark:bg-background/30 text-xs font-medium text-foreground/80 border border-border/40 transition-all duration-500 ${
+                    isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                  }`}
+                  style={{ transitionDelay: `${0.6 + index * 0.05}s` }}
+                >
+                  {item}
+                </span>
               ))}
             </div>
           </div>
@@ -323,6 +414,60 @@ function StatementReveal() {
         Every great experience starts with a story. We partner with you to shape that story-from imagination to impact-creating moments people remember.
       </p>
     </div>
+  )
+}
+
+function CTASection() {
+  const [isVisible, setIsVisible] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setIsVisible(true)
+      },
+      { threshold: 0.3 },
+    )
+    if (ref.current) observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <section ref={ref} className="relative h-[45vh] md:h-[60vh] overflow-hidden mx-4 md:mx-6 rounded-2xl">
+      <Image
+        src="/dramatic-concert-stage-lighting-dark-atmospheric-p.jpg"
+        alt="Let's talk"
+        fill
+        className="object-cover"
+        sizes="(max-width: 768px) 100vw, 100vw"
+      />
+      <div className="absolute inset-0 bg-black/50 dark:bg-black/70" />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="text-center text-white dark:text-white px-6">
+          <p 
+            className={`text-sm tracking-[0.2em] mb-4 text-white/70 dark:text-white/80 transition-all duration-700 ${
+              isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+            }`}
+          >
+            READY TO CREATE?
+          </p>
+          <div 
+            className={`transition-all duration-700 ${
+              isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+            }`}
+            style={{ transitionDelay: "0.15s" }}
+          >
+            <Link 
+              href="/contact" 
+              className="cursor-target group inline-flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all rounded-full"
+            >
+              <span className="text-xl md:text-2xl font-medium text-white dark:text-white">Let's Talk</span>
+              <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
 

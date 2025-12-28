@@ -17,7 +17,7 @@ const projectTypes = [
 ]
 
 export default function ContactPage() {
-  const [isLoaded, setIsLoaded] = useState(true)
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100)
@@ -40,28 +40,17 @@ export default function ContactPage() {
 
         <div className="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-10 pb-16 md:pb-20">
           <div className="max-w-3xl">
-            <div className="overflow-hidden mb-3">
-              <p
-                className={`text-white/50 dark:text-white/70 text-xs tracking-[0.15em] transition-all duration-700 ${
-                  isLoaded ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
-                }`}
-              >
+            <div className="mb-3">
+              <p className="text-white/50 dark:text-white/70 text-xs tracking-[0.15em]">
                 GET IN TOUCH
               </p>
             </div>
             <h1>
-              <div className="overflow-hidden">
-                <span
-                  className={`block text-4xl md:text-5xl lg:text-6xl font-medium leading-[1.1] text-white dark:text-white transition-all duration-700 ${
-                    isLoaded ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
-                  }`}
-                  style={{ transitionDelay: "0.15s" }}
-                >
-                  Let's Create Something
-                  <br />
-                  <span className="italic font-normal text-white/80 dark:text-white/70">Extraordinary</span>
-                </span>
-              </div>
+              <span className="block text-4xl md:text-5xl lg:text-6xl font-medium leading-[1.1] text-white dark:text-white">
+                Let's Create Something
+                <br />
+                <span className="italic font-normal text-white/80 dark:text-white/70">Extraordinary</span>
+              </span>
             </h1>
           </div>
         </div>
@@ -71,15 +60,15 @@ export default function ContactPage() {
         <div className="max-w-[1400px] mx-auto">
           <div className="grid lg:grid-cols-[1fr_2fr] gap-12 lg:gap-16">
             {/* Contact Info - Left Side */}
-            <div
-              className={`flex flex-col justify-between h-full transition-all duration-700 ${
-                isLoaded ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-              }`}
-              style={{ transitionDelay: "0.3s" }}
-            >
+            <div className="flex flex-col justify-between h-full">
               {/* Contact Details */}
               <div className="space-y-12">
-                <div>
+                <div
+                  className={`transition-all duration-700 ${
+                    isLoaded ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                  }`}
+                  style={{ transitionDelay: "0.3s" }}
+                >
                   <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4">//Email</p>
                   <a
                     href="mailto:info@imaginesl.com"
@@ -89,7 +78,12 @@ export default function ContactPage() {
                   </a>
                 </div>
 
-                <div>
+                <div
+                  className={`transition-all duration-700 ${
+                    isLoaded ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                  }`}
+                  style={{ transitionDelay: "0.4s" }}
+                >
                   <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4">//Phone</p>
                   <a
                     href="tel:+94717750744"
@@ -99,7 +93,12 @@ export default function ContactPage() {
                   </a>
                 </div>
 
-                <div>
+                <div
+                  className={`transition-all duration-700 ${
+                    isLoaded ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                  }`}
+                  style={{ transitionDelay: "0.5s" }}
+                >
                   <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4">//Location</p>
                   <address className="text-lg font-medium not-italic leading-relaxed">
                     <p>No : 97 Delkanda,</p>
@@ -111,7 +110,12 @@ export default function ContactPage() {
               </div>
 
               {/* Social Icons - Pushed to Bottom */}
-              <div className="mt-12 lg:mt-0">
+              <div 
+                className={`mt-12 lg:mt-0 transition-all duration-700 ${
+                  isLoaded ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                }`}
+                style={{ transitionDelay: "0.6s" }}
+              >
                 <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4">//Follow Us</p>
                 <div className="flex gap-3">
                   {/* Facebook */}
@@ -171,7 +175,7 @@ export default function ContactPage() {
               className={`transition-all duration-700 ${
                 isLoaded ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
               }`}
-              style={{ transitionDelay: "0.5s" }}
+              style={{ transitionDelay: "0.4s" }}
             >
               {/* Highlighted Form Container */}
               <div className="relative overflow-hidden bg-stone-100 dark:bg-white/5 rounded-3xl p-8 md:p-10 border border-stone-200/80 dark:border-white/10 shadow-lg dark:shadow-none">
@@ -193,23 +197,7 @@ export default function ContactPage() {
       </section>
 
       {/* Google Maps Section */}
-      <section className="px-6 md:px-10 pb-8 md:pb-10">
-        <div className="max-w-[1400px] mx-auto">
-          <div className="rounded-2xl overflow-hidden">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.287193906835!2d79.89516797399497!3d6.856139919210529!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae25a8a95dd48b1%3A0xcbe65810955771f5!2sImagine%20Entertainment%20(Pvt)%20Ltd!5e0!3m2!1sen!2slk!4v1766860301232!5m2!1sen!2slk"
-              width="100%"
-              height="450"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Imagine Entertainment Location"
-              className="w-full"
-            />
-          </div>
-        </div>
-      </section>
+      <MapSection />
 
       <Footer />
     </main>
@@ -460,5 +448,46 @@ function ContactForm() {
         <a href="/privacy" className="text-foreground hover:underline font-medium">Privacy Policy</a>
       </p>
     </form>
+  )
+}
+
+function MapSection() {
+  const [isVisible, setIsVisible] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setIsVisible(true)
+      },
+      { threshold: 0.2 },
+    )
+    if (ref.current) observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <section 
+      ref={ref} 
+      className={`px-6 md:px-10 pb-8 md:pb-10 transition-all duration-700 ${
+        isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+      }`}
+    >
+      <div className="max-w-[1400px] mx-auto">
+        <div className="rounded-2xl overflow-hidden">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.287193906835!2d79.89516797399497!3d6.856139919210529!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae25a8a95dd48b1%3A0xcbe65810955771f5!2sImagine%20Entertainment%20(Pvt)%20Ltd!5e0!3m2!1sen!2slk!4v1766860301232!5m2!1sen!2slk"
+            width="100%"
+            height="450"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Imagine Entertainment Location"
+            className="w-full"
+          />
+        </div>
+      </div>
+    </section>
   )
 }

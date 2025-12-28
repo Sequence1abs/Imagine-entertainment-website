@@ -17,15 +17,27 @@ import { socialLinks } from "@/lib/socials"
 
 // Animation variants for smooth, optimized animations
 const navVariants = {
+  hidden: {
+    opacity: 0,
+    y: -10,
+    backgroundColor: "rgba(0, 0, 0, 0)",
+    backdropFilter: "blur(0px)",
+  },
   transparent: {
+    opacity: 1,
+    y: 0,
     backgroundColor: "rgba(0, 0, 0, 0)",
     backdropFilter: "blur(0px)",
   },
   scrolledDark: {
+    opacity: 1,
+    y: 0,
     backgroundColor: "rgba(0, 0, 0, 0.7)",
     backdropFilter: "blur(20px)",
   },
   scrolledLight: {
+    opacity: 1,
+    y: 0,
     backgroundColor: "rgba(255, 255, 255, 0.7)",
     backdropFilter: "blur(20px)",
   },
@@ -246,12 +258,14 @@ export default function Navigation() {
   return (
     <>
       <motion.nav
-        initial="transparent"
-        animate={getNavAnimationState()}
+        initial="hidden"
+        animate={mounted ? getNavAnimationState() : "hidden"}
         variants={navVariants}
         transition={{ 
-          duration: 0.5, 
+          duration: 0.6, 
           ease: [0.25, 0.1, 0.25, 1],
+          opacity: { duration: 0.5, delay: 0.1 },
+          y: { duration: 0.5, delay: 0.1 },
           backgroundColor: { duration: 0.4, ease: "easeInOut" },
           backdropFilter: { duration: 0.6, ease: "easeOut" }
         }}
