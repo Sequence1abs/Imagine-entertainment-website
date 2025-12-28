@@ -2,9 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Button } from "@/components/ui/button"
 import { X, Cookie } from "lucide-react"
-import { cn } from "@/lib/utils"
 
 export function CookieConsent() {
   // Start hidden to avoid hydration mismatch, check on mount
@@ -58,19 +56,18 @@ export function CookieConsent() {
               </div>
 
               <div className="flex gap-2 pt-2">
-                <Button 
+                <button 
                   onClick={accept}
-                  className="flex-1 rounded-full"
+                  className="flex-1 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                 >
                   Accept All
-                </Button>
-                <Button 
+                </button>
+                <button 
                   onClick={decline}
-                  variant="outline" 
-                  className="flex-1 rounded-full"
+                  className="flex-1 rounded-full border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
                 >
                   Decline
-                </Button>
+                </button>
               </div>
             </div>
 
@@ -87,3 +84,4 @@ export function CookieConsent() {
     </AnimatePresence>
   )
 }
+

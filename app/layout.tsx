@@ -18,8 +18,23 @@ export const metadata: Metadata = {
   title: "IMAGINE ENTERTAINMENT",
   description:
     "Full-service event production for corporate events, television, film, and theatre. We create extraordinary experiences that captivate audiences worldwide.",
-
-
+  keywords: ["Event Production", "Corporate Events", "Concert Production", "Stage Lighting", "Audio Visual", "Sri Lanka", "Imagine Entertainment"],
+  authors: [{ name: "Imagine Entertainment" }],
+  creator: "Imagine Entertainment",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://imagine-entertainment.com/",
+    title: "IMAGINE ENTERTAINMENT",
+    description: "Full-service event production for corporate events, television, film, and theatre.",
+    siteName: "Imagine Entertainment",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "IMAGINE ENTERTAINMENT",
+    description: "Full-service event production for corporate events, television, film, and theatre.",
+    creator: "@imagineentertainment",
+  },
   icons: {
     icon: [
       { url: "/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },

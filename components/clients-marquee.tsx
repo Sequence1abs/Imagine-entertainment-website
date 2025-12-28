@@ -8,17 +8,17 @@ const clients = [
   { abbr: "HIR", name: "Hiru TV", image: "Hiru_TV-Logo1.png" },
   { abbr: "DER", name: "TV Derana", image: "TV_Derana_Logo.png" },
   { abbr: "SIR", name: "Sirasa TV", image: "Sirasa_TV_Logo.png" },
-  { abbr: "SWA", name: "Swarnavahini", image: "swarnavahini.png" }, // Placeholder filename
+  { abbr: "SWA", name: "Swarnavahini", image: "swarnavahini.png" },
   { abbr: "ITN", name: "ITN", image: "ITN_Television_Logo_of_Sri_lanka.png" },
   { abbr: "RUP", name: "Rupavahini", image: "Logo_of_Sri_Lanka_Rupavahini_Corporation.png" },
-  { abbr: "WE", name: "Waters Edge", image: "waters-edge.png" }, // Placeholder
+  { abbr: "WE", name: "Waters Edge", image: "waters-edge.png" },
   { abbr: "HIL", name: "Hilton", image: "hilton-logo.png" },
-  { abbr: "KIN", name: "The Kingsbury", image: "the-kingsbury.png" }, // Placeholder
-  { abbr: "TAJ", name: "Taj Samudra", image: "taj-samudra.png" }, // Placeholder
-  { abbr: "SHA", name: "Shangri-La", image: "shangri-la.png" }, // Placeholder
-  { abbr: "MLH", name: "Mount Lavinia", image: "mount-lavinia-hotel.png" }, // Placeholder
-  { abbr: "GFH", name: "Galle Face", image: "galle-face-hotel.png" }, // Placeholder
-  { abbr: "AVN", name: "Avenra", image: "avenra.png" }, // Placeholder
+  { abbr: "KIN", name: "The Kingsbury", image: "the-kingsbury.png" },
+  { abbr: "TAJ", name: "Taj Samudra", image: "taj-samudra.png" },
+  { abbr: "SHA", name: "Shangri-La", image: "shangri-la.png" },
+  { abbr: "MLH", name: "Mount Lavinia", image: "mount-lavinia-hotel.png" },
+  { abbr: "GFH", name: "Galle Face", image: "galle-face-hotel.png" },
+  { abbr: "AVN", name: "Avenra", image: "avenra.png" },
 ]
 
 // Corporate

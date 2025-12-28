@@ -192,7 +192,7 @@ const Masonry: React.FC<MasonryProps> = ({
   const animatedIds = useRef<Set<string>>(new Set());
 
   useLayoutEffect(() => {
-    if (!imagesReady || grid.length === 0) return;
+    if (grid.length === 0) return;
 
     // Wait a frame to ensure all refs are set
     requestAnimationFrame(() => {

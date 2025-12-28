@@ -51,7 +51,7 @@ export default function Hero() {
           preload="auto"
           aria-label="Imagine Entertainment showreel"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 dark:from-black/50 dark:via-black/30 dark:to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 dark:from-black/60 dark:via-black/40 dark:to-black/80" />
       </div>
 
       {/* Content Overlay */}

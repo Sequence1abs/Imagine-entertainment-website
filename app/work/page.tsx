@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowUpRight } from "lucide-react"
 import Footer from "@/components/footer"
 
@@ -242,10 +243,12 @@ function ProjectCard({ project, index }: { project: (typeof allProjects)[0]; ind
       style={{ transitionDelay: `${(index % 4) * 0.1}s` }}
     >
       <div className="relative overflow-hidden aspect-[4/3] mb-4 bg-muted rounded-xl">
-        <img
+        <Image
           src={project.image || "/placeholder.svg"}
           alt={project.title}
-          className="w-full h-full object-cover img-scale"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover img-scale"
         />
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500" />
       </div>

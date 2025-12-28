@@ -310,8 +310,9 @@ function ContactForm() {
     <form className="space-y-8" onSubmit={handleSubmit}>
       <div className="grid md:grid-cols-2 gap-8">
         <div>
-          <label className="block text-xs tracking-[0.15em] text-muted-foreground mb-3">NAME</label>
+          <label htmlFor="name" className="block text-xs tracking-[0.15em] text-muted-foreground mb-3">NAME</label>
           <input
+            id="name"
             type="text"
             required
             value={formData.name}
@@ -321,8 +322,9 @@ function ContactForm() {
           />
         </div>
         <div>
-          <label className="block text-xs tracking-[0.15em] text-muted-foreground mb-3">EMAIL</label>
+          <label htmlFor="email" className="block text-xs tracking-[0.15em] text-muted-foreground mb-3">EMAIL</label>
           <input
+            id="email"
             type="email"
             required
             value={formData.email}
@@ -335,8 +337,9 @@ function ContactForm() {
 
       <div className="grid md:grid-cols-2 gap-8">
         <div>
-          <label className="block text-xs tracking-[0.15em] text-muted-foreground mb-3">PHONE</label>
+          <label htmlFor="phone" className="block text-xs tracking-[0.15em] text-muted-foreground mb-3">PHONE</label>
           <input
+            id="phone"
             type="tel"
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -345,8 +348,9 @@ function ContactForm() {
           />
         </div>
         <div>
-          <label className="block text-xs tracking-[0.15em] text-muted-foreground mb-3">COMPANY</label>
+          <label htmlFor="company" className="block text-xs tracking-[0.15em] text-muted-foreground mb-3">COMPANY</label>
           <input
+            id="company"
             type="text"
             value={formData.company}
             onChange={(e) => setFormData({ ...formData, company: e.target.value })}
@@ -357,9 +361,10 @@ function ContactForm() {
       </div>
 
       <div ref={dropdownRef} className="relative">
-        <label className="block text-xs tracking-[0.15em] text-muted-foreground mb-3">EVENT TYPE</label>
+        <label id="event-type-label" className="block text-xs tracking-[0.15em] text-muted-foreground mb-3">EVENT TYPE</label>
         <button
           type="button"
+          aria-labelledby="event-type-label"
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           className="w-full flex items-center justify-between bg-transparent border-b border-border pb-3 text-left transition-colors focus:border-foreground outline-none"
         >
@@ -398,12 +403,13 @@ function ContactForm() {
 
       <div>
         <div className="flex justify-between items-center mb-3">
-          <label className="text-xs tracking-[0.15em] text-muted-foreground">MESSAGE</label>
+          <label htmlFor="message" className="text-xs tracking-[0.15em] text-muted-foreground">MESSAGE</label>
           <span className={`text-xs ${formData.message.length > 500 ? 'text-red-500' : 'text-muted-foreground'}`}>
             {formData.message.length}/500
           </span>
         </div>
         <textarea
+          id="message"
           rows={4}
           required
           maxLength={500}

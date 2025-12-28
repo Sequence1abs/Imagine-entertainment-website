@@ -7,13 +7,12 @@
   pointer-events: none;
   z-index: 9999;
   mix-blend-mode: difference;
-  transform: translate(-50%, -50%);
 }
 
 .target-cursor-dot {
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: 0;
+  top: 0;
   width: 4px;
   height: 4px;
   background: #fff;
@@ -24,8 +23,8 @@
 
 .target-cursor-corner {
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: 0;
+  top: 0;
   width: 10px;
   height: 10px;
   border: 2px solid #fff;
@@ -33,30 +32,25 @@
 }
 
 .corner-tl {
-  transform: translate(calc(-100% - 6px), calc(-100% - 6px));
   border-right: none;
   border-bottom: none;
   border-top-left-radius: 10px;
 }
 
 .corner-tr {
-  transform: translate(6px, calc(-100% - 6px));
   border-left: none;
   border-bottom: none;
   border-top-right-radius: 10px;
 }
 
 .corner-br {
-  transform: translate(6px, 6px);
   border-left: none;
   border-top: none;
   border-bottom-right-radius: 10px;
 }
 
 .corner-bl {
-  transform: translate(calc(-100% - 6px), 6px);
   border-right: none;
   border-top: none;
   border-bottom-left-radius: 10px;
 }
-

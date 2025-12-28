@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowLeft, ArrowUpRight } from "lucide-react"
 import Footer from "@/components/footer"
 import Masonry from "@/components/Masonry"
@@ -10,7 +11,7 @@ import Masonry from "@/components/Masonry"
 // Helper function to get image dimensions
 const getImageDimensions = (src: string): Promise<{ width: number; height: number }> => {
   return new Promise((resolve) => {
-    const img = new Image()
+    const img = new window.Image()
     img.onload = () => {
       resolve({ width: img.naturalWidth, height: img.naturalHeight })
     }
@@ -272,10 +273,13 @@ export default function WorkDetailPage() {
     <main className="min-h-screen bg-background" suppressHydrationWarning>
       {/* Hero Image */}
       <section className="relative h-[60vh] md:h-[70vh] overflow-hidden">
-        <img
+        <Image
           src={project.images[0]}
           alt={project.title}
-          className="w-full h-full object-cover"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/70 to-foreground/40 dark:from-black/90 dark:via-black/70 dark:to-black/40" />
         <div className="absolute inset-0 bg-black/40 dark:bg-black/50" />
