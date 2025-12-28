@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import Footer from "@/components/footer"
+import PublicLayout from "@/components/layouts/public-layout"
 
 export default function AboutPage() {
   const [isLoaded, setIsLoaded] = useState(true)
@@ -14,6 +15,7 @@ export default function AboutPage() {
   }, [])
 
   return (
+    <PublicLayout>
     <main className="min-h-screen bg-background">
       {/* Hero */}
       <section className="relative min-h-[60vh] md:min-h-[70vh] bg-foreground dark:bg-black text-white overflow-hidden flex items-end">
@@ -108,6 +110,7 @@ export default function AboutPage() {
 
       <Footer />
     </main>
+    </PublicLayout>
   )
 }
 

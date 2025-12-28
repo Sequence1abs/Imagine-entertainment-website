@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import { ArrowRight, ArrowUpRight } from "lucide-react"
 import Footer from "@/components/footer"
+import PublicLayout from "@/components/layouts/public-layout"
 
 const services = [
   {
@@ -105,6 +106,7 @@ export default function ServicesPage() {
   }, [])
 
   return (
+    <PublicLayout>
     <main className="min-h-screen bg-background">
       <section className="pt-28 pb-12 md:pt-36 md:pb-16 px-6 md:px-10">
         <div className="max-w-[1400px] mx-auto">
@@ -188,6 +190,7 @@ export default function ServicesPage() {
 
       <Footer />
     </main>
+    </PublicLayout>
   )
 }
 

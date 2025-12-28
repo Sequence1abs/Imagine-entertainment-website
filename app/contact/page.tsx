@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react"
 import type React from "react"
 import { ArrowRight, ChevronDown, Check } from "lucide-react"
 import Footer from "@/components/footer"
+import PublicLayout from "@/components/layouts/public-layout"
 
 const projectTypes = [
   { value: "corporate", label: "Corporate" },
@@ -25,6 +26,7 @@ export default function ContactPage() {
   }, [])
 
   return (
+    <PublicLayout>
     <main className="min-h-screen bg-background">
       {/* Hero Section with Image */}
       <section className="relative min-h-[60vh] md:min-h-[70vh] bg-foreground dark:bg-black text-white overflow-hidden flex items-end">
@@ -201,6 +203,7 @@ export default function ContactPage() {
 
       <Footer />
     </main>
+    </PublicLayout>
   )
 }
 

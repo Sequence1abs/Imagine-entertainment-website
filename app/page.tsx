@@ -8,6 +8,7 @@ import Hero from "@/components/hero"
 import ClientsMarquee from "@/components/clients-marquee"
 import Testimonials from "@/components/testimonials"
 import Footer from "@/components/footer"
+import PublicLayout from "@/components/layouts/public-layout"
 
 // Services data - 5 column bento grid (matches user's sketch)
 // Row 1: Corporate(1), Television(1), Musical(2), Rigging(1) = 5 cols
@@ -76,44 +77,46 @@ const services = [
 export default function Home() {
 
   return (
-    <main className="min-h-screen bg-background" suppressHydrationWarning>
-      {/* Hero Section */}
-      <Hero />
+    <PublicLayout>
+      <main className="min-h-screen bg-background" suppressHydrationWarning>
+        {/* Hero Section */}
+        <Hero />
 
-      {/* Philosophy section */}
-      <section id="philosophy" className="pt-20 md:pt-28 pb-10 md:pb-14 px-6 md:px-10">
-        <div className="max-w-[1400px] mx-auto">
-          <StatementReveal />
-        </div>
-      </section>
-
-      {/* Services Bento Grid */}
-      <section className="pt-10 md:pt-14 pb-20 md:pb-28 mx-4 md:mx-6">
-        <div className="max-w-[1400px] mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-5 auto-rows-[220px] md:auto-rows-[280px]">
-            {services.map((service, index) => (
-              <ServiceBentoCard key={service.id} service={service} index={index} />
-            ))}
-            {/* View Our Services Card - Below Rigging Services */}
-            <ViewServicesCard index={services.length} />
+        {/* Philosophy section */}
+        <section id="philosophy" className="pt-20 md:pt-28 pb-10 md:pb-14 px-6 md:px-10">
+          <div className="max-w-[1400px] mx-auto">
+            <StatementReveal />
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Expertise Section */}
-      <ExpertiseSection />
+        {/* Services Bento Grid */}
+        <section className="pt-10 md:pt-14 pb-20 md:pb-28 mx-4 md:mx-6">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-5 auto-rows-[220px] md:auto-rows-[280px]">
+              {services.map((service, index) => (
+                <ServiceBentoCard key={service.id} service={service} index={index} />
+              ))}
+              {/* View Our Services Card - Below Rigging Services */}
+              <ViewServicesCard index={services.length} />
+            </div>
+          </div>
+        </section>
 
-      {/* Clients & Testimonials */}
-      <ClientsMarquee />
-      <Testimonials />
+        {/* Expertise Section */}
+        <ExpertiseSection />
 
-      <StatsSection />
+        {/* Clients & Testimonials */}
+        <ClientsMarquee />
+        <Testimonials />
 
-      {/* Pre-footer CTA */}
-      <CTASection />
+        <StatsSection />
 
-      <Footer />
-    </main>
+        {/* Pre-footer CTA */}
+        <CTASection />
+
+        <Footer />
+      </main>
+    </PublicLayout>
   )
 }
 

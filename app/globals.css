@@ -273,3 +273,12 @@ nav {
 .transition-400 {
   transition-duration: 400ms;
 }
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

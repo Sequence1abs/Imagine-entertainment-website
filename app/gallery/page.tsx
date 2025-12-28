@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react"
 import Masonry from "@/components/Masonry"
+import PublicLayout from "@/components/layouts/public-layout"
 
 const INITIAL_LOAD_COUNT = 20 // Load 20 images initially
 const LOAD_MORE_COUNT = 15 // Load 15 more images each time
@@ -191,6 +192,7 @@ export default function GalleryPage() {
   }, [hasMore, isLoadingMore, loadMore])
 
   return (
+    <PublicLayout>
     <main className="min-h-screen bg-background text-foreground">
       <section className="pt-28 pb-12 px-6 md:px-10 max-w-[1400px] mx-auto">
         <div className="max-w-[1400px] mx-auto mb-10 md:mb-16">
@@ -252,6 +254,7 @@ export default function GalleryPage() {
         )}
       </section>
     </main>
+    </PublicLayout>
   )
 }
 

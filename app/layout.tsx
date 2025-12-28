@@ -3,10 +3,7 @@ import type { Metadata, Viewport } from "next"
 import { Outfit } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
-import Navigation from "@/components/navigation"
-import { CookieConsent } from "@/components/cookie-consent"
 import { ThemeProvider } from "@/components/theme-provider"
-import CursorProvider from "@/components/cursor-provider"
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -64,11 +61,8 @@ export default function RootLayout({
     <html lang="en" className={outfit.variable} suppressHydrationWarning>
       <body className="font-sans antialiased overflow-x-hidden" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-        <CursorProvider />
-        <Navigation />
-        {children}
-        <Analytics />
-        <CookieConsent />
+          {children}
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
