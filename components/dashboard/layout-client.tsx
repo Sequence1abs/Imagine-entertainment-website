@@ -1,6 +1,8 @@
 "use client"
 
 import * as React from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { usePathname } from "next/navigation"
 import { AppSidebar } from "@/components/dashboard/app-sidebar"
 import { SiteHeader } from "@/components/dashboard/site-header"
 import { LoginForm } from "@/components/dashboard/login-form"
@@ -12,8 +14,49 @@ interface DashboardLayoutClientProps {
   user?: { email: string; name?: string }
 }
 
+// Page transition variants
+const pageVariants = {
+  initial: { 
+    opacity: 0, 
+    y: 8,
+  },
+  enter: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.3,
+      ease: [0.25, 0.46, 0.45, 0.94],
+    }
+  },
+  exit: { 
+    opacity: 0,
+    y: -8,
+    transition: {
+      duration: 0.2,
+      ease: [0.45, 0.45, 0.55, 0.95],
+    }
+  }
+}
+
+// Login form animation variants
+const loginVariants = {
+  initial: { 
+    opacity: 0, 
+    scale: 0.96,
+  },
+  enter: { 
+    opacity: 1, 
+    scale: 1,
+    transition: {
+      duration: 0.4,
+      ease: [0.25, 0.46, 0.45, 0.94],
+    }
+  }
+}
+
 export function DashboardLayoutClient({ children, isAuthenticated, user }: DashboardLayoutClientProps) {
   const [mounted, setMounted] = React.useState(false)
+  const pathname = usePathname()
 
   React.useEffect(() => {
     setMounted(true)
@@ -22,9 +65,14 @@ export function DashboardLayoutClient({ children, isAuthenticated, user }: Dashb
   if (!isAuthenticated) {
     return (
       <div className="min-h-dvh bg-muted flex flex-col items-center justify-center p-6 md:p-10">
-        <div className="w-full max-w-sm md:max-w-4xl">
+        <motion.div 
+          className="w-full max-w-sm md:max-w-4xl"
+          initial="initial"
+          animate="enter"
+          variants={loginVariants}
+        >
           <LoginForm />
-        </div>
+        </motion.div>
       </div>
     )
   }
@@ -53,9 +101,18 @@ export function DashboardLayoutClient({ children, isAuthenticated, user }: Dashb
         <div className="flex h-[calc(100svh-1rem)] flex-col rounded-xl bg-background overflow-hidden">
           <SiteHeader />
           <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pb-4 pt-6">
-            <div className="flex flex-col gap-4">
-              {children}
-            </div>
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={pathname}
+                className="flex flex-col gap-4"
+                initial="initial"
+                animate="enter"
+                exit="exit"
+                variants={pageVariants}
+              >
+                {children}
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </SidebarInset>
