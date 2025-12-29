@@ -2,10 +2,11 @@ import { createClient, createAdminClient } from '@/lib/supabase/server'
 import type { Event, EventWithImages, EventImage, GalleryImage, EventFormData } from '@/lib/types/database'
 
 // ============ PUBLIC READ OPERATIONS ============
+// All public read operations use admin client since they don't need user context
 
 // Get all published events (for public /work page)
 export async function getPublishedEvents(): Promise<Event[]> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   
   const { data, error } = await supabase
     .from('events')
@@ -23,7 +24,7 @@ export async function getPublishedEvents(): Promise<Event[]> {
 
 // Get single event by ID (for public /work/[id] page)
 export async function getEventById(id: string): Promise<EventWithImages | null> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   
   const { data, error } = await supabase
     .from('events')
