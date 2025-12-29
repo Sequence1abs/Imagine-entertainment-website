@@ -24,36 +24,54 @@ export default function SetupAccountPage() {
 
   useEffect(() => {
     const supabase = createClient()
+    let timeoutId: NodeJS.Timeout | null = null
+    let isMounted = true
     
     // Check if this is an invite flow
     const params = new URLSearchParams(window.location.search)
     const isInvite = params.get('type') === 'invite' || window.location.hash.includes('access_token')
 
+    // Timeout fallback - if verification takes too long, show error
+    timeoutId = setTimeout(() => {
+      if (isMounted && isCheckingSession) {
+        setError("Verification timed out. Please try clicking the invite link again.")
+        setIsCheckingSession(false)
+      }
+    }, 15000) // 15 second timeout
+
+    const checkSession = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user && isMounted) {
+        setEmail(user.email || null)
+        setIsCheckingSession(false)
+        if (timeoutId) clearTimeout(timeoutId)
+      }
+    }
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user) {
+      if (session?.user && isMounted) {
         setEmail(session.user.email || null)
         setIsCheckingSession(false)
-      } else if (!session && !isInvite) {
+        if (timeoutId) clearTimeout(timeoutId)
+      } else if (!session && !isInvite && isMounted) {
         // Only redirect if not waiting for invite token processing
         router.push("/dashboard?error=invalid_invite")
       }
     })
 
-    // Fallback check for existing session
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) {
-        setEmail(user.email || null)
-        setIsCheckingSession(false)
-      } else if (!isInvite) {
-        // If no user and not an invitation link, redirect
-         router.push("/dashboard?error=invalid_invite")
-      }
-    })
+    // Initial check
+    checkSession()
+
+    // Retry session check after a short delay (in case auth callback is slow)
+    const retryTimeout = setTimeout(checkSession, 2000)
 
     return () => {
+      isMounted = false
       subscription.unsubscribe()
+      if (timeoutId) clearTimeout(timeoutId)
+      clearTimeout(retryTimeout)
     }
-  }, [router])
+  }, [router, isCheckingSession])
 
   const validatePassword = (password: string): string | null => {
     if (password.length < 6) {
