@@ -53,18 +53,18 @@ export const viewport: Viewport = {
   userScalable: true,
 }
 
-import { useAutoLogout } from "@/hooks/use-auto-logout"
+import { AutoLogoutListener } from "@/components/auth/auto-logout-listener"
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  useAutoLogout()
   
   return (
     <html lang="en" className={outfit.variable} suppressHydrationWarning>
       <body className="font-sans antialiased overflow-x-hidden" suppressHydrationWarning>
+        <AutoLogoutListener />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           {children}
           <Analytics />

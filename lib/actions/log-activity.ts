@@ -26,12 +26,21 @@ export async function logActivity(
   // Get current user if possible, or leave null (system action)
   const { data: { user } } = await (await createAdminClient()).auth.getUser()
 
-  await supabase.from("activity_logs").insert({
+  const payload = {
     action,
-    details,
+    details: {
+        ...details,
+        user_email: user?.email // Captured for display purposes
+    },
     entity_type: entityType,
     entity_id: entityId,
-    user_id: user?.id || null, // Might be null if triggered by background job/anon, but ideally we have user
+    user_id: user?.id || null,
     device_info: deviceInfo
-  })
+  }
+
+  const { error } = await supabase.from("activity_logs").insert(payload)
+
+  if (error) {
+    console.error('Error inserting activity log:', error)
+  }
 }

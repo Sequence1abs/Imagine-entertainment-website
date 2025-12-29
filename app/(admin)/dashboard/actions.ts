@@ -103,34 +103,3 @@ export async function updatePassword(formData: FormData) {
   return { success: true }
 }
 
-
-export async function logActivity(
-  action: string,
-  entityType?: string,
-  entityId?: string,
-  details?: any
-) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) return
-
-  try {
-    const { error } = await supabase.from('activity_logs').insert({
-      user_id: user.id,
-      action,
-      entity_type: entityType,
-      entity_id: entityId,
-      details: {
-        ...details,
-        user_email: user.email // Store email for display
-      }
-    })
-
-    if (error) {
-      console.error('Failed to log activity:', error)
-    }
-  } catch (err) {
-    console.error('Error logging activity:', err)
-  }
-}
