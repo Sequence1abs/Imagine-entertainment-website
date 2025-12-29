@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import type { Event, EventWithImages, EventImage, GalleryImage, EventFormData } from '@/lib/types/database'
 
 // ============ PUBLIC READ OPERATIONS ============
@@ -46,8 +46,9 @@ export async function getEventById(id: string): Promise<EventWithImages | null> 
 }
 
 // Get all gallery images (for public /gallery page)
+// Uses admin client since this is public data and doesn't need user context
 export async function getAllGalleryImages(): Promise<string[]> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   
   // Get standalone gallery images
   const { data: galleryImages, error: galleryError } = await supabase
@@ -55,12 +56,20 @@ export async function getAllGalleryImages(): Promise<string[]> {
     .select('image_url')
     .order('created_at', { ascending: false })
   
+  if (galleryError) {
+    console.error('Error fetching gallery_images:', galleryError)
+  }
+  
   // Get event images from published events
   const { data: eventImages, error: eventError } = await supabase
     .from('event_images')
     .select('image_url, events!inner(is_published)')
     .eq('events.is_published', true)
     .order('created_at', { ascending: false })
+  
+  if (eventError) {
+    console.error('Error fetching event_images:', eventError)
+  }
   
   const images: string[] = []
   
