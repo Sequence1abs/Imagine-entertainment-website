@@ -68,16 +68,14 @@ export default function ClientsMarquee() {
     <section ref={ref} className="py-20 md:py-28 overflow-hidden" suppressHydrationWarning>
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 mb-12" suppressHydrationWarning>
         <p
-          className={`text-muted-foreground text-xs tracking-[0.2em] text-center mb-4 transition-all duration-700 ${
-            isVisible ? "opacity-100" : "opacity-0"
-          }`}
+          className={`text-muted-foreground text-xs tracking-[0.2em] text-center mb-4 transition-all duration-700 ${isVisible ? "opacity-100" : "opacity-0"
+            }`}
         >
           //TRUSTED BY
         </p>
         <h2
-          className={`text-3xl md:text-4xl lg:text-5xl font-medium text-center transition-all duration-700 ${
-            isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-          }`}
+          className={`text-3xl md:text-4xl lg:text-5xl font-medium text-center transition-all duration-700 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+            }`}
         >
           Industry-Leading
           <br />
@@ -114,7 +112,7 @@ function ClientCard({ client }: { client: { abbr: string; name: string; image?: 
           <div className="relative w-28 h-14 md:w-40 md:h-20 transition-transform duration-300 hover:scale-110">
             <Image
               src={`/brands/${client.image}`}
-              alt={client.name}
+              alt={`${client.name} Logo`}
               fill
               className="object-contain"
               sizes="(max-width: 768px) 112px, 160px"
