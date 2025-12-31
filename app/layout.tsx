@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://imagine-entertainment.com/",
+    url: "https://www.imaginesl.com/",
     title: "IMAGINE ENTERTAINMENT",
     description: "Full-service event production for corporate events, television, film, and theatre.",
     siteName: "Imagine Entertainment",

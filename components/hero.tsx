@@ -51,10 +51,11 @@ export default function Hero() {
           // @ts-expect-error - fetchPriority is valid but not in React types yet
           fetchPriority="high"
           aria-label="Imagine Entertainment showreel"
+          poster={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto,w_1920/IMAGINE/3b90c805-d870-4868-84b5-33041e3f242b`}
         >
           {/* Primary: Cloudinary CDN with auto-optimization */}
           <source 
-            src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/q_auto,f_auto/IMAGINE/Final_Web_w4daca`}
+            src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/q_auto,f_auto/IMAGINE/Final_Web_vyhf3y`}
             type="video/mp4" 
           />
           {/* Fallback: Self-hosted optimized versions */}
