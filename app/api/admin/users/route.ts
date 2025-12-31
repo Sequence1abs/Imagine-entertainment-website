@@ -79,7 +79,7 @@ export async function POST(request: Request) {
     if (sendInvite) {
       // Send invitation email
       const { data, error } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
-        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/setup-account?type=invite`,
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback?next=${encodeURIComponent('/setup-account?type=invite')}`,
       })
 
       if (error) {

@@ -21,9 +21,11 @@ export default function AboutPage() {
       <section className="relative min-h-[60vh] md:min-h-[70vh] bg-foreground dark:bg-black text-white overflow-hidden flex items-end">
         <div className="absolute inset-0">
           <img
-            src="/About 1st Appearence-min.jpg"
+            src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto,w_1920/About_1st_Appearence-min_o65dz0.jpg`}
             alt="Imagine Entertainment live event production with stunning stage lighting and visual effects"
             className="w-full h-full object-cover opacity-40 dark:opacity-70"
+            loading="eager"
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-foreground via-foreground/60 to-foreground/40 dark:from-black/90 dark:via-black/70 dark:to-black/50" />
           <div className="absolute inset-0 bg-black/40 dark:bg-black/50" />
@@ -246,7 +248,7 @@ function LeadershipSection() {
           {/* Image - Grayscale to Color on Hover */}
           <div className="relative aspect-[3/4] mb-8 overflow-hidden rounded-lg">
             <img
-              src="/directors/Mr Sajith Kodikara (Managing Director).webp"
+              src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/Mr_Sajith_Kodikara_Managing_Director_ry6wdi.png`}
               alt="Mr. Sajith Morawaka Kodikara - Managing Director of Imagine Entertainment, leading the company with 37 years of industry experience"
               className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
             />
@@ -270,7 +272,7 @@ function LeadershipSection() {
           {/* Image - Grayscale to Color on Hover */}
           <div className="relative aspect-[3/4] mb-8 overflow-hidden rounded-lg">
             <img
-              src="/directors/Mr Sandun Kodikara (Director).webp"
+              src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/Mr_Sandun_Kodikara_Director_tiz6ed.png`}
               alt="Mr. Sandun Morawaka Kodikara - Director of Imagine Entertainment, co-leading the company's vision and creative direction"
               className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
             />
@@ -368,7 +370,7 @@ function TeamSection() {
       >
         <div className="relative h-[70vh] md:h-[80vh]">
           <img
-            src="/creative-team-meeting-modern-office-collaboration-e.jpg"
+            src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/About-01_rsdanf.jpg`}
             alt="Our House"
             className="w-full h-full object-cover"
           />

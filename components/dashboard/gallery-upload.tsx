@@ -119,8 +119,8 @@ export function GalleryUpload({
 
       {/* Gallery Stats */}
       {totalImages > 0 && (
-        <div className="mt-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3 sm:gap-4">
             <h4 className="text-sm font-medium">
               Gallery ({totalImages}/{maxFiles})
             </h4>
@@ -132,11 +132,11 @@ export function GalleryUpload({
           </div>
           {files.length > 0 && (
             <div className="flex items-center gap-2">
-              <Button onClick={clearFiles} type="button" variant="outline" size="sm">
+              <Button onClick={clearFiles} type="button" variant="outline" size="sm" className="flex-1 sm:flex-initial">
                 Clear New
               </Button>
               {onUpload && (
-                <Button onClick={onUpload} type="button" size="sm" disabled={isUploading}>
+                <Button onClick={onUpload} type="button" size="sm" disabled={isUploading} className="flex-1 sm:flex-initial">
                   {isUploading ? 'Uploading...' : `Upload ${files.length} Image${files.length !== 1 ? 's' : ''}`}
                 </Button>
               )}

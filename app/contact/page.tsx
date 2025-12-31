@@ -32,9 +32,11 @@ export default function ContactPage() {
       <section className="relative min-h-[60vh] md:min-h-[70vh] bg-foreground dark:bg-black text-white overflow-hidden flex items-end">
         <div className="absolute inset-0">
           <img
-            src="/behind-the-scenes-event-production-crew-working-ba.jpg"
+            src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto,w_1920/IMG-2854_ywimbk.jpg`}
             alt="Let's talk"
             className="w-full h-full object-cover opacity-40 dark:opacity-70"
+            loading="eager"
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-linear-to-t from-foreground via-foreground/60 to-foreground/40 dark:from-black/90 dark:via-black/70 dark:to-black/50" />
           <div className="absolute inset-0 bg-black/40 dark:bg-black/50" />

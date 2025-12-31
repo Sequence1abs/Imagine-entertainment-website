@@ -57,9 +57,8 @@ function WorkPageContent() {
             })))
           }
         }
-      } catch (error) {
-        // Silently fall back to static data
-        console.log('Using fallback project data')
+      } catch {
+        // Silently fall back to empty state
       }
     }
     fetchEvents()

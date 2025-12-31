@@ -6,6 +6,11 @@ import { ArrowRight, ArrowUpRight } from "lucide-react"
 import Footer from "@/components/footer"
 import PublicLayout from "@/components/layouts/public-layout"
 
+// Cloudinary base URL
+const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+const getCloudinaryUrl = (publicId: string) => 
+  `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto/${publicId}.jpg`
+
 const services = [
   {
     number: "01",
@@ -20,7 +25,7 @@ const services = [
       "Hybrid & Virtual Events",
       "Total Studio Production",
     ],
-    image: "/corporate-event-stage-blue-lighting-conference.jpg",
+    image: getCloudinaryUrl("corporate_ka9aei"),
   },
   {
     number: "02",
@@ -36,14 +41,14 @@ const services = [
       "Animated TV & Films",
       "Televised Theatre & Performing Arts",
     ],
-    image: "/brit-awards-stage-red-lighting-production.jpg",
+    image: getCloudinaryUrl("TV_FILM_p7a2sm"),
   },
   {
     number: "03",
     title: "Musical Concert",
     description: "Full production services for concerts, festivals, and music events of all scales.",
     items: ["Concerts & Tours", "Music Festivals", "Dance Music Events", "Classical Music Concerts"],
-    image: "/music-festival-outdoor-stage-crowd-night-lights.jpg",
+    image: getCloudinaryUrl("music_efyntt"),
   },
   {
     number: "04",
@@ -55,14 +60,14 @@ const services = [
       "Pyrotechnics & Special Effects Rigging",
       "Custom Rigging Solutions",
     ],
-    image: "/professional-event-production-team-working-stage-s.jpg",
+    image: getCloudinaryUrl("rigging_sjkbut"),
   },
   {
     number: "05",
     title: "Public, Sports & Major Events",
     description: "Large-scale event production for public gatherings, sporting events, and ceremonies.",
     items: ["Sporting Events", "Public Events", "Opening & Closing Ceremonies"],
-    image: "/dramatic-stage-lighting-corporate-event-dark-green.jpg",
+    image: getCloudinaryUrl("public_sports_zzrust"),
   },
   {
     number: "06",
@@ -76,7 +81,7 @@ const services = [
       "Rehearsal, Recording & Post-Production Facilities",
       "End-to-End Technical Production Management",
     ],
-    image: "/professional-event-production-team-working-stage-s.jpg",
+    image: getCloudinaryUrl("inhouse_fxds5f"),
   },
   {
     number: "07",
@@ -92,7 +97,7 @@ const services = [
       "Destination Weddings & Luxury Experiences",
       "Themed & Cultural Wedding Productions",
     ],
-    image: "/dramatic-stage-lighting-corporate-event-dark-green.jpg",
+    image: getCloudinaryUrl("weddings_e86ttg"),
   },
 ]
 
@@ -303,11 +308,13 @@ function ServicesCTASection() {
     return () => observer.disconnect()
   }, [])
 
+  const ctaImageUrl = `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto/dramatic-concert-stage-lighting-dark-atmospheric-p_h5ck3u.jpg`
+
   return (
     <section ref={ref} className="relative py-28 md:py-36 overflow-hidden mx-4 md:mx-6 mt-16 rounded-2xl">
       <div className="absolute inset-0 bg-foreground dark:bg-black">
         <img
-          src="/dramatic-concert-stage-lighting-dark-atmospheric-p.jpg"
+          src={ctaImageUrl}
           alt="Production"
           className="w-full h-full object-cover opacity-30 dark:opacity-50"
         />

@@ -115,12 +115,12 @@ export function SystemStatus() {
 
   return (
     <div className="bg-card border border-border rounded-lg p-6 space-y-6">
-      <div className="flex items-center justify-between border-b border-border pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-border pb-4">
         <div>
           <h2 className="text-lg font-semibold">System Status</h2>
           <p className="text-sm text-muted-foreground">Live health check of connected services</p>
         </div>
-        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${
+        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium w-fit ${
           allOnline ? "bg-green-500/10 text-green-500" : 
           anyOffline ? "bg-red-500/10 text-red-500" : 
           "bg-yellow-500/10 text-yellow-500"

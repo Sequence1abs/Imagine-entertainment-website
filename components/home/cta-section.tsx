@@ -20,10 +20,13 @@ export function CTASection() {
     return () => observer.disconnect()
   }, [])
 
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+  const ctaImageUrl = `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto/dramatic-concert-stage-lighting-dark-atmospheric-p_h5ck3u.jpg`
+
   return (
     <section ref={ref} className="relative h-[45vh] md:h-[60vh] overflow-hidden mx-4 md:mx-6 rounded-2xl">
       <Image
-        src="/dramatic-concert-stage-lighting-dark-atmospheric-p.jpg"
+        src={ctaImageUrl}
         alt="Let's talk"
         fill
         className="object-cover"

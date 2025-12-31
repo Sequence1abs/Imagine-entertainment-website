@@ -5,6 +5,11 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowUpRight } from "lucide-react"
 
+// Cloudinary base URL
+const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+const getCloudinaryUrl = (publicId: string) => 
+  `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto/${publicId}.jpg`
+
 // Services data
 const services = [
   {
@@ -12,7 +17,7 @@ const services = [
     title: "Corporate Events",
     eventType: "Corporate",
     filterCategory: "Corporate",
-    image: "/corporate-event-stage-blue-lighting-conference.jpg",
+    image: getCloudinaryUrl("corporate_ka9aei"),
     span: "md:col-span-1",
   },
   {
@@ -20,7 +25,7 @@ const services = [
     title: "Television & Film Production",
     eventType: "Television & Film",
     filterCategory: "Television & Film Production",
-    image: "/brit-awards-stage-red-lighting-production.jpg",
+    image: getCloudinaryUrl("TV_FILM_p7a2sm"),
     span: "md:col-span-1",
   },
   {
@@ -28,7 +33,7 @@ const services = [
     title: "Musical Concert",
     eventType: "Musical Concert",
     filterCategory: "Music",
-    image: "/music-festival-outdoor-stage-crowd-night-lights.jpg",
+    image: getCloudinaryUrl("music_efyntt"),
     span: "md:col-span-2",
   },
   {
@@ -36,7 +41,7 @@ const services = [
     title: "Rigging Services",
     eventType: "Rigging",
     filterCategory: "Rigging Services",
-    image: "/professional-event-production-team-working-stage-s.jpg",
+    image: getCloudinaryUrl("rigging_sjkbut"),
     span: "md:col-span-1",
   },
   {
@@ -44,7 +49,7 @@ const services = [
     title: "In-House Studio",
     eventType: "In-House Studio",
     filterCategory: "In-House Studio",
-    image: "/professional-event-production-team-working-stage-s.jpg",
+    image: getCloudinaryUrl("inhouse_fxds5f"),
     span: "md:col-span-1",
   },
   {
@@ -52,7 +57,7 @@ const services = [
     title: "Public, Sports & Major Events",
     eventType: "Major Events",
     filterCategory: "Public, Sports & Major Events",
-    image: "/dramatic-stage-lighting-corporate-event-dark-green.jpg",
+    image: getCloudinaryUrl("public_sports_zzrust"),
     span: "md:col-span-2",
   },
   {
@@ -60,7 +65,7 @@ const services = [
     title: "Weddings & Private",
     eventType: "Weddings & Private Celebrations",
     filterCategory: "Weddings & Private Celebrations",
-    image: "/dramatic-stage-lighting-corporate-event-dark-green.jpg",
+    image: getCloudinaryUrl("weddings_e86ttg"),
     span: "md:col-span-1",
   },
 ]

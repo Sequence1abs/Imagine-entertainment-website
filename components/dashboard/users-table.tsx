@@ -164,7 +164,6 @@ export function UsersTable() {
         setNewPassword("")
         setAddSuccess(null)
         fetchUsers() // Refresh list
-        router.refresh()
       }, 1500)
       
     } catch (err) {
@@ -194,7 +193,6 @@ export function UsersTable() {
       setShowDeleteDialog(false)
       setUserToDelete(null)
       fetchUsers() // Refresh list
-      router.refresh()
       
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete user')

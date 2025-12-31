@@ -150,7 +150,7 @@ export default function Testimonials() {
           <div className="lg:col-span-8 relative">
             {/* Large quote watermark - right upper corner */}
             <svg 
-              className="absolute -top-16 -right-16 md:-right-24 w-64 h-64 md:w-[28rem] md:h-[28rem] lg:w-[36rem] lg:h-[36rem] text-foreground/[0.06] dark:text-white/[0.06]"
+              className="absolute -top-16 -right-16 md:-right-24 w-64 h-64 md:w-md md:h-112 lg:w-xl lg:h-144 text-foreground/6 dark:text-white/6"
               viewBox="0 0 100 100" 
               fill="currentColor"
             >
@@ -177,7 +177,7 @@ export default function Testimonials() {
                   </blockquote>
 
                   <div className="flex items-center gap-4 pt-6 border-t border-border">
-                    <div className="w-12 h-12 rounded-full bg-foreground text-background flex items-center justify-center flex-shrink-0">
+                    <div className="w-12 h-12 rounded-full bg-foreground text-background flex items-center justify-center shrink-0">
                       <span className="text-sm font-medium">
                         {currentTestimonial.author
                           .split(" ")
