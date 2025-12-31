@@ -7,7 +7,7 @@ export const EVENT_CATEGORIES = [
   'Music',
   'Rigging Services',
   'Public/Sports Events',
-  'Fixed Installation',
+  'In-House Studio',
   'Weddings & Private',
 ] as const
 

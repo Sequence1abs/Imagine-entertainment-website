@@ -79,8 +79,8 @@ export default function PrivacyPolicy() {
                 <div className="mt-4 p-6 bg-muted rounded-xl">
                   <p className="font-medium">Imagine Entertainment (Pvt) Ltd</p>
                   <p className="text-muted-foreground">No : 97 Delkanda, Old Kesbewa Road, Nugegoda 10250, Sri Lanka.</p>
-                  <p className="text-muted-foreground">Email: info@imaginesl.com</p>
-                  <p className="text-muted-foreground">Phone: +94 717 750744</p>
+                  <p className="text-muted-foreground">Email: sales@imaginesl.com</p>
+                  <p className="text-muted-foreground">Phone: +94 71 893 3514</p>
                 </div>
               </section>
 

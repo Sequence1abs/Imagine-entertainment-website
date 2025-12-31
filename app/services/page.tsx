@@ -66,16 +66,15 @@ const services = [
   },
   {
     number: "06",
-    title: "Fixed Installation",
-    description: "Imagine Entertainment (Pvt) Ltd delivers reliable and high-impact fixed LED screen solutions, sound system and light systems for commercial and hospitality environments across Sri Lanka.",
+    title: "In-House Studio",
+    description: "From concept development to final delivery, our in-house studio brings ideas to life with precision, creativity, and technical excellence.",
     items: [
-      "LED screen supply",
-      "Installation and structural framing",
-      "System configuration and commissioning",
-      "Maintenance and technical support",
-      "Weather-resistant construction for outdoor conditions",
-      "Designed for continuous operation",
-      "Corrosion-resistant for long-term durability",
+      "Full-Scale Audio & Video Production",
+      "Live Broadcast & Multicamera Direction",
+      "Lighting Design & Stage Visuals",
+      "Creative Content, Motion Graphics & Animations",
+      "Rehearsal, Recording & Post-Production Facilities",
+      "End-to-End Technical Production Management",
     ],
     image: "/professional-event-production-team-working-stage-s.jpg",
   },
@@ -248,7 +247,7 @@ function ServiceCard({ service, index }: { service: (typeof services)[0]; index:
       </div>
 
       <div className="order-1 lg:order-2">
-        <div className="relative overflow-hidden aspect-[4/3] bg-muted rounded-xl group">
+        <div className="relative overflow-hidden aspect-4/3 bg-muted rounded-xl group">
           <img
             src={service.image || "/placeholder.svg"}
             alt={service.title}

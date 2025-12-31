@@ -173,7 +173,7 @@ export default function Navigation() {
     { label: "Musical Concert", href: "/services#musical-concert", number: "03" },
     { label: "Rigging Services", href: "/services#rigging-services", number: "04" },
     { label: "Public, Sports & Major Events", href: "/services#public-sports-and-major-events", number: "05" },
-    { label: "Fixed Installation", href: "/services#fixed-installation", number: "06" },
+    { label: "In-House Studio", href: "/services#in-house-studio", number: "06" },
     { label: "Weddings & Private Celebrations", href: "/services#weddings-and-private-celebrations", number: "07" },
   ]
 

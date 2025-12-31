@@ -12,7 +12,7 @@ const projectTypes = [
   { value: "concert", label: "Musical Concert" },
   { value: "rigging", label: "Rigging Services" },
   { value: "public-sports", label: "Public, Sports & Major Events" },
-  { value: "fixed-installation", label: "Fixed Installation" },
+  { value: "in-house-studio", label: "In-House Studio" },
   { value: "weddings", label: "Weddings & Private Celebrations" },
   { value: "other", label: "Other" },
 ]
@@ -73,10 +73,10 @@ export default function ContactPage() {
                 >
                   <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4">//Email</p>
                   <a
-                    href="mailto:info@imaginesl.com"
+                    href="mailto:sales@imaginesl.com"
                     className="text-2xl md:text-3xl font-medium hover:text-muted-foreground transition-colors"
                   >
-                    info@imaginesl.com
+                    sales@imaginesl.com
                   </a>
                 </div>
 
@@ -88,10 +88,10 @@ export default function ContactPage() {
                 >
                   <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4">//Phone</p>
                   <a
-                    href="tel:+94717750744"
+                    href="tel:+94718933514"
                     className="text-2xl md:text-3xl font-medium hover:text-muted-foreground transition-colors"
                   >
-                    +94 717 750744
+                    +94 71 893 3514
                   </a>
                 </div>
 
@@ -436,7 +436,7 @@ function ContactForm() {
             <p className="text-xs opacity-90">{errorMessage}</p>
           )}
           {!errorMessage && (
-            <p className="text-xs opacity-90">Please try again or contact us directly at info@imaginesl.com</p>
+            <p className="text-xs opacity-90">Please try again or contact us directly at sales@imaginesl.com</p>
           )}
         </div>
       )}

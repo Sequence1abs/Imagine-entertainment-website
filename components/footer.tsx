@@ -124,14 +124,14 @@ export default function Footer() {
               <div className="space-y-1">
                 <p>
                   Phone :{" "}
-                  <a href="tel:+94717750744" className="hover:text-foreground transition-colors">
-                    +94 717 750744
+                  <a href="tel:+94718933514" className="hover:text-foreground transition-colors">
+                    +94 71 893 3514
                   </a>
                 </p>
                 <p>
                   Email :{" "}
-                  <a href="mailto:info@imaginesl.com" className="hover:text-foreground transition-colors">
-                    info@imaginesl.com
+                  <a href="mailto:sales@imaginesl.com" className="hover:text-foreground transition-colors">
+                    sales@imaginesl.com
                   </a>
                 </p>
               </div>

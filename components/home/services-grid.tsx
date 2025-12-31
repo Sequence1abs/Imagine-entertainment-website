@@ -41,9 +41,9 @@ const services = [
   },
   {
     id: 5,
-    title: "Fixed Installation",
-    eventType: "Fixed Installation",
-    filterCategory: "Fixed Installation",
+    title: "In-House Studio",
+    eventType: "In-House Studio",
+    filterCategory: "In-House Studio",
     image: "/professional-event-production-team-working-stage-s.jpg",
     span: "md:col-span-1",
   },
