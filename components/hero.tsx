@@ -41,16 +41,26 @@ export default function Hero() {
         <motion.video
           ref={videoRef}
           animate={{ opacity: videoReady ? 1 : 0 }}
-          transition={{ duration: 0.5 }} // Same as CSS duration-500
-          className="absolute inset-0 w-full h-full object-cover scale-[1.3]"
-          src="/Imagine Entertainment Commercial 30 Sec.mp4"
+          transition={{ duration: 0.5 }}
+          className="absolute inset-0 w-full h-full object-cover"
           autoPlay
           loop
           muted
           playsInline
           preload="auto"
+          // @ts-expect-error - fetchPriority is valid but not in React types yet
+          fetchPriority="high"
           aria-label="Imagine Entertainment showreel"
-        />
+        >
+          {/* Primary: Cloudinary CDN with auto-optimization */}
+          <source 
+            src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/q_auto,f_auto/IMAGINE/Final_Web_w4daca`}
+            type="video/mp4" 
+          />
+          {/* Fallback: Self-hosted optimized versions */}
+          <source src="/Final_Web.webm" type="video/webm" />
+          <source src="/Final_Web.mp4" type="video/mp4" />
+        </motion.video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 dark:from-black/60 dark:via-black/40 dark:to-black/80" />
       </div>
 

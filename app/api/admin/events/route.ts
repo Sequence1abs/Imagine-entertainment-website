@@ -44,8 +44,8 @@ export async function POST(request: NextRequest) {
       is_published: body.is_published ?? false,
     })
 
-    if (error) {
-      return NextResponse.json({ error }, { status: 400 })
+    if (error || !event) {
+      return NextResponse.json({ error: error || 'Failed to create event' }, { status: 400 })
     }
 
     // Log event creation

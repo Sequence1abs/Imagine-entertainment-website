@@ -3,51 +3,66 @@
 import { useEffect, useState, useRef } from "react"
 import Image from "next/image"
 
-// Media & Hotels
+// Combined Clients List (42 total)
 const clients = [
-  { abbr: "HIR", name: "Hiru TV", image: "Hiru_TV-Logo1.png" },
-  { abbr: "DER", name: "TV Derana", image: "TV_Derana_Logo.png" },
-  { abbr: "SIR", name: "Sirasa TV", image: "Sirasa_TV_Logo.png" },
-  { abbr: "SWA", name: "Swarnavahini", image: "swarnavahini.png" },
-  { abbr: "ITN", name: "ITN", image: "ITN_Television_Logo_of_Sri_lanka.png" },
-  { abbr: "RUP", name: "Rupavahini", image: "Logo_of_Sri_Lanka_Rupavahini_Corporation.png" },
-  { abbr: "WE", name: "Waters Edge", image: "waters-edge.png" },
-  { abbr: "HIL", name: "Hilton", image: "hilton-logo.png" },
-  { abbr: "KIN", name: "The Kingsbury", image: "the-kingsbury.png" },
-  { abbr: "TAJ", name: "Taj Samudra", image: "taj-samudra.png" },
-  { abbr: "SHA", name: "Shangri-La", image: "shangri-la.png" },
-  { abbr: "MLH", name: "Mount Lavinia", image: "mount-lavinia-hotel.png" },
-  { abbr: "GFH", name: "Galle Face", image: "galle-face-hotel.png" },
-  { abbr: "AVN", name: "Avenra", image: "avenra.png" },
+  // Named Files
+  { abbr: "CGTTI", name: "Ceylon German Technical Training Institute", image: "CGTTI.png" },
+  { abbr: "HNB", name: "Hatton National Bank", image: "HNB.png" },
+  { abbr: "JANA", name: "Janashakthi Insurance", image: "Janashakthi.png" },
+
+  // Media & Hotels (Mapped to Asset sequence 128-141)
+  { abbr: "HIR", name: "Hiru TV", image: "Asset 128@3x.webp" },
+  { abbr: "DER", name: "TV Derana", image: "Asset 129@3x.webp" },
+  { abbr: "SIR", name: "Sirasa TV", image: "Asset 130@3x.webp" },
+  { abbr: "SWA", name: "Swarnavahini", image: "Asset 131@3x.webp" },
+  { abbr: "ITN", name: "ITN", image: "Asset 132@3x.webp" },
+  { abbr: "RUP", name: "Rupavahini", image: "Asset 133@3x.webp" },
+  { abbr: "WE", name: "Waters Edge", image: "Asset 134@3x.webp" },
+  { abbr: "HIL", name: "Hilton", image: "Asset 136@3x.webp" }, // 135 missing, shifted to 136
+  { abbr: "KIN", name: "The Kingsbury", image: "Asset 137@3x.webp" },
+  { abbr: "TAJ", name: "Taj Samudra", image: "Asset 138@3x.webp" },
+  { abbr: "SHA", name: "Shangri-La", image: "Asset 139@3x.webp" },
+  { abbr: "MLH", name: "Mount Lavinia", image: "Asset 140@3x.webp" },
+  { abbr: "GFH", name: "Galle Face", image: "Asset 141@3x.webp" },
+  { abbr: "AVN", name: "Avenra", image: "Asset 142@3x.webp" },
+
+  // Corporate (Mapped to Asset sequence 143-168)
+  { abbr: "PB", name: "People's Bank", image: "Asset 143@3x.webp" },
+  { abbr: "SB", name: "Sampath Bank", image: "Asset 144@3x.webp" },
+  { abbr: "BOC", name: "Bank of Ceylon", image: "Asset 145@3x.webp" },
+  { abbr: "COM", name: "Commercial Bank", image: "Asset 146@3x.webp" },
+  // HNB is named above
+  { abbr: "SIN", name: "Singer", image: "Asset 147@3x.webp" },
+  { abbr: "UBR", name: "Uber", image: "Asset 148@3x.webp" },
+  // 149 missing (Sri Lanka Youth) -> Mapped to next available or named?
+  { abbr: "FLO", name: "Flora", image: "Asset 150@3x.webp" },
+  { abbr: "UL", name: "Unilever", image: "Asset 151@3x.webp" },
+  { abbr: "SLY", name: "Sri Lanka Youth", image: "Asset 152@3x.webp" },
+  // Janashakthi named above
+  { abbr: "DIA", name: "Dialog", image: "Asset 153@3x.webp" },
+  { abbr: "BRX", name: "Brandix", image: "Asset 154@3x.webp" },
+  { abbr: "FON", name: "Fonterra", image: "Asset 155@3x.webp" },
+  { abbr: "IESL", name: "IESL", image: "Asset 156@3x.webp" },
+  { abbr: "SLIC", name: "Sri Lanka Insurance", image: "Asset 157@3x.webp" },
+  { abbr: "LOLC", name: "LOLC", image: "Asset 158@3x.webp" },
+  // German Tech (CGTTI) named above
+  { abbr: "RAI", name: "Raigam", image: "Asset 159@3x.webp" },
+  { abbr: "LION", name: "Lions Club", image: "Asset 160@3x.webp" },
+  { abbr: "SLT", name: "SLT Mobitel", image: "Asset 161@3x.webp" },
+  { abbr: "SLA", name: "SriLankan Airlines", image: "Asset 162@3x.webp" },
+  { abbr: "NES", name: "Nestlé", image: "Asset 163@3x.webp" },
+  { abbr: "DP", name: "DP Education", image: "Asset 164@3x.webp" },
+  
+  // Extra Files (New Clients)
+  { abbr: "P1", name: "Partner Brand 1", image: "Asset 165@3x.webp" },
+  { abbr: "P2", name: "Partner Brand 2", image: "Asset 166@3x.webp" },
+  { abbr: "P3", name: "Partner Brand 3", image: "Asset 167@3x.webp" },
+  { abbr: "P4", name: "Partner Brand 4", image: "Asset 168@3x.webp" },
 ]
 
-// Corporate
-const clients2 = [
-  { abbr: "PB", name: "People's Bank", image: "peoples-bank.png" },
-  { abbr: "SB", name: "Sampath Bank", image: "sampath-bank.png" },
-  { abbr: "BOC", name: "BOC", image: "boc.png" },
-  { abbr: "COM", name: "Commercial Bank", image: "commercial-bank.png" },
-  { abbr: "HNB", name: "HNB", image: "hnb.png" },
-  { abbr: "SIN", name: "Singer", image: "singer.png" },
-  { abbr: "UBR", name: "Uber", image: "uber.png" },
-  { abbr: "FLO", name: "Flora", image: "flora.png" },
-  { abbr: "UL", name: "Unilever", image: "unilever.png" },
-  { abbr: "NYSC", name: "Sri Lanka Youth", image: "sri-lanka-youth.png" },
-  { abbr: "JANA", name: "Janashakti", image: "janashakti.png" },
-  { abbr: "DIA", name: "Dialog", image: "dialog.png" },
-  { abbr: "BRX", name: "Brandix", image: "brandix.png" },
-  { abbr: "FON", name: "Fonterra", image: "fonterra.png" },
-  { abbr: "IESL", name: "IESL", image: "iesl.png" },
-  { abbr: "SLIC", name: "Sri Lanka Ins.", image: "sri-lanka-insurance.png" },
-  { abbr: "LOLC", name: "LOLC", image: "lolc.png" },
-  { abbr: "CGTTI", name: "German Tech", image: "cgtti.png" },
-  { abbr: "RAI", name: "Raigam", image: "raigam.png" },
-  { abbr: "LION", name: "Lions Club", image: "lions-club.png" },
-  { abbr: "SLT", name: "SLT Mobitel", image: "slt.png" },
-  { abbr: "SLA", name: "SriLankan", image: "srilankan-airlines.png" },
-  { abbr: "NES", name: "Nestle", image: "nestle.png" },
-  { abbr: "DP", name: "DP Education", image: "dp-education.png" },
-]
+// Split for marquee rows
+const clients1 = clients.slice(0, 21)
+const clients2 = clients.slice(21, 42)
 
 export default function ClientsMarquee() {
   const [isVisible, setIsVisible] = useState(false)
@@ -86,7 +101,7 @@ export default function ClientsMarquee() {
       {/* Row 1 - scroll left */}
       <div className="relative mb-4 marquee-mask" suppressHydrationWarning>
         <div className="flex animate-marquee" suppressHydrationWarning>
-          {[...clients, ...clients, ...clients].map((client, index) => (
+          {[...clients1, ...clients1, ...clients1].map((client, index) => (
             <ClientCard key={`row1-${index}`} client={client} />
           ))}
         </div>

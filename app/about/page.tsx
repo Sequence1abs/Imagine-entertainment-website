@@ -21,8 +21,8 @@ export default function AboutPage() {
       <section className="relative min-h-[60vh] md:min-h-[70vh] bg-foreground dark:bg-black text-white overflow-hidden flex items-end">
         <div className="absolute inset-0">
           <img
-            src="/professional-event-production-team-working-stage-s.jpg"
-            alt="Team at work"
+            src="/About 1st Appearence-min.jpg"
+            alt="Imagine Entertainment live event production with stunning stage lighting and visual effects"
             className="w-full h-full object-cover opacity-40 dark:opacity-70"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-foreground via-foreground/60 to-foreground/40 dark:from-black/90 dark:via-black/70 dark:to-black/50" />
@@ -246,8 +246,8 @@ function LeadershipSection() {
           {/* Image - Grayscale to Color on Hover */}
           <div className="relative aspect-[3/4] mb-8 overflow-hidden rounded-lg">
             <img
-              src="/professional-event-production-team-working-stage-s.jpg"
-              alt="Mr. Sajith Morawaka Kodikara"
+              src="/directors/Mr Sajith Kodikara (Managing Director).webp"
+              alt="Mr. Sajith Morawaka Kodikara - Managing Director of Imagine Entertainment, leading the company with 37 years of industry experience"
               className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
@@ -270,8 +270,8 @@ function LeadershipSection() {
           {/* Image - Grayscale to Color on Hover */}
           <div className="relative aspect-[3/4] mb-8 overflow-hidden rounded-lg">
             <img
-              src="/creative-team-meeting-modern-office-collaboration-e.jpg"
-              alt="Mr. Sandun Morawaka Kodikara"
+              src="/directors/Mr Sandun Kodikara (Director).webp"
+              alt="Mr. Sandun Morawaka Kodikara - Director of Imagine Entertainment, co-leading the company's vision and creative direction"
               className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
