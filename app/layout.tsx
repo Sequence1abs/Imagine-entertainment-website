@@ -6,7 +6,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
-import { HydrationLoader } from "@/components/hydration-loader"
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -65,9 +64,13 @@ export default function RootLayout({
   
   return (
     <html lang="en" className={outfit.variable} suppressHydrationWarning>
+      <head>
+        {/* Preconnect to critical third-party origins */}
+        <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+      </head>
       <body className="font-sans antialiased overflow-x-hidden" suppressHydrationWarning>
         <AutoLogoutListener />
-        <HydrationLoader />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           {children}
           <Analytics />

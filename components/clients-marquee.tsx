@@ -101,8 +101,8 @@ export default function ClientsMarquee() {
       {/* Row 1 - scroll left */}
       <div className="relative mb-4 marquee-mask" suppressHydrationWarning>
         <div className="flex animate-marquee" suppressHydrationWarning>
-          {[...clients1, ...clients1, ...clients1].map((client, index) => (
-            <ClientCard key={`row1-${index}`} client={client} />
+          {[...clients1, ...clients1, ...clients1, ...clients1].map((client, index) => (
+            <ClientCard key={`row1-${index}`} client={client} index={index} />
           ))}
         </div>
       </div>
@@ -110,8 +110,8 @@ export default function ClientsMarquee() {
       {/* Row 2 - scroll right */}
       <div className="relative marquee-mask" suppressHydrationWarning>
         <div className="flex animate-marquee-reverse" suppressHydrationWarning>
-          {[...clients2, ...clients2, ...clients2].map((client, index) => (
-            <ClientCard key={`row2-${index}`} client={client} />
+          {[...clients2, ...clients2, ...clients2, ...clients2].map((client, index) => (
+            <ClientCard key={`row2-${index}`} client={client} index={index} />
           ))}
         </div>
       </div>
@@ -119,9 +119,12 @@ export default function ClientsMarquee() {
   )
 }
 
-function ClientCard({ client }: { client: { abbr: string; name: string; image?: string } }) {
+function ClientCard({ client, index }: { client: { abbr: string; name: string; image?: string }; index: number }) {
+  // Eager load first 7 logos (visible on initial render), lazy load rest
+  const shouldEagerLoad = index < 7
+  
   return (
-    <div className="flex-shrink-0 px-3 md:px-5" suppressHydrationWarning>
+    <div className="shrink-0 px-3 md:px-5" suppressHydrationWarning>
       <div className="flex items-center justify-center h-20 md:h-24" suppressHydrationWarning>
         {client.image ? (
           <div className="relative w-28 h-14 md:w-40 md:h-20 transition-transform duration-300 hover:scale-110">
@@ -131,6 +134,8 @@ function ClientCard({ client }: { client: { abbr: string; name: string; image?: 
               fill
               className="object-contain"
               sizes="(max-width: 768px) 112px, 160px"
+              loading={shouldEagerLoad ? "eager" : "lazy"}
+              quality={70}
             />
           </div>
         ) : (

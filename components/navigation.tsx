@@ -393,11 +393,7 @@ export default function Navigation() {
                   )
                 }
                 return (
-                  <motion.div
-                    key={item.label}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
+                  <div key={item.label} className="hover:scale-[1.02] active:scale-[0.98] transition-transform duration-150">
                     <Link
                       href={item.href}
                       className={`text-sm font-medium transition-colors duration-300 ${getNavLinkClass(
@@ -406,7 +402,7 @@ export default function Navigation() {
                     >
                       {item.label}
                     </Link>
-                  </motion.div>
+                  </div>
                 )
               })}
             </div>
@@ -419,15 +415,10 @@ export default function Navigation() {
                 />
               </div>
               
-              <motion.div
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="hidden lg:block"
-              >
+              <div className="hidden lg:block">
                 <Link
                   href="/contact"
-                  className={`cursor-target flex items-center gap-2 h-11 md:h-12 px-6 rounded-full text-sm font-bold transition-all duration-300 shadow-lg hover:shadow-2xl ${
+                  className={`cursor-target flex items-center gap-2 h-11 md:h-12 px-6 rounded-full text-sm font-bold transition-all duration-200 shadow-lg hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] ${
                     isHeroMode || isDarkMode
                       ? "bg-white text-black hover:bg-white/90 border-2 border-white"
                       : "bg-black text-white hover:bg-black/90 border-2 border-black"
@@ -436,7 +427,7 @@ export default function Navigation() {
                   <span>Talk to Us</span>
                   <ArrowUpRight className="w-4 h-4 shrink-0 stroke-[2.5]" />
                 </Link>
-              </motion.div>
+              </div>
 
               <button
                 onClick={() => setIsOpen(!isOpen)}
