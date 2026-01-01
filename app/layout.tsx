@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/sonner"
 import { GoogleAnalytics } from "@/components/seo/google-analytics"
 import { JsonLd } from "@/components/seo/json-ld"
 import { AutoLogoutListener } from "@/components/auth/auto-logout-listener"
+import { ConsoleWatermark } from "@/components/console-watermark"
 import { cn } from "@/lib/utils"
 
 const outfit = Outfit({
@@ -196,12 +197,23 @@ export default function RootLayout({
   
   return (
     <html lang="en" className={outfit.variable} suppressHydrationWarning>
+      {/* 
+        ═══════════════════════════════════════════════════════════════════════
+        ║  Property of IMAGINE ENTERTAINMENT (PVT) LTD.                       ║
+        ║  Website: https://www.imaginesl.com                                 ║
+        ║  Developed by Skynet Labs                                           ║
+        ║  https://www.linkedin.com/in/tharukakarunanayaka/                   ║
+        ║  https://www.linkedin.com/in/hasal/                                 ║
+        ║  © 2026 All Rights Reserved                                         ║
+        ═══════════════════════════════════════════════════════════════════════
+      */}
       <head>
         {/* Preconnect to critical third-party origins */}
         <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
       </head>
       <body className={cn("font-sans antialiased overflow-x-hidden", outfit.variable)} suppressHydrationWarning>
+        <ConsoleWatermark />
         <AutoLogoutListener />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <JsonLd />

@@ -232,7 +232,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="font-medium hover:text-foreground transition-colors"
             >
-              Developed by TEAM SKYNET
+              Developed by Skynet Labs
             </a>
           </div>
         </div>
