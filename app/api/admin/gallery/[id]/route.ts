@@ -24,10 +24,6 @@ export async function DELETE(
       return NextResponse.json({ error: 'Missing image ID' }, { status: 400 })
     }
 
-    // TODO: Ideally we should delete from Cloudinary too, 
-    // but for now we just delete the record from DB.
-    // Cloudinary cleanup can be a separate cron job or admin utility.
-
     const { error } = await deleteGalleryImage(id)
 
     if (error) {
