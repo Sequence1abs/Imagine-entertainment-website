@@ -1,126 +1,55 @@
-# IMAGINE Entertainment | Official Web Ecosystem
+# IMAGINE ENTERTAINMENT (PVT) LTD.
 
 <div align="center">
   <p align="center">
-    <strong>A high-caliber, full-stack digital experience for the premium entertainment industry.</strong>
+    <strong>Sri Lanka's Premier Event Production Company</strong>
   </p>
+  
   <p align="center">
-    <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-16.0-black?style=for-the-badge&logo=next.dot.js" alt="Next.js"></a>
-    <a href="https://supabase.com/"><img src="https://img.shields.io/badge/Supabase-DB%20%26%20Auth-3ECF8E?style=for-the-badge&logo=supabase" alt="Supabase"></a>
-    <a href="https://cloudinary.com/"><img src="https://img.shields.io/badge/Cloudinary-CDN-3448C5?style=for-the-badge&logo=cloudinary" alt="Cloudinary"></a>
-    <a href="https://vercel.com/"><img src="https://img.shields.io/badge/Vercel-Deploys-000000?style=for-the-badge&logo=vercel" alt="Vercel"></a>
+    <a href="https://www.imaginesl.com">Website</a> |
+    <a href="https://www.facebook.com/imagineentertainment.lk">Facebook</a> |
+    <a href="https://www.instagram.com/imagine.entertainment.sl/">Instagram</a> |
+    <a href="https://www.linkedin.com/company/imagine-entertainment-sl/">LinkedIn</a>
   </p>
 </div>
 
 ---
 
-## 📖 Table of Contents
-- [Project Vision](#-project-vision)
-- [System Architecture](#-system-architecture)
-- [Premium Tech Stack](#-premium-tech-stack)
-- [Key Features](#-key-features)
-- [Design Philosophy](#-design-philosophy)
-- [Deployment & Operations](#-deployment--operations)
-- [Installation Guide](#-installation-guide)
+## About
+
+**IMAGINE ENTERTAINMENT (PVT) LTD** is a premier event production company based in Sri Lanka with over 37 years of excellence in delivering world-class entertainment experiences.
+
+From corporate galas, musical concerts, and awards ceremonies to television production, weddings, and stadium-scale events — we bring extraordinary visions to life.
 
 ---
 
-## 🎯 Project Vision
+## Services
 
-The IMAGINE Entertainment platform is engineered to bridge the gap between high-end visual storytelling and robust enterprise management. It serves two primary audiences:
-1. **The Clients**: Global brands and VIPs seeking top-tier entertainment services via a lightning-fast, visually stunning portfolio.
-2. **The Agency**: Professional staff managing a dynamic schedule of high-stakes events through a secure, intuitive administrative terminal.
-
----
-
-## 🏗 System Architecture
-
-The ecosystem utilizes a **Next.js App Router** architecture with clear physical separation of concerns through Route Groups.
-
-### 🌐 Public Facing (SSG)
-- **Speed-First**: Pre-rendered static pages ensure near-instantaneous load times (TTFB < 50ms).
-- **SEO Optimized**: Dynamic metadata generation for every event and gallery item.
-- **Responsiveness**: Fluid layouts that adapt perfectly from 8K displays to mobile devices.
-
-### 🛡 Administrative Terminal (SSR + Edge)
-- **Secure Access**: Multi-factor ready authentication via Supabase Auth.
-- **Real-Time Control**: Instant updates to the portfolio via server actions.
-- **Audit Logging**: Every administrative action is logged for security and accountability.
+- Corporate Events - Conferences, product launches, award shows
+- Concerts & Festivals - Large-scale musical productions
+- Weddings - Luxury destination weddings
+- Television Production - TV shows and live broadcasts
+- Entertainment Services - Full event production and management
 
 ---
 
-## 🛠 Premium Tech Stack
+## Contact
 
-| Category | Technology | Purpose |
-| :--- | :--- | :--- |
-| **Foundation** | `Next.js 16` | Hybrid rendering (SSG + SSR) for peak performance. |
-| **Logic** | `React 19` | The latest in UI state management and server components. |
-| **Database** | `PostgreSQL` | Relational data integrity via Supabase. |
-| **Aesthetics** | `Tailwind CSS` | High-precision styling with consistent design tokens. |
-| **Motion** | `GSAP / Framer` | Premium micro-interactions and cinematic transitions. |
-| **Images** | `Cloudinary` | Intelligent AI-driven optimization and CDN delivery. |
+**Address**: Colombo, Sri Lanka  
+**Website**: [www.imaginesl.com](https://www.imaginesl.com)  
+**Email**: info@imaginesl.com
 
 ---
 
-## ✨ Key Features
+## License
 
-- 🚀 **Turbo-Charged Performance**: Optimized for Core Web Vitals (LCP, FID, CLS).
-- 🖼 **AI Image Pipeline**: Automatic format selection (AVIF/WebP) and smart cropping.
-- 📊 **Live Analytics**: Visualized traffic data and event engagement metrics.
-- 📧 **Enterprise Mail**: Automated confirmation and contact systems via Secure SMTP.
-- 🔄 **Self-Healing DB**: Automated keep-alive crons to prevent database dormancy.
-- 📱 **Mobile Mastery**: A true mobile-first approach for event attendees on the go.
+This software is proprietary and confidential property of **IMAGINE ENTERTAINMENT (PVT) LTD**.  
+See [LICENSE](./LICENSE) for details.
 
 ---
 
-## 🎨 Design Philosophy
-
-Our design system is built on four pillars:
-1. **Lustrous Simplicity**: Minimalist aesthetics that prioritize high-resolution content.
-2. **Kinetic Feedback**: Every user action is met with subtle, premium motion.
-3. **Accessibility**: AA-level compliance for diverse user groups.
-4. **Dark Mode Excellence**: A sophisticated dark palette designed for late-night event browsing.
-
----
-
-## 🚀 Deployment & Operations
-
-The platform is optimized for **Global Edge Deployment**.
-
-### Build Pipeline
-```mermaid
-graph LR
-  A[Push Code] --> B[Vercel Build]
-  B --> C{Static Generation}
-  C --> D[Edge CDN Cache]
-  D --> E[Global Delivery]
-```
-
-### Database Maintenance
-- **Health Check**: Every 72 hours via `/api/keep-alive`.
-- **Backup**: Daily snapshots provided by Supabase.
-- **Security**: Weekly dependency audits via automated linting.
-
----
-
-## 📥 Installation Guide
-
-### Development Setup
-1. **Clone & Install**:
-   ```bash
-   git clone [repository-url]
-   npm install
-   ```
-
-2. **Environment Configuration**:
-   Create a `.env.local` based on the provided enterprise requirements:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `CLOUDINARY_API_KEY`
-   - `SMTP_ENCRYPTION_PASS`
-
-3. **Execution**:
-   ```bash
-   npm run dev
-   ```
-
----
+<div align="center">
+  <sub>© 2026 IMAGINE ENTERTAINMENT (PVT) LTD. All Rights Reserved.</sub>
+  <br/>
+  <sub>Developed by <a href="https://www.linkedin.com/in/tharukakarunanayaka/">Skynet Labs</a></sub>
+</div>
