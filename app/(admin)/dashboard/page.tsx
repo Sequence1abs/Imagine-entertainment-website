@@ -60,8 +60,7 @@ type AnalyticsData = {
     avgSessionDuration: { value: number; change: number };
   };
   traffic: {
-    last7Days: Array<{ date: string; pageviews: number; visitors: number }>;
-    last30Days: Array<{ date: string; pageviews: number; visitors: number }>;
+    history: Array<{ date: string; pageviews: number; visitors: number }>;
   };
   topPages: Array<{ path: string; views: number; visitors: number }>;
   topReferrers: Array<{ source: string; views: number }>;
@@ -154,11 +153,11 @@ function TrafficChart({ data }: { data: AnalyticsData }) {
     <Card className="col-span-1 sm:col-span-4">
       <CardHeader className="pb-2 sm:pb-6">
         <CardTitle className="text-base sm:text-lg">Traffic Overview</CardTitle>
-        <CardDescription className="text-xs sm:text-sm">Last 30 days</CardDescription>
+        <CardDescription className="text-xs sm:text-sm">Traffic trends over the selected period</CardDescription>
       </CardHeader>
       <CardContent className="pt-0 sm:pt-2">
         <ChartContainer config={chartConfig}>
-          <AreaChart data={data.traffic.last30Days}>
+          <AreaChart data={data.traffic.history}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="date"
@@ -472,8 +471,8 @@ function BrowsersChart({ data }: { data: AnalyticsData }) {
   );
 }
 
-function AnalyticsDashboard() {
-  const { data, error, isLoading } = useSWR<AnalyticsData & { error?: string }>("/api/analytics", fetcher);
+function AnalyticsDashboard({ days }: { days: number }) {
+  const { data, error, isLoading } = useSWR<AnalyticsData & { error?: string }>(`/api/analytics?days=${days}`, fetcher);
 
   if (isLoading) {
     return (
@@ -585,18 +584,40 @@ function AnalyticsDashboard() {
 }
 
 export default function DashboardPage() {
+  const [days, setDays] = useState(30);
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold">Cloudflare Web Analytics</h1>
           <p className="text-muted-foreground">
             Real-time analytics and insights for your website
           </p>
         </div>
+
+        <div className="flex items-center bg-muted/50 p-1 rounded-lg border w-fit">
+          {[
+            { label: "7D", value: 7 },
+            { label: "30D", value: 30 },
+            { label: "90D", value: 90 }
+          ].map((range) => (
+            <button
+              key={range.value}
+              onClick={() => setDays(range.value)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${days === range.value
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                }`}
+            >
+              {range.label}
+            </button>
+          ))}
+        </div>
       </div>
+
       <div id="analytics-dashboard">
-        <AnalyticsDashboard />
+        <AnalyticsDashboard days={days} />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 // --- Types & Interfaces ---
 
@@ -98,17 +98,7 @@ async function fetchCloudflareAnalytics(query: string, variables: Record<string,
 
 function getEmptyData() {
   const now = new Date();
-  const last7Days = Array.from({ length: 7 }, (_, i) => {
-    const date = new Date(now);
-    date.setDate(date.getDate() - (6 - i));
-    return {
-      date: date.toISOString().split('T')[0],
-      pageviews: 0,
-      visitors: 0,
-    };
-  });
-
-  const last30Days = Array.from({ length: 30 }, (_, i) => {
+  const history = Array.from({ length: 30 }, (_, i) => {
     const date = new Date(now);
     date.setDate(date.getDate() - (29 - i));
     return {
@@ -125,7 +115,7 @@ function getEmptyData() {
       bounceRate: { value: 0, change: 0 },
       avgSessionDuration: { value: 0, change: 0 },
     },
-    traffic: { last7Days, last30Days },
+    traffic: { history },
     topPages: [],
     topReferrers: [],
     topCountries: [],
@@ -136,9 +126,13 @@ function getEmptyData() {
 
 // --- Main Handler ---
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const zoneId = process.env.CLOUDFLARE_ZONE_ID;
   const apiToken = process.env.CLOUDFLARE_API_TOKEN;
+
+  // Get range from query params
+  const { searchParams } = new URL(request.url);
+  const days = parseInt(searchParams.get("days") || "30");
 
   // 1. Validation
   if (!zoneId || !apiToken) {
@@ -148,7 +142,6 @@ export async function GET() {
 
   try {
     // 2. Prepare Queries
-    // Query for 1-day summary data (Traffic charts)
     const querySummary = `
       query GetSummary($zoneTag: String!, $startDate: Date!, $endDate: Date!) {
         viewer {
@@ -170,7 +163,6 @@ export async function GET() {
       }
     `;
 
-    // Query for detailed adaptive data (limited to 24h by Cloudflare)
     const queryAdaptive = `
       query GetAdaptive($zoneTag: String!, $startDateTime: DateTime!, $endDateTime: DateTime!) {
         viewer {
@@ -197,21 +189,21 @@ export async function GET() {
       }
     `;
 
-    const range7 = getDateRange(7);
-    const range30 = getDateRange(30);
-    const range1 = getDateRange(1); // Adaptive groups often limited to 24h
+    const rangeMain = getDateRange(days);
+    const rangeCompare = getDateRange(days * 2);
+    const range1 = getDateRange(1);
 
     // 3. Fetch Data (Parallel)
-    const [res7, res30, res1] = await Promise.all([
+    const [resMain, resCompare, res1] = await Promise.all([
       fetchCloudflareAnalytics(querySummary, {
         zoneTag: zoneId,
-        startDate: range7.startDate,
-        endDate: range7.endDate,
+        startDate: rangeMain.startDate,
+        endDate: rangeMain.endDate,
       }),
       fetchCloudflareAnalytics(querySummary, {
         zoneTag: zoneId,
-        startDate: range30.startDate,
-        endDate: range30.endDate,
+        startDate: rangeCompare.startDate,
+        endDate: rangeMain.startDate,
       }),
       fetchCloudflareAnalytics(queryAdaptive, {
         zoneTag: zoneId,
@@ -220,76 +212,57 @@ export async function GET() {
       }),
     ]);
 
-    const zoneCurrent = res7.data?.viewer?.zones?.[0];
-    const zone30 = res30.data?.viewer?.zones?.[0];
+    const zoneCurrent = resMain.data?.viewer?.zones?.[0];
+    const zonePrev = resCompare.data?.viewer?.zones?.[0];
     const zone1 = res1.data?.viewer?.zones?.[0];
 
     if (!zoneCurrent) {
-      // Zone might be invalid or no data
       return NextResponse.json(getEmptyData());
     }
 
     // 4. Transform Data
-    // IMPORTANT: We use 'requests' instead of 'pageViews' effectively as "Page Views" 
-    // because standard Cloudflare proxy analytics tracks "Traffic/Requests" by default.
-
-    // A. Traffic History
-    const last7Days = zoneCurrent.httpRequests1dGroups?.map((d) => ({
+    const history = zoneCurrent.httpRequests1dGroups?.map((d) => ({
       date: d.dimensions.date,
       pageviews: d.sum.requests || 0,
       visitors: d.uniq.uniques || 0,
     })) || [];
 
-    const last30Days = zone30?.httpRequests1dGroups?.map((d) => ({
-      date: d.dimensions.date,
-      pageviews: d.sum.requests || 0,
-      visitors: d.uniq.uniques || 0,
-    })) || [];
-
-    // B. Adaptive Analysis (Devices, Browsers, Countries, Pages)
-    // Use the 24h detailed data for these breakdowns
     const rawData = zone1?.httpRequestsAdaptiveGroups || [];
 
     const deviceCounts: Record<string, number> = { desktop: 0, mobile: 0, tablet: 0 };
     const browserCounts: Record<string, number> = {};
     const countryCounts: Record<string, { views: number; visitors: number }> = {};
     const pageCounts: Record<string, { views: number; visitors: number }> = {};
-    const referrerCounts: Record<string, number> = {}; // Fallback as we can't fetch it easily on some zones
+    const referrerCounts: Record<string, number> = {};
 
     rawData.forEach((item) => {
       const views = item.count || 0;
-      const visitors = 0; // Not available in adaptive groups without more permissions
+      const visitors = 0;
 
-      // Devices
       const type = item.dimensions.clientDeviceType?.toLowerCase() || 'desktop';
       if (type.includes('mobile')) deviceCounts.mobile += views;
       else if (type.includes('tablet')) deviceCounts.tablet += views;
       else deviceCounts.desktop += views;
 
-      // Browsers (via User Agent)
       const browser = getBrowserFromUA(item.dimensions.userAgent);
       browserCounts[browser] = (browserCounts[browser] || 0) + views;
 
-      // Countries
       const country = item.dimensions.clientCountryName || 'Unknown';
       if (!countryCounts[country]) countryCounts[country] = { views: 0, visitors: 0 };
       countryCounts[country].views += views;
       countryCounts[country].visitors += visitors;
 
-      // Pages
       const path = item.dimensions.clientRequestPath || '/';
       if (!pageCounts[path]) pageCounts[path] = { views: 0, visitors: 0 };
       pageCounts[path].views += views;
       pageCounts[path].visitors += visitors;
     });
 
-    // C. Summaries & Formatting
     const topReferrers = Object.entries(referrerCounts)
       .map(([source, views]) => ({ source, views }))
       .sort((a, b) => b.views - a.views)
       .slice(0, 5);
 
-    // C. Summaries & Formatting
     const totalDevices = deviceCounts.desktop + deviceCounts.mobile + deviceCounts.tablet;
     const devices = totalDevices > 0 ? {
       desktop: (deviceCounts.desktop / totalDevices) * 100,
@@ -314,42 +287,27 @@ export async function GET() {
       .sort((a, b) => b.views - a.views)
       .slice(0, 5);
 
-    // D. Comparison Metrics (Current 30 days vs Previous 30 days)
-    const totalPageviews = last30Days.reduce((acc, d) => acc + d.pageviews, 0);
-    const totalVisitors = last30Days.reduce((acc, d) => acc + d.visitors, 0);
+    // D. Comparison Metrics
+    const totalPageviews = history.reduce((acc, d) => acc + d.pageviews, 0);
+    const totalVisitors = history.reduce((acc, d) => acc + d.visitors, 0);
 
     let pageviewsChange = 0;
     let visitorsChange = 0;
 
-    try {
-      const rangePrev = getDateRange(60);
-      const prevDataParams = {
-        startDate: rangePrev.startDate,
-        endDate: range30.startDate,
-      };
+    const prevTotalViews = zonePrev?.httpRequests1dGroups?.reduce((acc, d) => acc + (d.sum.requests || 0), 0) || 0;
+    const prevTotalVisitors = zonePrev?.httpRequests1dGroups?.reduce((acc, d) => acc + (d.uniq.uniques || 0), 0) || 0;
 
-      const prevRes = await fetchCloudflareAnalytics(querySummary, { zoneTag: zoneId, ...prevDataParams });
-      const prevZone = prevRes.data?.viewer?.zones?.[0];
+    if (prevTotalViews > 0) pageviewsChange = ((totalPageviews - prevTotalViews) / prevTotalViews) * 100;
+    if (prevTotalVisitors > 0) visitorsChange = ((totalVisitors - prevTotalVisitors) / prevTotalVisitors) * 100;
 
-      const prevTotalViews = prevZone?.httpRequests1dGroups?.reduce((acc, d) => acc + (d.sum.requests || 0), 0) || 0;
-      const prevTotalVisitors = prevZone?.httpRequests1dGroups?.reduce((acc, d) => acc + (d.uniq.uniques || 0), 0) || 0;
-
-      if (prevTotalViews > 0) pageviewsChange = ((totalPageviews - prevTotalViews) / prevTotalViews) * 100;
-      if (prevTotalVisitors > 0) visitorsChange = ((totalVisitors - prevTotalVisitors) / prevTotalVisitors) * 100;
-
-    } catch (e) {
-      console.warn("Failed to fetch comparison data", e);
-    }
-
-    // 5. Final Response
     return NextResponse.json({
       summary: {
         pageviews: { total: totalPageviews, change: pageviewsChange },
         visitors: { total: totalVisitors, change: visitorsChange },
-        bounceRate: { value: 0, change: 0 }, // Requires JS Beacons
-        avgSessionDuration: { value: 0, change: 0 }, // Requires JS Beacons
+        bounceRate: { value: 0, change: 0 },
+        avgSessionDuration: { value: 0, change: 0 },
       },
-      traffic: { last7Days, last30Days },
+      traffic: { history },
       topPages,
       topCountries,
       topReferrers,
@@ -361,7 +319,6 @@ export async function GET() {
     const errorMessage = error instanceof Error ? error.message : "Failed to load analytics";
     console.error("Analytics API Error:", errorMessage);
 
-    // Extract a cleaner message if it contains JSON stringified errors
     let cleanMessage = errorMessage;
     if (errorMessage.includes("Cloudflare GraphQL errors")) {
       try {
@@ -369,9 +326,7 @@ export async function GET() {
         if (Array.isArray(errorJson) && errorJson[0]?.message) {
           cleanMessage = `Cloudflare Error: ${errorJson[0].message}`;
         }
-      } catch (e) {
-        // Fallback to original
-      }
+      } catch (e) { }
     }
 
     return NextResponse.json({ ...getEmptyData(), error: cleanMessage }, { status: 500 });
