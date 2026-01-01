@@ -15,13 +15,12 @@ interface CloudflareGraphQLResponse {
           dimensions: {
             datetime: string;
             clientDeviceType: string;
-            clientRequestUserAgent: string;
+            userAgent: string;
             clientRequestHTTPHost: string;
             clientRequestPath: string;
             clientCountryName: string;
           };
-          sum: { requests: number; pageViews: number };
-          uniq: { uniques: number };
+          count: number;
         }>;
       }[];
     };
@@ -44,7 +43,7 @@ function getDateRange(days: number): DateRange {
   const endDate = new Date();
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);
-  
+
   return {
     startDate: startDate.toISOString().split('T')[0],
     endDate: endDate.toISOString().split('T')[0],
@@ -56,20 +55,20 @@ function getDateRange(days: number): DateRange {
 function getBrowserFromUA(ua: string): string {
   if (!ua) return 'Other';
   const lowerUA = ua.toLowerCase();
-  
+
   if (lowerUA.includes('chrome') && !lowerUA.includes('edg') && !lowerUA.includes('opr')) return 'Chrome';
   if (lowerUA.includes('safari') && !lowerUA.includes('chrome')) return 'Safari';
   if (lowerUA.includes('firefox')) return 'Firefox';
   if (lowerUA.includes('edg')) return 'Edge';
   if (lowerUA.includes('opr') || lowerUA.includes('opera')) return 'Opera';
   if (lowerUA.includes('trident') || lowerUA.includes('msie')) return 'IE';
-  
+
   return 'Other';
 }
 
 async function fetchCloudflareAnalytics(query: string, variables: Record<string, any>): Promise<CloudflareGraphQLResponse> {
   const apiToken = process.env.CLOUDFLARE_API_TOKEN;
-  
+
   if (!apiToken) {
     throw new Error("CLOUDFLARE_API_TOKEN is not configured");
   }
@@ -89,7 +88,7 @@ async function fetchCloudflareAnalytics(query: string, variables: Record<string,
   }
 
   const data = await response.json();
-  
+
   if (data.errors) {
     throw new Error(`Cloudflare GraphQL errors: ${JSON.stringify(data.errors)}`);
   }
@@ -143,15 +142,15 @@ export async function GET() {
 
   // 1. Validation
   if (!zoneId || !apiToken) {
-    console.warn("Cloudflare credentials missing.");
+    console.warn("Cloudflare credentials missing in environment variables.");
     return NextResponse.json(getEmptyData());
   }
 
   try {
-    // 2. Prepare Query
-    // Note: We request 'clientRequestUserAgent' instead of 'clientBrowserName' for compatibility
-    const query = `
-      query GetAnalytics($zoneTag: String!, $startDate: Date!, $endDate: Date!, $startDateTime: DateTime!, $endDateTime: DateTime!) {
+    // 2. Prepare Queries
+    // Query for 1-day summary data (Traffic charts)
+    const querySummary = `
+      query GetSummary($zoneTag: String!, $startDate: Date!, $endDate: Date!) {
         viewer {
           zones(filter: { zoneTag: $zoneTag }) {
             httpRequests1dGroups(
@@ -162,17 +161,20 @@ export async function GET() {
               }
               orderBy: [date_ASC]
             ) {
-              dimensions {
-                date
-              }
-              sum {
-                requests
-                pageViews
-              }
-              uniq {
-                uniques
-              }
+              dimensions { date }
+              sum { requests pageViews }
+              uniq { uniques }
             }
+          }
+        }
+      }
+    `;
+
+    // Query for detailed adaptive data (limited to 24h by Cloudflare)
+    const queryAdaptive = `
+      query GetAdaptive($zoneTag: String!, $startDateTime: DateTime!, $endDateTime: DateTime!) {
+        viewer {
+          zones(filter: { zoneTag: $zoneTag }) {
             httpRequestsAdaptiveGroups(
               limit: 2000
               filter: {
@@ -183,18 +185,12 @@ export async function GET() {
               dimensions {
                 datetime
                 clientDeviceType
-                clientRequestUserAgent
+                userAgent
                 clientRequestHTTPHost
                 clientRequestPath
                 clientCountryName
               }
-              sum {
-                requests
-                pageViews
-              }
-              uniq {
-                uniques
-              }
+              count
             }
           }
         }
@@ -203,27 +199,30 @@ export async function GET() {
 
     const range7 = getDateRange(7);
     const range30 = getDateRange(30);
+    const range1 = getDateRange(1); // Adaptive groups often limited to 24h
 
     // 3. Fetch Data (Parallel)
-    const [res7, res30] = await Promise.all([
-      fetchCloudflareAnalytics(query, {
+    const [res7, res30, res1] = await Promise.all([
+      fetchCloudflareAnalytics(querySummary, {
         zoneTag: zoneId,
         startDate: range7.startDate,
         endDate: range7.endDate,
-        startDateTime: range7.startDateTime,
-        endDateTime: range7.endDateTime,
       }),
-      fetchCloudflareAnalytics(query, {
+      fetchCloudflareAnalytics(querySummary, {
         zoneTag: zoneId,
         startDate: range30.startDate,
         endDate: range30.endDate,
-        startDateTime: range30.startDateTime,
-        endDateTime: range30.endDateTime,
+      }),
+      fetchCloudflareAnalytics(queryAdaptive, {
+        zoneTag: zoneId,
+        startDateTime: range1.startDateTime,
+        endDateTime: range1.endDateTime,
       }),
     ]);
 
     const zoneCurrent = res7.data?.viewer?.zones?.[0];
     const zone30 = res30.data?.viewer?.zones?.[0];
+    const zone1 = res1.data?.viewer?.zones?.[0];
 
     if (!zoneCurrent) {
       // Zone might be invalid or no data
@@ -248,16 +247,18 @@ export async function GET() {
     })) || [];
 
     // B. Adaptive Analysis (Devices, Browsers, Countries, Pages)
-    const rawData = zoneCurrent.httpRequestsAdaptiveGroups || [];
+    // Use the 24h detailed data for these breakdowns
+    const rawData = zone1?.httpRequestsAdaptiveGroups || [];
 
     const deviceCounts: Record<string, number> = { desktop: 0, mobile: 0, tablet: 0 };
     const browserCounts: Record<string, number> = {};
     const countryCounts: Record<string, { views: number; visitors: number }> = {};
     const pageCounts: Record<string, { views: number; visitors: number }> = {};
+    const referrerCounts: Record<string, number> = {}; // Fallback as we can't fetch it easily on some zones
 
     rawData.forEach((item) => {
-      const views = item.sum.requests || 0; // Using requests
-      const visitors = item.uniq.uniques || 0;
+      const views = item.count || 0;
+      const visitors = 0; // Not available in adaptive groups without more permissions
 
       // Devices
       const type = item.dimensions.clientDeviceType?.toLowerCase() || 'desktop';
@@ -266,7 +267,7 @@ export async function GET() {
       else deviceCounts.desktop += views;
 
       // Browsers (via User Agent)
-      const browser = getBrowserFromUA(item.dimensions.clientRequestUserAgent);
+      const browser = getBrowserFromUA(item.dimensions.userAgent);
       browserCounts[browser] = (browserCounts[browser] || 0) + views;
 
       // Countries
@@ -283,11 +284,17 @@ export async function GET() {
     });
 
     // C. Summaries & Formatting
+    const topReferrers = Object.entries(referrerCounts)
+      .map(([source, views]) => ({ source, views }))
+      .sort((a, b) => b.views - a.views)
+      .slice(0, 5);
+
+    // C. Summaries & Formatting
     const totalDevices = deviceCounts.desktop + deviceCounts.mobile + deviceCounts.tablet;
     const devices = totalDevices > 0 ? {
-        desktop: (deviceCounts.desktop / totalDevices) * 100,
-        mobile: (deviceCounts.mobile / totalDevices) * 100,
-        tablet: (deviceCounts.tablet / totalDevices) * 100,
+      desktop: (deviceCounts.desktop / totalDevices) * 100,
+      mobile: (deviceCounts.mobile / totalDevices) * 100,
+      tablet: (deviceCounts.tablet / totalDevices) * 100,
     } : { desktop: 0, mobile: 0, tablet: 0 };
 
     const totalBrowserViews = Object.values(browserCounts).reduce((a, b) => a + b, 0);
@@ -316,21 +323,15 @@ export async function GET() {
     let visitorsChange = 0;
 
     try {
-      const rangePrev = getDateRange(14); // Crude approximation for diff
-      // We only need the aggregate for comparison, can reuse the same query or simpler one
-      // For simplicity in this logic, we'll calculate basic change vs pure previous period if needed
-      // But standard practice is to just look at the 14-day window derived earlier if possible.
-      // Or fetch specifically:
+      const rangePrev = getDateRange(14);
       const prevDataParams = {
         startDate: rangePrev.startDate,
         endDate: range7.startDate,
-        startDateTime: rangePrev.startDateTime,
-        endDateTime: range7.startDateTime,
       };
-      
-      const prevRes = await fetchCloudflareAnalytics(query, { zoneTag: zoneId, ...prevDataParams });
+
+      const prevRes = await fetchCloudflareAnalytics(querySummary, { zoneTag: zoneId, ...prevDataParams });
       const prevZone = prevRes.data?.viewer?.zones?.[0];
-      
+
       const prevTotalViews = prevZone?.httpRequests1dGroups?.reduce((acc, d) => acc + (d.sum.requests || 0), 0) || 0;
       const prevTotalVisitors = prevZone?.httpRequests1dGroups?.reduce((acc, d) => acc + (d.uniq.uniques || 0), 0) || 0;
 
@@ -352,7 +353,7 @@ export async function GET() {
       traffic: { last7Days, last30Days },
       topPages,
       topCountries,
-      topReferrers: [], // Cannot be fetched reliably via this specific GraphQL query without JS
+      topReferrers,
       devices,
       browsers,
     });

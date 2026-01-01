@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/button'
 import { GalleryUpload } from '@/components/dashboard/gallery-upload'
 import { toast } from 'sonner'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
-import { Activity } from 'lucide-react'
 import { logActivity } from '@/lib/actions/log-activity'
+import { uploadToCloudinary } from '@/lib/cloudinary-upload'
 
 interface GalleryImage {
   id: string
@@ -24,7 +24,7 @@ export default function GalleryPage() {
   const [isUploading, setIsUploading] = useState(false)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [newFiles, setNewFiles] = useState<File[]>([])
-  
+
   // Confirmation state
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -39,7 +39,7 @@ export default function GalleryPage() {
           const data = await response.json()
           setImages(data.images || [])
         } else {
-             throw new Error("Failed to fetch images")
+          throw new Error("Failed to fetch images")
         }
       } catch (error) {
         console.error('Error fetching images:', error)
@@ -51,72 +51,51 @@ export default function GalleryPage() {
     fetchImages()
   }, [])
 
-  // Upload to Cloudinary
-  const uploadToCloudinary = async (file: File): Promise<string | null> => {
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('upload_preset', 'imagine_events')
-    formData.append('folder', 'IMAGINE/General')
-    
-    try {
-      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-      if (!cloudName) return null
-      
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        { method: 'POST', body: formData }
-      )
-      
-      if (!response.ok) throw new Error('Upload failed')
-      const data = await response.json()
-      return data.secure_url
-    } catch (error) {
-      console.error('Error uploading:', error)
-      return null
-    }
-  }
+  // No longer needed: local uploadToCloudinary removed in favor of lib/cloudinary-upload
 
   // Handle upload
   const handleUpload = async () => {
     if (newFiles.length === 0) return
-    
+
     setIsUploading(true)
     let successCount = 0
-    
+
     try {
       for (const file of newFiles) {
-        const url = await uploadToCloudinary(file)
-        if (url) {
-          const response = await fetch('/api/admin/gallery', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image_url: url }),
-          })
-          
-          if (response.ok) {
-            const data = await response.json()
-            if (data.image) {
-              setImages(prev => [{ ...data.image, type: 'standalone' }, ...prev])
-              successCount++
-              
-              // Log upload
-              await logActivity("Uploaded Gallery Image", "image", data.image.id, { 
-                url: data.image.image_url 
-              })
+        try {
+          const result = await uploadToCloudinary(file, 'IMAGINE/General')
+          if (result?.url) {
+            const response = await fetch('/api/admin/gallery', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ image_url: result.url }),
+            })
+
+            if (response.ok) {
+              const data = await response.json()
+              if (data.image) {
+                setImages(prev => [{ ...data.image, type: 'standalone' }, ...prev])
+                successCount++
+
+                // Log upload
+                await logActivity("Uploaded Gallery Image", { url: data.image.image_url }, "image", data.image.id)
+              }
             }
           }
+        } catch (error) {
+          console.error('Gallery upload failed for file:', error)
         }
       }
-      
+
       // Reset
       setNewFiles([])
-      
+
       if (successCount === newFiles.length) {
-          toast.success("All images uploaded successfully")
+        toast.success("All images uploaded successfully")
       } else if (successCount > 0) {
-          toast.warning(`Uploaded ${successCount} of ${newFiles.length} images`)
+        toast.warning(`Uploaded ${successCount} of ${newFiles.length} images`)
       } else {
-          toast.error("Failed to upload images")
+        toast.error("Failed to upload images")
       }
 
     } catch (error) {
@@ -129,47 +108,44 @@ export default function GalleryPage() {
 
   // Execute delete after confirmation
   const executeDelete = async () => {
-      if (!deleteId) return
-      setIsDeleting(true)
+    if (!deleteId) return
+    setIsDeleting(true)
 
-      try {
-        const imageToDelete = images.find(img => img.id === deleteId)
-        if (!imageToDelete) return
+    try {
+      const imageToDelete = images.find(img => img.id === deleteId)
+      if (!imageToDelete) return
 
-        const endpoint = imageToDelete.type === 'event' 
-          ? `/api/admin/events/images/${deleteId}`
-          : `/api/admin/gallery/${deleteId}`
+      const endpoint = imageToDelete.type === 'event'
+        ? `/api/admin/events/images/${deleteId}`
+        : `/api/admin/gallery/${deleteId}`
 
-        const response = await fetch(endpoint, {
-          method: 'DELETE',
-        })
-        if (response.ok) {
-          setImages(prev => prev.filter(img => img.id !== deleteId))
-          toast.success("Image deleted")
-          
-          // Log deletion
-          await logActivity("Deleted Image", "image", deleteId, { 
-            type: imageToDelete.type,
-            url: imageToDelete.image_url 
-          })
+      const response = await fetch(endpoint, {
+        method: 'DELETE',
+      })
+      if (response.ok) {
+        setImages(prev => prev.filter(img => img.id !== deleteId))
+        toast.success("Image deleted")
 
-          setShowDeleteConfirm(false)
-        } else {
-            throw new Error("Failed to delete")
-        }
-      } catch (error) {
-        console.error('Error deleting image:', error)
-        toast.error("Failed to delete image")
-      } finally {
-          setIsDeleting(false)
-          setDeleteId(null)
+        // Log deletion
+        await logActivity("Deleted Image", { type: imageToDelete.type, url: imageToDelete.image_url }, "image", deleteId)
+
+        setShowDeleteConfirm(false)
+      } else {
+        throw new Error("Failed to delete")
       }
+    } catch (error) {
+      console.error('Error deleting image:', error)
+      toast.error("Failed to delete image")
+    } finally {
+      setIsDeleting(false)
+      setDeleteId(null)
+    }
   }
 
   // Trigger delete confirmation
   const handleDeleteClick = (id: string) => {
-      setDeleteId(id)
-      setShowDeleteConfirm(true)
+    setDeleteId(id)
+    setShowDeleteConfirm(true)
   }
 
   // Helper to optimize Cloudinary URLs for thumbnails
@@ -208,7 +184,7 @@ export default function GalleryPage() {
             <p className="text-xs text-muted-foreground">Add standalone images to the gallery</p>
           </div>
         </div>
-        
+
         <div className="p-6">
           <GalleryUpload
             key={images.length} // Force remount when new images are added to reset internal state
@@ -224,7 +200,7 @@ export default function GalleryPage() {
           />
         </div>
       </div>
-      
+
       {/* Existing Gallery Grid */}
       <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col max-h-[800px]">
         <div className="flex items-center gap-3 px-6 py-4 border-b border-border bg-muted/30 shrink-0">
@@ -236,7 +212,7 @@ export default function GalleryPage() {
             <p className="text-xs text-muted-foreground">All uploaded images</p>
           </div>
         </div>
-        
+
         <div className="p-6 overflow-y-auto">
           {isLoading ? (
             <div className="flex items-center justify-center py-20">
@@ -259,7 +235,7 @@ export default function GalleryPage() {
                     // We keep 'unoptimized' if we want to rely strictly on our Cloudinary transform string
                     // But using Next.js Image with a manually optimized source is fine too. 
                     // To be safe and fast, let's rely on the Cloudinary transform string we built.
-                    unoptimized={true} 
+                    unoptimized={true}
                   />
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                     <Button
@@ -282,9 +258,8 @@ export default function GalleryPage() {
                     </Button>
                   </div>
                   <div className="absolute top-2 right-2">
-                    <span className={`text-xs px-2 py-1 rounded-full ${
-                      image.type === 'event' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
-                    }`}>
+                    <span className={`text-xs px-2 py-1 rounded-full ${image.type === 'event' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
+                      }`}>
                       {image.type === 'event' ? 'Event' : 'Gallery'}
                     </span>
                   </div>
@@ -330,7 +305,7 @@ export default function GalleryPage() {
           </div>
         </div>
       )}
-      
+
       <ConfirmDialog
         open={showDeleteConfirm}
         onOpenChange={setShowDeleteConfirm}

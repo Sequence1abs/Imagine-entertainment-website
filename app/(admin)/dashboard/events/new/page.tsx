@@ -22,6 +22,7 @@ import {
 import { CoverUpload } from '@/components/dashboard/cover-upload'
 import { GalleryUpload } from '@/components/dashboard/gallery-upload'
 import { toast } from 'sonner'
+import { uploadToCloudinary } from '@/lib/cloudinary-upload'
 
 export default function NewEventPage() {
   const router = useRouter()
@@ -34,7 +35,7 @@ export default function NewEventPage() {
   }, [])
 
 
-  
+
   // Form state
   const [title, setTitle] = useState('')
   const [category, setCategory] = useState<EventCategory>('Corporate')
@@ -42,7 +43,7 @@ export default function NewEventPage() {
   const [location, setLocation] = useState('')
   const [description, setDescription] = useState('')
   const [isPublished, setIsPublished] = useState(false)
-  
+
   // Image state
   const [coverImage, setCoverImage] = useState<string | null>(null)
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null)
@@ -70,34 +71,7 @@ export default function NewEventPage() {
     })
   }
 
-  // Upload image to Cloudinary
-  const uploadToCloudinary = async (file: File, folderPath: string): Promise<string | null> => {
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('upload_preset', 'imagine_events')
-    formData.append('folder', folderPath)
-    
-    try {
-      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-      if (!cloudName) {
-        console.error('Cloudinary cloud name not configured')
-        return null
-      }
-      
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        { method: 'POST', body: formData }
-      )
-      
-      if (!response.ok) throw new Error('Upload failed')
-      
-      const data = await response.json()
-      return data.secure_url
-    } catch (error) {
-      console.error('Error uploading to Cloudinary:', error)
-      return null
-    }
-  }
+  // No longer needed: local uploadToCloudinary removed in favor of lib/cloudinary-upload
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -105,11 +79,11 @@ export default function NewEventPage() {
     setIsSubmitting(true)
 
     if (!title) {
-        toast.error('Event title is required', {
-          description: 'This is needed to create the image folder.'
-        })
-        setIsSubmitting(false)
-        return
+      toast.error('Event title is required', {
+        description: 'This is needed to create the image folder.'
+      })
+      setIsSubmitting(false)
+      return
     }
 
     // Generate folder path: IMAGINE/Events/EVENT_NAME
@@ -121,10 +95,13 @@ export default function NewEventPage() {
       let coverImageUrl = coverImage
       if (coverImageFile) {
         setIsUploadingCover(true)
-        const url = await uploadToCloudinary(coverImageFile, cloudFolder)
-        if (url) coverImageUrl = url
-        else throw new Error("Failed to upload cover image")
-        setIsUploadingCover(false)
+        try {
+          const result = await uploadToCloudinary(coverImageFile, cloudFolder)
+          if (result?.url) coverImageUrl = result.url
+          else throw new Error("Failed to upload cover image")
+        } finally {
+          setIsUploadingCover(false)
+        }
       }
 
       // Create event
@@ -153,25 +130,29 @@ export default function NewEventPage() {
         setIsUploadingGallery(true)
         let successCount = 0
         for (const img of galleryImages) {
-          const url = await uploadToCloudinary(img.file, cloudFolder)
-          if (url) {
-            await fetch('/api/admin/events/images', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                event_id: event.id,
-                image_url: url,
-              }),
-            })
-            successCount++
+          try {
+            const result = await uploadToCloudinary(img.file, cloudFolder)
+            if (result?.url) {
+              await fetch('/api/admin/events/images', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  event_id: event.id,
+                  image_url: result.url,
+                }),
+              })
+              successCount++
+            }
+          } catch (error) {
+            console.error('Gallery image upload failed:', error)
           }
         }
         setIsUploadingGallery(false)
         if (successCount < galleryImages.length) {
-             toast.warning(`Event created, but some images failed to upload (${successCount}/${galleryImages.length})`)
+          toast.warning(`Event created, but some images failed to upload (${successCount}/${galleryImages.length})`)
         }
       }
-      
+
       toast.success('Event created successfully!')
       router.push('/dashboard/events')
     } catch (err) {
@@ -191,8 +172,8 @@ export default function NewEventPage() {
     <div className="space-y-8">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link 
-          href="/dashboard/events" 
+        <Link
+          href="/dashboard/events"
           className="p-2.5 hover:bg-muted rounded-xl transition-colors border border-transparent hover:border-border shrink-0"
         >
           <ArrowLeft className="size-5" />
@@ -213,7 +194,7 @@ export default function NewEventPage() {
             </div>
             <h2 className="font-semibold">Event Details</h2>
           </div>
-          
+
           <div className="p-6 space-y-5">
             <div>
               <Label htmlFor="title">Event Title *</Label>
@@ -292,7 +273,7 @@ export default function NewEventPage() {
               <p className="text-xs text-muted-foreground">Used as banner and thumbnail</p>
             </div>
           </div>
-          
+
           <div className="p-6">
             <CoverUpload
               onImageChange={(file) => {
@@ -322,20 +303,20 @@ export default function NewEventPage() {
               <p className="text-xs text-muted-foreground">Additional photos for the event</p>
             </div>
           </div>
-          
+
           <div className="p-6">
             <GalleryUpload
               maxFiles={20}
               onFilesChange={(files) => {
-              const previews = files.map((file) => ({
-                file,
-                preview: URL.createObjectURL(file),
-              }))
-              // Defer state update to avoid "update while rendering" error
-              setTimeout(() => {
-                setGalleryImages(previews)
-              }, 0)
-            }}
+                const previews = files.map((file) => ({
+                  file,
+                  preview: URL.createObjectURL(file),
+                }))
+                // Defer state update to avoid "update while rendering" error
+                setTimeout(() => {
+                  setGalleryImages(previews)
+                }, 0)
+              }}
             />
           </div>
         </div>

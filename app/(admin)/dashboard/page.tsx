@@ -356,8 +356,8 @@ function DevicesChart({ data }: { data: AnalyticsData }) {
                 className="flex items-center justify-between gap-4 sm:gap-8"
               >
                 <div className="flex items-center gap-2">
-                  <div 
-                    className="w-2.5 h-2.5 rounded-full" 
+                  <div
+                    className="w-2.5 h-2.5 rounded-full"
                     style={{ backgroundColor: COLORS[index] }}
                   />
                   <device.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
@@ -473,9 +473,9 @@ function BrowsersChart({ data }: { data: AnalyticsData }) {
 }
 
 function AnalyticsDashboard() {
-  const { data, isLoading } = useSWR<AnalyticsData>("/api/analytics", fetcher);
+  const { data, error, isLoading } = useSWR<AnalyticsData & { error?: string }>("/api/analytics", fetcher);
 
-  if (isLoading || !data) {
+  if (isLoading) {
     return (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-4">
         {[1, 2, 3, 4].map((i) => (
@@ -484,6 +484,38 @@ function AnalyticsDashboard() {
       </div>
     );
   }
+
+  if (error || (data && data.error)) {
+    return (
+      <Card className="border-destructive/50 bg-destructive/5 text-destructive">
+        <CardHeader>
+          <CardTitle className="text-lg">Failed to load analytics</CardTitle>
+          <CardDescription className="text-destructive/80">
+            {error?.message || data?.error || "An unknown error occurred while fetching Cloudflare data."}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-sm space-y-2">
+            <p>Please check your Cloudflare credentials in <code>.env.local</code>:</p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li><code>CLOUDFLARE_ZONE_ID</code></li>
+              <li><code>CLOUDFLARE_API_TOKEN</code> (Ensure it has "Analytics:Read" permissions)</li>
+            </ul>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-4"
+              onClick={() => window.location.reload()}
+            >
+              Retry
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!data) return null;
 
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
