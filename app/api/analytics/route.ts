@@ -40,24 +40,54 @@ interface DateRange {
 const CLOUDFLARE_API_URL = "https://api.cloudflare.com/client/v4/graphql";
 
 const COUNTRY_NAME_TO_CODE: Record<string, string> = {
-  // North America
-  "United States": "us", "Canada": "ca", "Mexico": "mx", "Cuba": "cu", "Guatemala": "gt", "Haiti": "ht", "Dominican Republic": "do", "Honduras": "hn", "Nicaragua": "ni", "El Salvador": "sv", "Costa Rica": "cr", "Panama": "pa", "Jamaica": "jm", "Trinidad and Tobago": "tt", "Bahamas": "bs", "Barbados": "bb", "Saint Lucia": "lc", "Saint Vincent and the Grenadines": "vc", "Grenada": "gd", "Antigua and Barbuda": "ag", "Dominica": "dm", "Saint Kitts and Nevis": "kn", "Belize": "bz",
-
-  // South America
-  "Brazil": "br", "Colombia": "co", "Argentina": "ar", "Peru": "pe", "Venezuela": "ve", "Chile": "cl", "Ecuador": "ec", "Bolivia": "bo", "Paraguay": "py", "Uruguay": "uy", "Guyana": "gy", "Suriname": "sr",
-
-  // Europe
-  "United Kingdom": "gb", "Germany": "de", "France": "fr", "Italy": "it", "Spain": "es", "Poland": "pl", "Ukraine": "ua", "Romania": "ro", "Netherlands": "nl", "Belgium": "be", "Greece": "gr", "Czech Republic": "cz", "Portugal": "pt", "Sweden": "se", "Hungary": "hu", "Belarus": "by", "Austria": "at", "Switzerland": "ch", "Serbia": "rs", "Bulgaria": "bg", "Denmark": "dk", "Finland": "fi", "Slovakia": "sk", "Norway": "no", "Ireland": "ie", "Croatia": "hr", "Moldova": "md", "Bosnia and Herzegovina": "ba", "Albania": "al", "Lithuania": "lt", "Slovenia": "si", "Latvia": "lv", "Estonia": "ee", "Montenegro": "me", "Luxembourg": "lu", "Malta": "mt", "Iceland": "is", "Andorra": "ad", "Monaco": "mc", "Liechtenstein": "li", "San Marino": "sm", "Vatican City": "va", "Russia": "ru", "Turkey": "tr",
-
-  // Asia
-  "China": "cn", "India": "in", "Indonesia": "id", "Pakistan": "pk", "Bangladesh": "bd", "Japan": "jp", "Philippines": "ph", "Vietnam": "vn", "Iran": "ir", "Thailand": "th", "Myanmar": "mm", "South Korea": "kr", "Iraq": "iq", "Afghanistan": "af", "Saudi Arabia": "sa", "Uzbekistan": "uz", "Malaysia": "my", "Yemen": "ye", "Nepal": "np", "North Korea": "kp", "Sri Lanka": "lk", "Kazakhstan": "kz", "Syria": "sy", "Cambodia": "kh", "Jordan": "jo", "Azerbaijan": "az", "United Arab Emirates": "ae", "Tajikistan": "tj", "Israel": "il", "Hong Kong": "hk", "Laos": "la", "Lebanon": "lb", "Kyrgyzstan": "kg", "Turkmenistan": "tm", "Singapore": "sg", "Palestine": "ps", "Oman": "om", "Kuwait": "kw", "Georgia": "ge", "Mongolia": "mn", "Armenia": "am", "Qatar": "qa", "Bahrain": "bh", "Timor-Leste": "tl", "Cyprus": "cy", "Bhutan": "bt", "Maldives": "mv", "Brunei": "bn", "Taiwan": "tw", "Macao": "mo",
-
-  // Africa
-  "Nigeria": "ng", "Ethiopia": "et", "Egypt": "eg", "DR Congo": "cd", "Tanzania": "tz", "South Africa": "za", "Kenya": "ke", "Uganda": "ug", "Algeria": "dz", "Sudan": "sd", "Morocco": "ma", "Angola": "ao", "Mozambique": "mz", "Ghana": "gh", "Madagascar": "mg", "Ivory Coast": "ci", "Cameroon": "cm", "Niger": "ne", "Burkina Faso": "bf", "Mali": "ml", "Malawi": "mw", "Zambia": "zm", "Senegal": "sn", "Chad": "td", "Somalia": "so", "Zimbabwe": "zw", "Guinea": "gn", "Rwanda": "rw", "Benin": "bj", "Burundi": "bi", "Tunisia": "tn", "South Sudan": "ss", "Togo": "tg", "Sierra Leone": "sl", "Libya": "ly", "Congo": "cg", "Central African Republic": "cf", "Liberia": "lr", "Mauritania": "mr", "Eritrea": "er", "Namibia": "na", "Gambia": "gm", "Botswana": "bw", "Gabon": "ga", "Lesotho": "ls", "Guinea-Bissau": "gw", "Equatorial Guinea": "gq", "Mauritius": "mu", "Eswatini": "sz", "Djibouti": "dj", "Comoros": "km", "Cape Verde": "cv", "Sao Tome and Principe": "st", "Seychelles": "sc",
-
-  // Oceania
-  "Australia": "au", "Papua New Guinea": "pg", "New Zealand": "nz", "Fiji": "fj", "Solomon Islands": "sb", "Vanuatu": "vu", "Samoa": "ws", "Kiribati": "ki", "Tonga": "to", "Micronesia": "fm", "Palau": "pw", "Marshall Islands": "mh", "Nauru": "nr", "Tuvalu": "tv",
-
+  "United States": "us",
+  "United Kingdom": "gb",
+  "India": "in",
+  "Canada": "ca",
+  "Germany": "de",
+  "France": "fr",
+  "Japan": "jp",
+  "China": "cn",
+  "Australia": "au",
+  "Brazil": "br",
+  "Russia": "ru",
+  "South Korea": "kr",
+  "Italy": "it",
+  "Spain": "es",
+  "Netherlands": "nl",
+  "Switzerland": "ch",
+  "Sweden": "se",
+  "Norway": "no",
+  "Denmark": "dk",
+  "Finland": "fi",
+  "Ireland": "ie",
+  "New Zealand": "nz",
+  "Singapore": "sg",
+  "United Arab Emirates": "ae",
+  "Saudi Arabia": "sa",
+  "South Africa": "za",
+  "Mexico": "mx",
+  "Argentina": "ar",
+  "Turkey": "tr",
+  "Portugal": "pt",
+  "Belgium": "be",
+  "Austria": "at",
+  "Thailand": "th",
+  "Vietnam": "vn",
+  "Indonesia": "id",
+  "Malaysia": "my",
+  "Philippines": "ph",
+  "Poland": "pl",
+  "Czech Republic": "cz",
+  "Greece": "gr",
+  "Israel": "il",
+  "Ukraine": "ua",
+  "Hong Kong": "hk",
+  "Taiwan": "tw",
+  "Pakistan": "pk",
+  "Egypt": "eg",
+  "Nigeria": "ng",
+  "Sri Lanka": "lk",
   "Unknown": "un"
 };
 
@@ -162,17 +192,14 @@ export async function GET(request: NextRequest) {
   const zoneId = process.env.CLOUDFLARE_ZONE_ID;
   const apiToken = process.env.CLOUDFLARE_API_TOKEN;
 
-  // Get range from query params
-  const { searchParams } = new URL(request.url);
-  const days = parseInt(searchParams.get("days") || "30");
-
   // 1. Validation
   if (!zoneId || !apiToken) {
     console.warn("Cloudflare credentials missing in environment variables.");
-    return NextResponse.json(getEmptyData(days));
+    return NextResponse.json(getEmptyData(30));
   }
 
   try {
+    const days = 30;
     // 2. Prepare Queries
     const querySummary = `
       query GetSummary($zoneTag: String!, $startDate: Date!, $endDate: Date!) {
@@ -243,41 +270,20 @@ export async function GET(request: NextRequest) {
       }),
     ]);
 
-    // Diagnostic Log
-    console.log(`[Analytics] Fetched ${resMain.data?.viewer?.zones?.[0]?.httpRequests1dGroups?.length || 0} history records`);
-    console.log(`[Analytics] Fetched ${res1.data?.viewer?.zones?.[0]?.httpRequestsAdaptiveGroups?.length || 0} adaptive records`);
-
     const zoneCurrent = resMain.data?.viewer?.zones?.[0];
     const zonePrev = resCompare.data?.viewer?.zones?.[0];
     const zone1 = res1.data?.viewer?.zones?.[0];
 
     if (!zoneCurrent) {
-      return NextResponse.json(getEmptyData(days));
+      return NextResponse.json(getEmptyData(30));
     }
 
     // 4. Transform Data
-    // A. Fill missing dates in history to ensure a continuous chart
-    const historyMap = new Map();
-    zoneCurrent.httpRequests1dGroups?.forEach((d: any) => {
-      historyMap.set(d.dimensions.date, {
-        date: d.dimensions.date,
-        pageviews: d.sum.requests || 0,
-        visitors: d.uniq.uniques || 0,
-      });
-    });
-
-    const history = [];
-    for (let i = days - 1; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      const dateStr = d.toISOString().split('T')[0];
-
-      history.push(historyMap.get(dateStr) || {
-        date: dateStr,
-        pageviews: 0,
-        visitors: 0,
-      });
-    }
+    const history = zoneCurrent.httpRequests1dGroups?.map((d: any) => ({
+      date: d.dimensions.date,
+      pageviews: d.sum.requests || 0,
+      visitors: d.uniq.uniques || 0,
+    })) || [];
 
     const rawData = zone1?.httpRequestsAdaptiveGroups || [];
 
@@ -382,6 +388,6 @@ export async function GET(request: NextRequest) {
       } catch (e) { }
     }
 
-    return NextResponse.json({ ...getEmptyData(days), error: cleanMessage }, { status: 500 });
+    return NextResponse.json({ ...getEmptyData(30), error: cleanMessage }, { status: 500 });
   }
 }

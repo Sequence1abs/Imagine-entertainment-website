@@ -487,7 +487,7 @@ function BrowsersChart({ data }: { data: AnalyticsData }) {
 }
 
 function AnalyticsDashboard() {
-  const { data, error, isLoading } = useSWR<AnalyticsData & { error?: string }>("/api/analytics?days=30", fetcher);
+  const { data, error, isLoading } = useSWR<AnalyticsData & { error?: string }>("/api/analytics", fetcher);
 
   if (isLoading) {
     return (
