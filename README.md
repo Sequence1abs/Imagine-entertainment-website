@@ -19,7 +19,7 @@
 
 **IMAGINE ENTERTAINMENT (PVT) LTD** is a premier event production company based in Sri Lanka with over 37 years of excellence in delivering world-class entertainment experiences.
 
-From corporate galas, musical concerts, and awards ceremonies to television production, weddings, and stadium-scale events — we bring extraordinary visions to life.
+From corporate galas, musical concerts, and awards ceremonies to television production, weddings, and stadium-scale events, we bring extraordinary visions to life.
 
 ---
 
