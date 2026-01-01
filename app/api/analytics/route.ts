@@ -243,6 +243,10 @@ export async function GET(request: NextRequest) {
       }),
     ]);
 
+    // Diagnostic Log
+    console.log(`[Analytics] Fetched ${resMain.data?.viewer?.zones?.[0]?.httpRequests1dGroups?.length || 0} history records`);
+    console.log(`[Analytics] Fetched ${res1.data?.viewer?.zones?.[0]?.httpRequestsAdaptiveGroups?.length || 0} adaptive records`);
+
     const zoneCurrent = resMain.data?.viewer?.zones?.[0];
     const zonePrev = resCompare.data?.viewer?.zones?.[0];
     const zone1 = res1.data?.viewer?.zones?.[0];
