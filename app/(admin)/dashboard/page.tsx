@@ -142,11 +142,11 @@ function TrafficChart({ data }: { data: AnalyticsData }) {
   const chartConfig = {
     pageviews: {
       label: "Pageviews",
-      color: "hsl(var(--chart-1))",
+      color: "#000080", // Navy Blue
     },
     visitors: {
       label: "Visitors",
-      color: "hsl(var(--chart-2))",
+      color: "#3b82f6", // Bright Blue for contrast
     },
   };
 
@@ -266,7 +266,7 @@ function TopReferrers({ data }: { data: AnalyticsData }) {
   const chartConfig = {
     views: {
       label: "Views",
-      color: "hsl(var(--chart-3))",
+      color: "#1e3a8a", // Deep Navy
     },
   };
 
@@ -447,7 +447,7 @@ function BrowsersChart({ data }: { data: AnalyticsData }) {
   const chartConfig = {
     percentage: {
       label: "Percentage",
-      color: "hsl(var(--chart-4))",
+      color: "#1e40af", // Premium Navy
     },
   };
 
