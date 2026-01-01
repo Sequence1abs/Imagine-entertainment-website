@@ -475,8 +475,8 @@ function BrowsersChart({ data }: { data: AnalyticsData }) {
   );
 }
 
-function AnalyticsDashboard({ days }: { days: number }) {
-  const { data, error, isLoading } = useSWR<AnalyticsData & { error?: string }>(`/api/analytics?days=${days}`, fetcher);
+function AnalyticsDashboard() {
+  const { data, error, isLoading } = useSWR<AnalyticsData & { error?: string }>("/api/analytics?days=30", fetcher);
 
   if (isLoading) {
     return (
@@ -588,8 +588,6 @@ function AnalyticsDashboard({ days }: { days: number }) {
 }
 
 export default function DashboardPage() {
-  const [days, setDays] = useState(30);
-
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -599,29 +597,10 @@ export default function DashboardPage() {
             Real-time analytics and insights for your website
           </p>
         </div>
-
-        <div className="flex items-center bg-muted/50 p-1 rounded-lg border w-fit">
-          {[
-            { label: "7D", value: 7 },
-            { label: "30D", value: 30 },
-            { label: "90D", value: 90 }
-          ].map((range) => (
-            <button
-              key={range.value}
-              onClick={() => setDays(range.value)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${days === range.value
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground hover:bg-background/50"
-                }`}
-            >
-              {range.label}
-            </button>
-          ))}
-        </div>
       </div>
 
       <div id="analytics-dashboard">
-        <AnalyticsDashboard days={days} />
+        <AnalyticsDashboard />
       </div>
     </div>
   );
