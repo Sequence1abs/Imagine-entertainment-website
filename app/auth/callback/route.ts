@@ -43,7 +43,7 @@ export async function GET(request: Request) {
     if (!error) {
       // For invite type, redirect to setup account page
       if (type === 'invite') {
-        return NextResponse.redirect(`${origin}/setup-account`)
+        return NextResponse.redirect(`${origin}/setup-account?type=invite`)
       }
       // For recovery type, redirect to reset password
       if (type === 'recovery') {
@@ -57,6 +57,11 @@ export async function GET(request: Request) {
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
+      // Ensure invite context is preserved
+      if (next.includes('setup-account') && !next.includes('type=invite')) {
+        const separator = next.includes('?') ? '&' : '?'
+        return NextResponse.redirect(`${origin}${next}${separator}type=invite`)
+      }
       return NextResponse.redirect(`${origin}${next}`)
     }
   }

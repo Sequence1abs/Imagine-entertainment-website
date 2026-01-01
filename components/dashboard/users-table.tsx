@@ -185,17 +185,20 @@ export function UsersTable() {
         body: JSON.stringify({ userId: userToDelete.id })
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        const data = await response.json()
         throw new Error(data.error || 'Failed to delete user')
       }
 
+      // Success
       setShowDeleteDialog(false)
+      await fetchUsers() // Wait for list refresh
       setUserToDelete(null)
-      fetchUsers() // Refresh list
       
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete user')
+      // Show error in alert since dialog might be closed or blocking view
+      alert(err instanceof Error ? err.message : 'Failed to delete user')
     } finally {
       setIsDeleting(false)
     }
