@@ -92,6 +92,9 @@ const COUNTRY_NAME_TO_CODE: Record<string, string> = {
 };
 
 function getCountryCode(name: string): string {
+  // If it's already a 2-letter code, return it lowercased
+  if (name.length === 2) return name.toLowerCase();
+  
   if (COUNTRY_NAME_TO_CODE[name]) return COUNTRY_NAME_TO_CODE[name];
   // Basic search for common variations
   const lowerName = name.toLowerCase();
