@@ -178,9 +178,9 @@ export async function GET(request: NextRequest) {
                 datetime
                 clientDeviceType
                 userAgent
-                clientRequestHTTPHost
                 clientRequestPath
                 clientCountryName
+                clientCountry
               }
               count
             }
@@ -248,7 +248,7 @@ export async function GET(request: NextRequest) {
 
     const deviceCounts: Record<string, number> = { desktop: 0, mobile: 0, tablet: 0 };
     const browserCounts: Record<string, number> = {};
-    const countryCounts: Record<string, { views: number; visitors: number }> = {};
+    const countryCounts: Record<string, { views: number; visitors: number; code: string }> = {};
     const pageCounts: Record<string, { views: number; visitors: number }> = {};
     const referrerCounts: Record<string, number> = {};
 
@@ -265,7 +265,8 @@ export async function GET(request: NextRequest) {
       browserCounts[browser] = (browserCounts[browser] || 0) + views;
 
       const country = item.dimensions.clientCountryName || 'Unknown';
-      if (!countryCounts[country]) countryCounts[country] = { views: 0, visitors: 0 };
+      const code = item.dimensions.clientCountry || 'XX';
+      if (!countryCounts[country]) countryCounts[country] = { views: 0, visitors: 0, code };
       countryCounts[country].views += views;
       countryCounts[country].visitors += visitors;
 

@@ -64,7 +64,7 @@ type AnalyticsData = {
   };
   topPages: Array<{ path: string; views: number; visitors: number }>;
   topReferrers: Array<{ source: string; views: number }>;
-  topCountries: Array<{ country: string; views: number; visitors: number }>;
+  topCountries: Array<{ country: string; views: number; visitors: number; code: string }>;
   devices: { desktop: number; mobile: number; tablet: number };
   browsers: Array<{ name: string; percentage: number }>;
 };
@@ -414,9 +414,20 @@ function TopCountries({ data }: { data: AnalyticsData }) {
           <TableBody>
             {data.topCountries.map((country) => (
               <TableRow key={country.country}>
-                <TableCell className="font-medium flex items-center gap-2">
-                  <Globe className="h-4 w-4 text-muted-foreground" />
-                  {country.country}
+                <TableCell className="font-medium">
+                  <div className="flex items-center gap-3">
+                    <div className="relative w-6 h-4 overflow-hidden rounded-sm border bg-muted group">
+                      <img
+                        src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`}
+                        alt={country.country}
+                        className="object-cover w-full h-full"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = 'https://flagcdn.com/w40/un.png';
+                        }}
+                      />
+                    </div>
+                    <span>{country.country}</span>
+                  </div>
                 </TableCell>
                 <TableCell className="text-right">
                   {country.views.toLocaleString()}
