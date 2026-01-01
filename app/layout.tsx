@@ -22,64 +22,112 @@ export const metadata: Metadata = {
   description:
     "With over 37 years of excellence, Imagine Entertainment delivers world-class event production across Sri Lanka. From corporate galas, musical concerts, and awards ceremonies to television production, weddings, and stadium-scale events — we bring extraordinary visions to life.",
   keywords: [
-    // Core Brand
+    // Core Brand Keywords
     "Imagine Entertainment",
     "Imagine Entertainment Sri Lanka",
+    "Imagine Entertainment Pvt Ltd",
     "Imagine Events",
     "Imagine Event Production",
-    // Core Services
+    "imaginesl",
+    // Event Production Services
     "Event Production Company",
+    "Event Production Company Sri Lanka",
     "Event Management Company Sri Lanka",
     "Corporate Event Production",
     "Luxury Event Production",
     "End-to-End Event Solutions",
     "Turnkey Event Production",
     "Live Event Specialists",
-    // Technical Services
+    "Full Service Event Production",
+    "Event Planning Sri Lanka",
+    "Event Organizers Colombo",
+    // Technical & AV Services
     "Professional Sound & Lighting",
     "Stage Design & Setup",
     "LED Wall Solutions",
+    "LED Screen Rental Sri Lanka",
     "Audiovisual Production",
+    "AV Equipment Rental",
     "Event Technical Partner",
     "Show Production Services",
     "Concert Production",
     "Festival Production",
+    "Sound System Rental",
+    "Stage Lighting Design",
+    "Truss & Rigging Services",
+    "Video Wall Rental",
+    "PA System Rental Sri Lanka",
+    // Concert & Music Events
+    "Concert Production Sri Lanka",
+    "Music Festival Production",
+    "Live Concert Management",
+    "Artist Tour Production",
+    "Outdoor Concert Setup",
+    "Indoor Concert Production",
     // Creative & Experience
     "Immersive Event Experiences",
     "Experiential Marketing",
     "Creative Event Design",
     "Bespoke Event Experiences",
     "Premium Event Styling",
-    // Event Types
+    "Event Decor & Design",
+    // Corporate Events
     "Corporate Galas",
     "Award Ceremonies",
     "Product Launches",
     "Brand Activations",
     "Conferences & Summits",
+    "Corporate Entertainment Solutions",
+    "Corporate Events Colombo",
+    "Company Annual Dinners",
+    "AGM Event Production",
+    "Trade Show Production",
+    "Exhibition Stand Design",
+    // Weddings & Private
     "Weddings Sri Lanka",
+    "Wedding Planning Sri Lanka",
+    "Destination Weddings Sri Lanka",
+    "Luxury Wedding Production",
+    "Wedding Stage Design",
+    "Private Party Production",
     // Broadcast & Virtual
     "Broadcast Production",
     "Live Streaming Services",
     "Hybrid Events",
     "Virtual Event Production",
-    "Television & Film Production",
-    // Corporate Specific
-    "Corporate Entertainment Solutions",
-    "Corporate Events Colombo",
-    // Authority & Location
+    "Television Production Sri Lanka",
+    "Film Production Sri Lanka",
+    "TV Show Production",
+    "Reality TV Production",
+    // Location Keywords
+    "Event Production Sri Lanka",
+    "Colombo Event Production",
+    "Sri Lanka Event Specialists",
+    "Event Company Nugegoda",
+    "Events Colombo",
+    "Event Planners Western Province",
+    // Authority Keywords
     "Award-Winning Event Production",
     "Industry-Leading Event Experts",
     "Trusted Technical Partner",
     "Professional Event Team",
-    "35+ Years of Experience",
+    "37+ Years of Experience",
     "High-End Event Production",
-    "Event Production Sri Lanka",
-    "Colombo Event Production",
-    "Sri Lanka Event Specialists"
+    "Best Event Company Sri Lanka",
+    "Top Event Planners Sri Lanka",
+    // Service Specific
+    "Stage Rental Sri Lanka",
+    "Event Equipment Hire",
+    "Backdrop Design",
+    "Event Furniture Rental",
+    "Pyrotechnics & Special Effects"
   ],
   authors: [{ name: "Imagine Entertainment (Pvt) Ltd" }],
   creator: "Imagine Entertainment",
   publisher: "Imagine Entertainment",
+  verification: {
+    google: "FsaEPcmDwm7kcUTfP0txTgyfXQ_zOoghOKGXCL0f9lc",
+  },
   metadataBase: new URL('https://www.imaginesl.com'),
   alternates: {
     canonical: '/',
@@ -89,13 +137,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://www.imaginesl.com/",
     title: "Imagine Entertainment (Pvt) Ltd | Sri Lanka's Premier Event Production",
-    description: "As Sri Lanka's top entertainment provider, we offer advanced show lighting, audio-video solutions, staging, LED walls, and flawless execution for concerts, corporate events, and large-scale productions.",
+    description: "With over 37 years of excellence, Imagine Entertainment delivers world-class event production across Sri Lanka. From corporate galas, concerts, and awards ceremonies to TV production and weddings.",
     siteName: "Imagine Entertainment (Pvt) Ltd",
     images: [{
-      url: '/og-image.jpg', // Ensure this exists or use a default
+      url: '/og-image.jpg',
       width: 1200,
       height: 630,
-      alt: 'Imagine Entertainment Event Production'
+      alt: 'Imagine Entertainment (Pvt) Ltd - Sri Lanka Premier Event Production Company'
     }]
   },
   twitter: {
