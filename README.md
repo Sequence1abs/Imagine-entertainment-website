@@ -22,7 +22,6 @@
 - [Design Philosophy](#-design-philosophy)
 - [Deployment & Operations](#-deployment--operations)
 - [Installation Guide](#-installation-guide)
-- [Support](#-support)
 
 ---
 
@@ -125,15 +124,3 @@ graph LR
    ```
 
 ---
-
-## 🤝 Support & Handoff
-
-This project includes a comprehensive `CLIENT_HANDOVER.md` for account transitions and `ARCHITECTURE.md` for deep technical diving.
-
-**Technical Support**: [developers@imaginesl.com](mailto:hasaldharmagunawardana@gmail.com)
-**Project Lead**: Imagine Entertainment SL
-
----
-<p align="center">
-  <em>Excellence in Entertainment, Mastered in Digital.</em>
-</p>
