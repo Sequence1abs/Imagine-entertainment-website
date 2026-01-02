@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     "AGM Event Production",
     "Trade Show Production",
     "Exhibition Stand Design",
-    // Weddings & Private
+    // Weddings & Private Celebrations
     "Weddings Sri Lanka",
     "Wedding Planning Sri Lanka",
     "Destination Weddings Sri Lanka",
@@ -194,7 +194,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  
+
   return (
     <html lang="en" className={outfit.variable} suppressHydrationWarning>
       {/* 

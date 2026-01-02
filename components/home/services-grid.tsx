@@ -7,7 +7,7 @@ import { ArrowUpRight } from "lucide-react"
 
 // Cloudinary base URL
 const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-const getCloudinaryUrl = (publicId: string) => 
+const getCloudinaryUrl = (publicId: string) =>
   `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto/${publicId}.jpg`
 
 // Services data
@@ -62,7 +62,7 @@ const services = [
   },
   {
     id: 7,
-    title: "Weddings & Private",
+    title: "Weddings & Private Celebrations",
     eventType: "Weddings & Private Celebrations",
     filterCategory: "Weddings & Private Celebrations",
     image: getCloudinaryUrl("weddings_e86ttg"),
@@ -104,9 +104,8 @@ function ServiceBentoCard({ service, index }: { service: (typeof services)[0]; i
     <Link
       href={`/work?category=${encodeURIComponent(service.filterCategory || service.eventType)}`}
       ref={ref}
-      className={`cursor-target group relative block h-full overflow-hidden rounded-xl transition-all duration-700 ${
-        isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-      } ${service.span} w-full`}
+      className={`cursor-target group relative block h-full overflow-hidden rounded-xl transition-all duration-700 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+        } ${service.span} w-full`}
       style={{ transitionDelay: `${index * 0.1}s` }}
     >
       <div className="absolute inset-0">
@@ -150,9 +149,8 @@ function ViewServicesCard({ index }: { index: number }) {
     <Link
       href="/services"
       ref={ref}
-      className={`cursor-target group relative block h-full overflow-hidden rounded-xl transition-all duration-700 md:col-span-1 w-full ${
-        isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-      }`}
+      className={`cursor-target group relative block h-full overflow-hidden rounded-xl transition-all duration-700 md:col-span-1 w-full ${isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+        }`}
       style={{ transitionDelay: `${index * 0.1}s` }}
     >
       <div className="absolute inset-0 bg-muted dark:bg-muted/50 group-hover:bg-muted/80 dark:group-hover:bg-muted/70 transition-all duration-500" />

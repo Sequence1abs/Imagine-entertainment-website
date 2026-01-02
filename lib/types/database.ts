@@ -8,7 +8,7 @@ export const EVENT_CATEGORIES = [
   'Rigging Services',
   'Public/Sports Events',
   'In-House Studio',
-  'Weddings & Private',
+  'Weddings & Private Celebrations',
 ] as const
 
 export type EventCategory = typeof EVENT_CATEGORIES[number]
