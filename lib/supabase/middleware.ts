@@ -10,7 +10,8 @@ export async function updateSession(request: NextRequest) {
     console.error('Missing Supabase environment variables!')
     console.error('URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'Not Set')
     console.error('Key:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Set' : 'Not Set')
-    throw new Error('Missing Supabase environment variables. Please check your .env.local file.')
+    // Don't throw - let the response continue so we can debug or show a better error
+    return supabaseResponse
   }
 
   const supabase = createServerClient(
