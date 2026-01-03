@@ -42,9 +42,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# IDE
+# IDE & AI Tools
 .vscode/
 .idea/
+.agent/
 *.swp
 *.swo
 *~
