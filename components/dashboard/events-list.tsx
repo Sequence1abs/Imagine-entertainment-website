@@ -72,6 +72,16 @@ export function EventsList() {
     })
   }
 
+  // Format event title helper - capitalize first letter of each word
+  const formatTitle = (title: string) => {
+    return title
+      .toLowerCase()
+      .split(" ")
+      .filter(Boolean)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ")
+  }
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -165,7 +175,7 @@ export function EventsList() {
                 {/* Content */}
                 <Link href={`/dashboard/events/${event.id}`} className="flex-1 min-w-0 cursor-pointer">
                   <h3 className="font-semibold text-sm sm:text-base line-clamp-2 sm:truncate group-hover:text-primary transition-colors mb-0.5 sm:mb-1">
-                    {event.title}
+                    {formatTitle(event.title)}
                   </h3>
                   <p className="text-xs sm:text-sm text-muted-foreground mb-1">
                     {event.category}

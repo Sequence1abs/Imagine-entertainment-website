@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/select'
 import { CoverUpload } from '@/components/dashboard/cover-upload'
 import { GalleryUpload } from '@/components/dashboard/gallery-upload'
+import { LocationAutocomplete } from '@/components/dashboard/location-autocomplete'
 import { toast } from 'sonner'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { uploadToCloudinary } from '@/lib/cloudinary-upload'
@@ -33,6 +34,7 @@ export function EventEditForm({ event }: EventEditFormProps) {
   const [loading, setLoading] = useState(false)
   const [isPublished, setIsPublished] = useState(event.is_published)
   const [category, setCategory] = useState<EventCategory>(event.category as EventCategory)
+  const [location, setLocation] = useState(event.location || '')
 
   // Image state
   const [coverImage, setCoverImage] = useState<string | null>(event.cover_image_url)
@@ -130,7 +132,7 @@ export function EventEditForm({ event }: EventEditFormProps) {
         category: category,
         description: formData.get('description') as string || null,
         event_date: formData.get('event_date') as string || null,
-        location: formData.get('location') as string || null,
+        location: location || null,
         cover_image_url: coverImageUrl,
         is_published: isPublished,
       }
@@ -249,13 +251,15 @@ export function EventEditForm({ event }: EventEditFormProps) {
             {/* Location */}
             <div>
               <Label htmlFor="location">Location</Label>
-              <Input
-                id="location"
-                name="location"
-                defaultValue={event.location || ''}
-                placeholder="e.g., London, UK"
-                className="mt-2"
-              />
+              <div className="mt-2">
+                <LocationAutocomplete
+                  id="location"
+                  name="location"
+                  value={location}
+                  onChange={setLocation}
+                  placeholder="e.g., Colombo, Sri Lanka"
+                />
+              </div>
             </div>
 
             {/* Description */}

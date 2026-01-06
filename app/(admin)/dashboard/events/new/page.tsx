@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/select'
 import { CoverUpload } from '@/components/dashboard/cover-upload'
 import { GalleryUpload } from '@/components/dashboard/gallery-upload'
+import { LocationAutocomplete } from '@/components/dashboard/location-autocomplete'
 import { toast } from 'sonner'
 import { uploadToCloudinary } from '@/lib/cloudinary-upload'
 
@@ -244,13 +245,14 @@ export default function NewEventPage() {
 
             <div>
               <Label htmlFor="location">Location</Label>
-              <Input
-                id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="e.g., London, UK"
-                className="mt-2"
-              />
+              <div className="mt-2">
+                <LocationAutocomplete
+                  id="location"
+                  value={location}
+                  onChange={setLocation}
+                  placeholder="e.g., Colombo, Sri Lanka"
+                />
+              </div>
             </div>
 
             <div>
