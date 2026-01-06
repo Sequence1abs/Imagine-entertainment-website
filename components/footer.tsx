@@ -227,7 +227,7 @@ export default function Footer() {
             <div className="hidden md:block h-3 w-px bg-foreground/20"></div>
 
             <a
-              href="https://www.linkedin.com/in/tharukakarunanayaka/"
+              href="https://www.linkedin.com/company/sequence3/"
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium hover:text-foreground transition-colors"
