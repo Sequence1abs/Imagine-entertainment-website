@@ -218,7 +218,7 @@ function TopPages({ data }: { data: AnalyticsData }) {
     <Card className="col-span-1 sm:col-span-2">
       <CardHeader className="pb-2 sm:pb-6">
         <CardTitle className="text-base sm:text-lg">Top Pages</CardTitle>
-        <CardDescription className="text-xs sm:text-sm">Most viewed (Last 24h)</CardDescription>
+        <CardDescription className="text-xs sm:text-sm">Most viewed (Last 30 days)</CardDescription>
       </CardHeader>
       <CardContent className="pt-0">
         <Table>

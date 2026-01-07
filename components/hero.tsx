@@ -28,8 +28,8 @@ export default function Hero() {
     }
   }, [])
 
-  // Cloudinary video URL - using best quality without auto-format to prevent encoding issues
-  const videoUrl = "https://res.cloudinary.com/dqhklh9nd/video/upload/q_auto:best/v1767202328/Final_Web_vyhf3y.mp4"
+  // Cloudinary video URL
+  const videoUrl = "https://res.cloudinary.com/dqhklh9nd/video/upload/q_auto:eco,f_auto/v1767202328/Final_Web_vyhf3y.mp4"
 
   return (
     <section className="relative min-h-dvh h-dvh bg-black overflow-hidden">

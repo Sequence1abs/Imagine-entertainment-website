@@ -230,7 +230,7 @@ export async function GET(request: NextRequest) {
         viewer {
           zones(filter: { zoneTag: $zoneTag }) {
             httpRequestsAdaptiveGroups(
-              limit: 2000
+              limit: 10000
               filter: {
                 datetime_geq: $startDateTime
                 datetime_lt: $endDateTime
@@ -241,6 +241,7 @@ export async function GET(request: NextRequest) {
                 clientDeviceType
                 userAgent
                 clientRequestPath
+                clientRequestHTTPHost
                 clientCountryName
               }
               count
@@ -252,10 +253,9 @@ export async function GET(request: NextRequest) {
 
     const rangeMain = getDateRange(days);
     const rangeCompare = getDateRange(days * 2);
-    const range1 = getDateRange(1);
 
-    // 3. Fetch Data (Parallel)
-    const [resMain, resCompare, res1] = await Promise.all([
+    // 3. Fetch Data (Parallel for summary, adaptive will be fetched separately)
+    const [resMain, resCompare] = await Promise.all([
       fetchCloudflareAnalytics(querySummary, {
         zoneTag: zoneId,
         startDate: rangeMain.startDate,
@@ -266,16 +266,10 @@ export async function GET(request: NextRequest) {
         startDate: rangeCompare.startDate,
         endDate: rangeMain.startDate,
       }),
-      fetchCloudflareAnalytics(queryAdaptive, {
-        zoneTag: zoneId,
-        startDateTime: range1.startDateTime,
-        endDateTime: range1.endDateTime,
-      }),
     ]);
 
     const zoneCurrent = resMain.data?.viewer?.zones?.[0];
     const zonePrev = resCompare.data?.viewer?.zones?.[0];
-    const zone1 = res1.data?.viewer?.zones?.[0];
 
     if (!zoneCurrent) {
       return NextResponse.json(getEmptyData(30));
@@ -284,11 +278,19 @@ export async function GET(request: NextRequest) {
     // 4. Transform Data
     const history = zoneCurrent.httpRequests1dGroups?.map((d: any) => ({
       date: d.dimensions.date,
-      pageviews: d.sum.requests || 0,
+      pageviews: d.sum.pageViews || d.sum.requests || 0,
       visitors: d.uniq.uniques || 0,
     })) || [];
 
-    const rawData = zone1?.httpRequestsAdaptiveGroups || [];
+    // Use adaptive data for last 30 days for better accuracy
+    const rangeAdaptive = getDateRange(days);
+    const resAdaptive = await fetchCloudflareAnalytics(queryAdaptive, {
+      zoneTag: zoneId,
+      startDateTime: rangeAdaptive.startDateTime,
+      endDateTime: rangeAdaptive.endDateTime,
+    });
+    const zoneAdaptive = resAdaptive.data?.viewer?.zones?.[0];
+    const rawData = zoneAdaptive?.httpRequestsAdaptiveGroups || [];
 
     const deviceCounts: Record<string, number> = { desktop: 0, mobile: 0, tablet: 0 };
     const browserCounts: Record<string, number> = {};
@@ -298,7 +300,9 @@ export async function GET(request: NextRequest) {
 
     rawData.forEach((item: any) => {
       const views = item.count || 0;
-      const visitors = 0;
+      // Note: Unique visitors are not available in httpRequestsAdaptiveGroups
+      // We'll use views as an approximation for visitors in top pages/countries
+      const visitors = views;
 
       const type = item.dimensions.clientDeviceType?.toLowerCase() || 'desktop';
       if (type.includes('mobile')) deviceCounts.mobile += views;
@@ -318,6 +322,11 @@ export async function GET(request: NextRequest) {
       if (!pageCounts[path]) pageCounts[path] = { views: 0, visitors: 0 };
       pageCounts[path].views += views;
       pageCounts[path].visitors += visitors;
+
+      // Note: Referrer data is not available in httpRequestsAdaptiveGroups
+      // All traffic will be counted as "Direct" since we can't determine referrers
+      // from this API endpoint. Referrer data may require a different Cloudflare API.
+      referrerCounts['Direct'] = (referrerCounts['Direct'] || 0) + views;
     });
 
     const topReferrers = Object.entries(referrerCounts)
@@ -356,7 +365,7 @@ export async function GET(request: NextRequest) {
     let pageviewsChange = 0;
     let visitorsChange = 0;
 
-    const prevTotalViews = zonePrev?.httpRequests1dGroups?.reduce((acc: number, d: any) => acc + (d.sum.requests || 0), 0) || 0;
+    const prevTotalViews = zonePrev?.httpRequests1dGroups?.reduce((acc: number, d: any) => acc + (d.sum.pageViews || d.sum.requests || 0), 0) || 0;
     const prevTotalVisitors = zonePrev?.httpRequests1dGroups?.reduce((acc: number, d: any) => acc + (d.uniq.uniques || 0), 0) || 0;
 
     if (prevTotalViews > 0) pageviewsChange = ((totalPageviews - prevTotalViews) / prevTotalViews) * 100;
