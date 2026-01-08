@@ -28,7 +28,7 @@ export default function Hero() {
     }
   }, [])
 
-  // Cloudinary video URL
+  // Cloudinary video URL with auto quality
   const videoUrl = "https://res.cloudinary.com/dqhklh9nd/video/upload/q_auto:eco,f_auto/v1767202328/Final_Web_vyhf3y.mp4"
 
   return (

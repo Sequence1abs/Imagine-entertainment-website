@@ -61,6 +61,32 @@ const nextConfig = {
       },
     ]
   },
+  // Aggressive caching headers to reduce Vercel Edge Requests
+  async headers() {
+    return [
+      {
+        // Static assets (images, fonts, etc.) - 1 year cache
+        source: '/:path*.(ico|png|jpg|jpeg|gif|webp|avif|svg|woff|woff2|ttf|eot)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }
+        ],
+      },
+      {
+        // Favicon directory - 1 year cache
+        source: '/favicon/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }
+        ],
+      },
+      {
+        // Next.js static bundles (already have content hashes) - 1 year cache
+        source: '/_next/static/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }
+        ],
+      },
+    ]
+  },
 }
 
 export default nextConfig

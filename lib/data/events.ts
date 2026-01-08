@@ -1,5 +1,6 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import type { Event, EventWithImages, EventImage, GalleryImage, EventFormData } from '@/lib/types/database'
+import { deleteFromCloudinary } from '@/lib/actions/cloudinary-delete'
 
 // ============ PUBLIC READ OPERATIONS ============
 // All public read operations use admin client since they don't need user context
@@ -152,10 +153,44 @@ export async function updateEvent(id: string, formData: Partial<EventFormData>):
   return { data, error: null }
 }
 
-// Delete event
+// Delete event (with all associated images from Cloudinary)
 export async function deleteEvent(id: string): Promise<{ error: string | null }> {
   const supabase = await createClient()
 
+  // First, fetch the event to get cover image URL
+  const { data: event } = await supabase
+    .from('events')
+    .select('cover_image_url')
+    .eq('id', id)
+    .single()
+
+  // Fetch all associated event images
+  const { data: eventImages } = await supabase
+    .from('event_images')
+    .select('image_url')
+    .eq('event_id', id)
+
+  // Delete cover image from Cloudinary
+  if (event?.cover_image_url) {
+    const coverResult = await deleteFromCloudinary(event.cover_image_url)
+    if (!coverResult.success) {
+      console.warn('Failed to delete cover image from Cloudinary:', coverResult.error)
+    }
+  }
+
+  // Delete all event images from Cloudinary
+  if (eventImages && eventImages.length > 0) {
+    for (const img of eventImages) {
+      if (img.image_url) {
+        const result = await deleteFromCloudinary(img.image_url)
+        if (!result.success) {
+          console.warn('Failed to delete event image from Cloudinary:', result.error)
+        }
+      }
+    }
+  }
+
+  // Delete event from database (cascade will delete event_images records)
   const { error } = await supabase
     .from('events')
     .delete()
@@ -204,17 +239,38 @@ export async function addEventImage(eventId: string, imageUrl: string, altText?:
   return { data, error: null }
 }
 
-// Delete event image
+// Delete event image (from Cloudinary and database)
 export async function deleteEventImage(imageId: string): Promise<{ error: string | null }> {
   const supabase = await createClient()
 
+  // First, get the image URL so we can delete from Cloudinary
+  const { data: imageData, error: fetchError } = await supabase
+    .from('event_images')
+    .select('image_url')
+    .eq('id', imageId)
+    .single()
+
+  if (fetchError) {
+    console.error('Error fetching event image for deletion:', fetchError)
+    return { error: fetchError.message }
+  }
+
+  // Delete from Cloudinary first (don't fail if this fails, continue with DB deletion)
+  if (imageData?.image_url) {
+    const cloudinaryResult = await deleteFromCloudinary(imageData.image_url)
+    if (!cloudinaryResult.success) {
+      console.warn('Failed to delete from Cloudinary, continuing with DB deletion:', cloudinaryResult.error)
+    }
+  }
+
+  // Delete from database
   const { error } = await supabase
     .from('event_images')
     .delete()
     .eq('id', imageId)
 
   if (error) {
-    console.error('Error deleting event image:', error)
+    console.error('Error deleting event image from database:', error)
     return { error: error.message }
   }
 
@@ -261,17 +317,38 @@ export async function getStandaloneGalleryImages(): Promise<GalleryImage[]> {
   return data || []
 }
 
-// Delete gallery image
+// Delete gallery image (from Cloudinary and database)
 export async function deleteGalleryImage(imageId: string): Promise<{ error: string | null }> {
   const supabase = await createClient()
 
+  // First, get the image URL so we can delete from Cloudinary
+  const { data: imageData, error: fetchError } = await supabase
+    .from('gallery_images')
+    .select('image_url')
+    .eq('id', imageId)
+    .single()
+
+  if (fetchError) {
+    console.error('Error fetching gallery image for deletion:', fetchError)
+    return { error: fetchError.message }
+  }
+
+  // Delete from Cloudinary first (don't fail if this fails, continue with DB deletion)
+  if (imageData?.image_url) {
+    const cloudinaryResult = await deleteFromCloudinary(imageData.image_url)
+    if (!cloudinaryResult.success) {
+      console.warn('Failed to delete from Cloudinary, continuing with DB deletion:', cloudinaryResult.error)
+    }
+  }
+
+  // Delete from database
   const { error } = await supabase
     .from('gallery_images')
     .delete()
     .eq('id', imageId)
 
   if (error) {
-    console.error('Error deleting gallery image:', error)
+    console.error('Error deleting gallery image from database:', error)
     return { error: error.message }
   }
 
