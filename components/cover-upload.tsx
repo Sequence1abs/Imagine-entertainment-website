@@ -250,7 +250,7 @@ export default function CoverUpload({
             <AlertTitle>Upload failed</AlertTitle>
             <AlertDescription>
               <p>{uploadError}</p>
-              <Button onClick={retryUpload} variant="primary" size="sm">
+              <Button onClick={retryUpload} variant="default" size="sm">
                 Retry Upload
               </Button>
             </AlertDescription>
