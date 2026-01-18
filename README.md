@@ -51,5 +51,5 @@ See [LICENSE](./LICENSE) for details.
 <div align="center">
   <sub>© 2026 IMAGINE ENTERTAINMENT (PVT) LTD. All Rights Reserved.</sub>
   <br/>
-  <sub>Developed by <a href="https://www.linkedin.com/in">Skynet Labs</a></sub>
+  <sub>Developed by <a href="https://www.linkedin.com/in">Sequence Labs</a></sub>
 </div>
