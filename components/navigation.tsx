@@ -207,9 +207,9 @@ export default function Navigation() {
   const isHeroPage = pathname === "/"
   const hasHeroSection = pathname === "/" || pathname === "/about" || pathname.startsWith("/work/")
   
-  // Determine which logo to show
+  // Determine which logo to show (white when !mounted so first paint matches hero/dark bg)
   const getLogoSource = () => {
-    if (!mounted) return "/Imagine_logo_black_long.png"
+    if (!mounted) return "/Imagine_logo_white_long.png"
     // When mobile menu is open, use theme-based logo (menu background matches theme)
     if (isOpen) {
       return isDarkMode ? "/Imagine_logo_white_long.png" : "/Imagine_logo_black_long.png" 
@@ -260,10 +260,48 @@ export default function Navigation() {
   // Always start with transparent state to match server render
   const navState = mounted ? getNavAnimationState() : "transparent"
 
+  // Static shell when !mounted: same layout as full nav so no flash or stagger on hydration
+  if (!mounted) {
+    return (
+      <nav
+        className="fixed top-0 left-0 right-0 z-50 h-16 md:h-20 bg-black/0"
+        aria-label="Main navigation"
+      >
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10 h-full flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/Imagine_logo_white_long.png"
+              alt="Imagine Entertainment"
+              className="h-[60px] md:h-[68px] w-[180px] md:w-[196px] object-contain object-left"
+              width={196}
+              height={68}
+              fetchPriority="high"
+            />
+          </Link>
+          <div className="hidden lg:flex items-center gap-12">
+            <Link href="/work" className="text-sm font-medium text-white/90 hover:text-white transition-colors">
+              Our Portfolio
+            </Link>
+            <Link href="/services" className="text-sm font-medium text-white/90 hover:text-white transition-colors">
+              Services
+            </Link>
+            <Link href="/about" className="text-sm font-medium text-white/90 hover:text-white transition-colors">
+              About
+            </Link>
+            <Link href="/gallery" className="text-sm font-medium text-white/90 hover:text-white transition-colors">
+              Gallery
+            </Link>
+          </div>
+        </div>
+      </nav>
+    )
+  }
+
   return (
     <>
       <motion.nav
-        initial="transparent"
+        initial={false}
         animate={navState}
         variants={navVariants}
         transition={{ 

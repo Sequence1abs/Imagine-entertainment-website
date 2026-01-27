@@ -57,8 +57,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SystemStatus } from "@/components/dashboard/system-status";
-
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 type AnalyticsData = {
@@ -655,8 +653,6 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <SystemStatus />
-
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="min-w-0">
           <h1 className="text-xl sm:text-2xl font-bold truncate">Cloudflare Web Analytics</h1>

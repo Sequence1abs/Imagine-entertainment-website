@@ -62,58 +62,38 @@ const clients = [
 const clients1 = clients.slice(0, 21)
 const clients2 = clients.slice(21, 42)
 
+// First N logos per row to preload and prioritize (load as soon as component mounts)
+const PRELOAD_COUNT = 15
+
 export default function ClientsMarquee() {
   const [isVisible, setIsVisible] = useState(false)
-  const [shouldPreload, setShouldPreload] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
+  // Preload brand logos as soon as the section mounts so they load quickly
   useEffect(() => {
-    let hasPreloaded = false
-    const preloadObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasPreloaded) {
-          hasPreloaded = true
-          setShouldPreload(true)
-          // Preload critical logos
-          // Note: We don't manually clean up preload links - they're harmless
-          // and the browser will handle them naturally. Manual cleanup can cause
-          // race conditions with React's DOM management.
-          const criticalLogos = [
-            ...clients1.slice(0, 10).map(c => c.image ? `/brands/${c.image}` : null),
-            ...clients2.slice(0, 10).map(c => c.image ? `/brands/${c.image}` : null)
-          ].filter((src): src is string => Boolean(src))
-          
-          criticalLogos.forEach(src => {
-            const link = document.createElement('link')
-            link.rel = 'preload'
-            link.as = 'image'
-            link.href = src
-            document.head.appendChild(link)
-          })
-        }
-      },
-      { threshold: 0.1, rootMargin: '200px' }, // Start loading 200px before visible
-    )
-    
+    const criticalLogos = [
+      ...clients1.slice(0, PRELOAD_COUNT).map(c => c.image ? `/brands/${c.image}` : null),
+      ...clients2.slice(0, PRELOAD_COUNT).map(c => c.image ? `/brands/${c.image}` : null)
+    ].filter((src): src is string => Boolean(src))
+
+    criticalLogos.forEach(src => {
+      const link = document.createElement('link')
+      link.rel = 'preload'
+      link.as = 'image'
+      link.href = src
+      document.head.appendChild(link)
+    })
+  }, [])
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) setIsVisible(true)
       },
-      { threshold: 0.1 }, // Lower threshold for faster visibility
+      { threshold: 0.1 }
     )
-    
-    if (ref.current) {
-      preloadObserver.observe(ref.current)
-      observer.observe(ref.current)
-    }
-    
-    return () => {
-      preloadObserver.disconnect()
-      observer.disconnect()
-      // Note: We intentionally don't clean up preload links here.
-      // They're harmless and manual cleanup can cause race conditions
-      // with React's DOM management, leading to "removeChild" errors.
-    }
+    if (ref.current) observer.observe(ref.current)
+    return () => observer.disconnect()
   }, [])
 
   return (
@@ -135,59 +115,53 @@ export default function ClientsMarquee() {
         </h2>
       </div>
 
-      {/* Row 1 - scroll left */}
+      {/* Row 1 - scroll left. Always render so logos start loading immediately */}
       <div className="relative mb-4 marquee-mask">
-        {(isVisible || shouldPreload) && (
-          <div className="flex animate-marquee">
-            {[...clients1, ...clients1, ...clients1, ...clients1].map((client, index) => (
-              <ClientCard 
-                key={`row1-${index}`} 
-                client={client} 
-                index={index} 
-                row={1}
-                isPriority={index < 14} // First set of logos in first row
-              />
-            ))}
-          </div>
-        )}
+        <div className="flex animate-marquee">
+          {[...clients1, ...clients1, ...clients1, ...clients1].map((client, index) => (
+            <ClientCard
+              key={`row1-${index}`}
+              client={client}
+              index={index}
+              row={1}
+              isPriority={index < PRELOAD_COUNT}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Row 2 - scroll right */}
+      {/* Row 2 - scroll right. Always render so logos start loading immediately */}
       <div className="relative marquee-mask">
-        {(isVisible || shouldPreload) && (
-          <div className="flex animate-marquee-reverse">
-            {[...clients2, ...clients2, ...clients2, ...clients2].map((client, index) => (
-              <ClientCard 
-                key={`row2-${index}`} 
-                client={client} 
-                index={index} 
-                row={2}
-                isPriority={index < 14} // First set of logos in second row
-              />
-            ))}
-          </div>
-        )}
+        <div className="flex animate-marquee-reverse">
+          {[...clients2, ...clients2, ...clients2, ...clients2].map((client, index) => (
+            <ClientCard
+              key={`row2-${index}`}
+              client={client}
+              index={index}
+              row={2}
+              isPriority={index < PRELOAD_COUNT}
+            />
+          ))}
+        </div>
       </div>
     </section>
   )
 }
 
-function ClientCard({ 
-  client, 
-  index, 
+function ClientCard({
+  client,
+  index,
   row,
-  isPriority 
-}: { 
+  isPriority
+}: {
   client: { abbr: string; name: string; image?: string }
   index: number
   row: number
   isPriority: boolean
 }) {
-  // Priority load: first 14 logos in the first repetition (index < 14) of each row
-  // Since we duplicate arrays 4 times, index 0-13, 21-34, 42-55, 63-76 are first sets
-  const isInFirstRepetition = index % 21 < 14
-  const shouldPriorityLoad = isPriority && isInFirstRepetition
-  
+  // First PRELOAD_COUNT logos in each row get priority + high fetchPriority for fast load
+  const shouldPriorityLoad = isPriority
+
   return (
     <div className="shrink-0 px-3 md:px-5">
       <div className="flex items-center justify-center h-20 md:h-24 min-h-20 md:min-h-24">

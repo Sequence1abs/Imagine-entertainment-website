@@ -273,6 +273,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://assets.imaginesl.com" />
         <link rel="dns-prefetch" href="https://images.imaginesl.com" />
         <link rel="dns-prefetch" href="https://imagedelivery.net" />
+        <link rel="preload" href="/Imagine_logo_white_long.png" as="image" />
       </head>
       <body className={cn("font-sans antialiased overflow-x-hidden", outfit.variable)} suppressHydrationWarning>
         <ConsoleWatermark />
