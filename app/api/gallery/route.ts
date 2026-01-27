@@ -6,6 +6,8 @@ import { getAllGalleryImages } from '@/lib/data/events'
  * Returns only images that were uploaded through the dashboard and stored in the database.
  * Does NOT fetch directly from Cloudflare Images API - only database records.
  */
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     const images = await getAllGalleryImages()

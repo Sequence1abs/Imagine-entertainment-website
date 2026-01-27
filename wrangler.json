@@ -5,6 +5,11 @@
   "compatibility_flags": [
     "nodejs_compat"
   ],
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "www.imaginesl.com/*", "zone_name": "imaginesl.com" }
+  ],
   "triggers": {
     "crons": [
       "0 0 */3 * *"
@@ -17,7 +22,13 @@
   "vars": {
     "SMTP_HOST": "smtp.resend.com",
     "SMTP_PORT": "587",
-    "SMTP_USER": "resend"
+    "SMTP_USER": "resend",
+    "NEXT_PUBLIC_SITE_URL": "https://www.imaginesl.com",
+    "NEXT_PUBLIC_SUPABASE_URL": "https://senwdjofbzrhigglhwkw.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNlbndkam9mYnpyaGlnZ2xod2t3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxODE1OTYsImV4cCI6MjA4Mjc1NzU5Nn0.nuM0VLNOAR3OA9eC5TLHrGq0LkZwgeSCOVp4JY6Ej5A",
+    "NEXT_PUBLIC_CLOUDFLARE_IMAGES_HASH": "VXLIc7g8zCNPFDQiYCuvsg",
+    "NEXT_PUBLIC_R2_DEV_URL": "https://pub-381b9410b47e4afca7a3ceafc36b57ef.r2.dev",
+    "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-MHYFQXZ7L1"
   },
   "kv_namespaces": [
     {
