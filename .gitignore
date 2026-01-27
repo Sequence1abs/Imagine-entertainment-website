@@ -82,3 +82,5 @@ logs/
 # editor temp files
 *.tmp
 *.bak
+
+.docs/
