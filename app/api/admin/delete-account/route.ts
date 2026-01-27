@@ -26,41 +26,14 @@ export async function DELETE(request: Request) {
       )
     }
 
-    // Delete user's data in order (respecting foreign key constraints)
-    
-    // 1. Delete activity logs
+    // Delete user's data. Schema has no created_by/uploaded_by on events or gallery_images,
+    // so we only clear activity_logs and then sign out.
     await supabase
       .from('activity_logs')
       .delete()
       .eq('user_id', user.id)
 
-    // 2. Delete event images (for events owned by user)
-    const { data: userEvents } = await supabase
-      .from('events')
-      .select('id')
-      .eq('created_by', user.id)
-
-    if (userEvents && userEvents.length > 0) {
-      const eventIds = userEvents.map(e => e.id)
-      await supabase
-        .from('event_images')
-        .delete()
-        .in('event_id', eventIds)
-    }
-
-    // 3. Delete events
-    await supabase
-      .from('events')
-      .delete()
-      .eq('created_by', user.id)
-
-    // 4. Delete gallery images
-    await supabase
-      .from('gallery_images')
-      .delete()
-      .eq('uploaded_by', user.id)
-
-    // 5. Sign out the user (this also invalidates the session)
+    // Sign out the user (this also invalidates the session)
     await supabase.auth.signOut()
 
     // Note: Actually deleting the user from auth.users requires admin privileges

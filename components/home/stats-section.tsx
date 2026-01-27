@@ -34,7 +34,7 @@ export function StatsSection() {
                 isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
               }`}
             >
-              <span style={{ color: "var(--brand-orange)" }}>{'//'}</span>BY THE NUMBERS
+              <span className="text-(--brand-orange)">{'//'}</span>BY THE NUMBERS
             </p>
           </div>
           <div className="lg:col-span-9">

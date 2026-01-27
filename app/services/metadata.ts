@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Our Services | Event Production, Sound, Lighting & AV | Imagine Entertainment",
+  title: "Services | Event Production & AV | Imagine Entertainment",
   description: "Comprehensive event production services including corporate events, concerts, TV production, weddings, rigging, and in-house studio facilities. Professional sound, lighting, LED walls, and AV solutions in Sri Lanka.",
   keywords: [
     "Event Production Services",
@@ -14,7 +14,12 @@ export const metadata: Metadata = {
     "LED Wall Rental",
     "AV Solutions Sri Lanka",
     "Stage Design Services",
-    "Event Equipment Rental"
+    "Event Equipment Rental",
+    "best LED walls in Sri Lanka",
+    "best LED wall rental Sri Lanka",
+    "best sound system Sri Lanka",
+    "best stage lighting Sri Lanka",
+    "best event production Sri Lanka"
   ],
   alternates: {
     canonical: '/services',

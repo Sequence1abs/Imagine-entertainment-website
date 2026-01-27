@@ -10,7 +10,9 @@ export const metadata: Metadata = {
     "Event Planners Contact",
     "Nugegoda Event Company",
     "Colombo Event Production Contact",
-    "Event Booking Sri Lanka"
+    "Event Booking Sri Lanka",
+    "best LED walls Sri Lanka contact",
+    "best event company Sri Lanka quote"
   ],
   alternates: {
     canonical: '/contact',

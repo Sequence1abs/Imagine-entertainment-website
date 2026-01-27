@@ -11,7 +11,9 @@ export const metadata: Metadata = {
     "Event Industry Leaders Sri Lanka",
     "37 Years Event Experience",
     "Event Production Team",
-    "Event Management Experts"
+    "Event Management Experts",
+    "best event company Sri Lanka",
+    "best event production company Sri Lanka"
   ],
   alternates: {
     canonical: '/about',

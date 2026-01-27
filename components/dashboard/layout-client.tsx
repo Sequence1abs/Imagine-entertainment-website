@@ -100,7 +100,7 @@ export function DashboardLayoutClient({ children, isAuthenticated, user }: Dashb
       <SidebarInset className="p-2 overflow-hidden">
         <div className="flex h-[calc(100svh-1rem)] flex-col rounded-xl bg-background overflow-hidden">
           <SiteHeader />
-          <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pb-4 pt-6">
+          <div className="flex-1 overflow-y-auto pl-4 pr-4 pb-4 pt-6">
             <AnimatePresence mode="wait">
               <motion.div 
                 key={pathname}

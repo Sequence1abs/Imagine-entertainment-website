@@ -44,7 +44,7 @@ export default function AboutPage() {
                     isLoaded ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
                   }`}
                 >
-                  <span style={{ color: "var(--brand-orange)" }}>{'//'}</span>IMAGINE ENTERTAINMENT
+                  <span className="text-(--brand-orange)">{'//'}</span>IMAGINE ENTERTAINMENT
                 </p>
               </div>
 

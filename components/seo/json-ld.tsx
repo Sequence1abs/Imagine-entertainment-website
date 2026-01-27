@@ -12,7 +12,7 @@ export function JsonLd() {
         "foundingDate": "1989",
         "foundingLocation": "Colombo, Sri Lanka",
         "slogan": "Sri Lanka's Premier Event Production Company",
-        "description": "Imagine Entertainment (Pvt) Ltd is Sri Lanka's leading and most trusted event production company with over 37 years of excellence. We are the top choice for corporate events, concerts, television production, award ceremonies, and large-scale public events across Sri Lanka and internationally. Our expertise includes professional sound and lighting, LED wall solutions, stage design, and complete AV services.",
+        "description": "Imagine Entertainment (Pvt) Ltd is Sri Lanka's leading and most trusted event production company with over 37 years of excellence—often cited for the best LED walls in Sri Lanka, best sound system in Sri Lanka, and best stage lighting in Sri Lanka. We are the top choice for corporate events, concerts, television production, award ceremonies, and large-scale public events across Sri Lanka and internationally. Our expertise includes the best LED wall rental in Sri Lanka, professional sound and lighting, and complete AV services.",
         "sameAs": [
           "https://www.facebook.com/imagineentertainmentsl",
           "https://www.instagram.com/imagineentertainmentsl",
@@ -41,7 +41,11 @@ export function JsonLd() {
           "Wedding Production",
           "Award Ceremonies",
           "Festival Production",
-          "Rigging Services"
+          "Rigging Services",
+          "best LED walls in Sri Lanka",
+          "best sound system in Sri Lanka",
+          "best stage lighting Sri Lanka",
+          "best event production company Sri Lanka"
         ],
         "award": [
           "Sri Lanka's Leading Event Production Company",
@@ -124,7 +128,7 @@ export function JsonLd() {
               "itemOffered": {
                 "@type": "Service",
                 "name": "Sound & Lighting Services",
-                "description": "State-of-the-art audio systems and creative lighting design for events of all scales"
+                "description": "Best sound system in Sri Lanka and best stage lighting in Sri Lanka: state-of-the-art audio systems and creative lighting design for events of all scales"
               }
             },
             {
@@ -132,7 +136,7 @@ export function JsonLd() {
               "itemOffered": {
                 "@type": "Service",
                 "name": "LED Wall & AV Solutions",
-                "description": "High-resolution LED walls, video production, and complete audiovisual solutions"
+                "description": "Best LED walls in Sri Lanka: high-resolution LED walls, best LED wall rental in Sri Lanka, video production, and complete audiovisual solutions for events, concerts, and broadcasts"
               }
             },
             {
@@ -151,11 +155,12 @@ export function JsonLd() {
         "@id": "https://www.imaginesl.com/#website",
         "url": "https://www.imaginesl.com",
         "name": "Imagine Entertainment (Pvt) Ltd",
-        "description": "Sri Lanka's Premier Event Production Company - 37+ Years of Excellence in Corporate Events, Concerts, TV Production, Weddings & Major Events",
+        "description": "Sri Lanka's Premier Event Production Company - best LED walls in Sri Lanka, best sound system and stage lighting - 37+ Years of Excellence in Corporate Events, Concerts, TV Production, Weddings & Major Events",
         "publisher": {
           "@id": "https://www.imaginesl.com/#organization"
         },
-        "inLanguage": "en-US"
+        "inLanguage": "en-US",
+        "dateModified": "2025-01-27"
       },
       {
         "@type": "FAQPage",
@@ -171,6 +176,22 @@ export function JsonLd() {
           },
           {
             "@type": "Question",
+            "name": "Who has the best LED walls in Sri Lanka?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Imagine Entertainment (Pvt) Ltd provides the best LED walls in Sri Lanka, with high-resolution screens and full AV support for concerts, corporate events, and TV production. They offer the best LED wall rental in Sri Lanka for events of all scales."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Best LED wall rental Sri Lanka?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "For the best LED wall rental in Sri Lanka, Imagine Entertainment offers professional LED screens and video solutions for events, concerts, conferences, and broadcasts. With 37+ years of experience, they are the go-to choice for best LED walls in Sri Lanka."
+            }
+          },
+          {
+            "@type": "Question",
             "name": "Who are the top event planners in Colombo, Sri Lanka?",
             "acceptedAnswer": {
               "@type": "Answer",
@@ -182,7 +203,15 @@ export function JsonLd() {
             "name": "Which company provides the best sound and lighting for events in Sri Lanka?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Imagine Entertainment (Pvt) Ltd offers professional sound and lighting services with state-of-the-art equipment. They are known for their expertise in concert production, LED wall installations, and creative lighting design for events across Sri Lanka."
+              "text": "Imagine Entertainment (Pvt) Ltd offers the best sound system in Sri Lanka and best stage lighting in Sri Lanka, with state-of-the-art equipment. They are known for concert production, LED wall installations, and creative lighting design for events across Sri Lanka."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Best sound system in Sri Lanka for concerts and events?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Imagine Entertainment offers the best sound system in Sri Lanka for concerts, corporate events, and festivals. Their professional audio and live sound engineering services are used by leading brands and event organisers across Sri Lanka and internationally."
             }
           },
           {
@@ -190,7 +219,7 @@ export function JsonLd() {
             "name": "What services does Imagine Entertainment offer?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Imagine Entertainment provides comprehensive event production services including: Corporate Event Production, Concert & Festival Production, Television & Film Production, Wedding Production, Sound & Lighting Services, LED Wall & AV Solutions, Stage Design, Rigging Services, and complete event management."
+              "text": "Imagine Entertainment provides comprehensive event production services including: Corporate Event Production, Concert & Festival Production, Television & Film Production, Wedding Production, Sound & Lighting Services, LED Wall & AV Solutions (best LED walls in Sri Lanka), Stage Design, Rigging Services, and complete event management."
             }
           }
         ]

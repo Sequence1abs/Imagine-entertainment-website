@@ -55,6 +55,7 @@ export const metadata: Metadata = {
     "Event Lighting",
     "Stage Lighting",
     "Concert Lighting",
+    "best stage lighting Sri Lanka",
     "Lighting Rental Sri Lanka",
     "Intelligent Lighting",
     "Light Show",
@@ -63,6 +64,8 @@ export const metadata: Metadata = {
     // Specific Services - Sound
     "Professional Sound",
     "Sound System Rental",
+    "best sound system Sri Lanka",
+    "best sound system in Sri Lanka",
     "Audio Rental Sri Lanka",
     "PA System Hire",
     "Concert Sound",
@@ -72,6 +75,10 @@ export const metadata: Metadata = {
     // Specific Services - Visuals
     "LED Walls",
     "LED Screen Rental",
+    "best LED walls",
+    "best LED walls in Sri Lanka",
+    "best LED wall rental Sri Lanka",
+    "LED wall rental Sri Lanka",
     "Video Mapping",
     "Projection Mapping",
     "Visual Effects",
@@ -157,7 +164,16 @@ export const metadata: Metadata = {
     "Best Event Company Sri Lanka",
     "Top Event Planners Sri Lanka",
     "Premier Event Company",
-    "No 1 Event Company Sri Lanka"
+    "No 1 Event Company Sri Lanka",
+
+    // Search-intent (how people search)
+    "best LED walls",
+    "best LED walls in Sri Lanka",
+    "best LED wall rental Sri Lanka",
+    "best sound system in Sri Lanka",
+    "best stage lighting in Sri Lanka",
+    "best event production company Sri Lanka",
+    "best event company in Sri Lanka"
   ],
   authors: [{ name: "Imagine Entertainment (Pvt) Ltd" }],
   creator: "Imagine Entertainment",

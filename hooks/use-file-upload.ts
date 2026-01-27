@@ -60,7 +60,6 @@ export function useFileUpload({
 
   const validateFile = useCallback(
     (file: File): string | null => {
-      // Check file type
       if (accept !== '*') {
         const acceptedTypes = accept.split(',').map((type) => type.trim());
         const fileType = file.type;
@@ -76,7 +75,6 @@ export function useFileUpload({
         }
       }
 
-      // Check file size
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / (1024 * 1024)).toFixed(2);
         return `File size exceeds ${maxSizeMB}MB limit`;
@@ -92,8 +90,6 @@ export function useFileUpload({
       const files = Array.from(fileList);
       const errors: string[] = [];
       const validFiles: FileWithPreview[] = [];
-
-      // Check max files (including current files)
       const totalFiles = currentFiles.length + files.length;
       if (totalFiles > maxFiles) {
         errors.push(`Maximum ${maxFiles} file(s) allowed`);
@@ -165,7 +161,6 @@ export function useFileUpload({
           return { ...prev, files: newFiles, errors };
         });
       }
-      // Reset input
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }

@@ -4,7 +4,19 @@ import { useEffect, useState, useRef } from "react"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { motion, AnimatePresence, useInView } from "framer-motion"
 
-const testimonials = [
+const AUTO_ROTATE_MS = 5000
+const PAUSE_AFTER_NAV_MS = 10_000
+const IN_VIEW_AMOUNT = 0.2
+
+type Testimonial = {
+  quote: string
+  author: string
+  role: string
+  company: string
+  highlights: string[]
+}
+
+const testimonials: Testimonial[] = [
   {
     quote:
       "I wish to extend my sincere appreciation and heartfelt gratitude to each of you at imagine entertainment for the outstanding professionalism, dedication, flexibility, and unwavering positivity demonstrated throughout the planning and execution of the 2025 Litro Gas Channel Award Ceremony. This year's event was a remarkable success, and it is clear that such excellence was achieved through your collective effort, creativity, and commitment to delivering nothing short of the best.",
@@ -31,49 +43,33 @@ const testimonials = [
   },
 ]
 
-// Function to render quote with highlights
 function renderQuoteWithHighlights(quote: string, highlights: string[]) {
-  if (!highlights || highlights.length === 0) return `"${quote}"`
-  
-  let result = quote
+  if (!highlights?.length) return `"${quote}"`
+
   const parts: (string | { text: string; isHighlight: boolean })[] = []
-  
-  // Sort highlights by their position in the quote (to process in order)
-  const sortedHighlights = highlights
-    .map(h => ({ text: h, index: quote.toLowerCase().indexOf(h.toLowerCase()) }))
-    .filter(h => h.index !== -1)
+  const sorted = highlights
+    .map((h) => ({ text: h, index: quote.toLowerCase().indexOf(h.toLowerCase()) }))
+    .filter((h) => h.index !== -1)
     .sort((a, b) => a.index - b.index)
-  
+
   let lastIndex = 0
-  sortedHighlights.forEach(({ text, index }) => {
-    // Find the actual case-sensitive text in the quote
+  for (const { text } of sorted) {
     const actualIndex = quote.toLowerCase().indexOf(text.toLowerCase(), lastIndex)
-    if (actualIndex !== -1) {
-      // Add text before highlight
-      if (actualIndex > lastIndex) {
-        parts.push(quote.slice(lastIndex, actualIndex))
-      }
-      // Add highlighted text (preserve original case)
-      parts.push({ text: quote.slice(actualIndex, actualIndex + text.length), isHighlight: true })
-      lastIndex = actualIndex + text.length
-    }
-  })
-  // Add remaining text
-  if (lastIndex < quote.length) {
-    parts.push(quote.slice(lastIndex))
+    if (actualIndex === -1) continue
+    if (actualIndex > lastIndex) parts.push(quote.slice(lastIndex, actualIndex))
+    parts.push({ text: quote.slice(actualIndex, actualIndex + text.length), isHighlight: true })
+    lastIndex = actualIndex + text.length
   }
-  
+  if (lastIndex < quote.length) parts.push(quote.slice(lastIndex))
+
   return (
     <>
       &quot;
-      {parts.map((part, i) => 
-        typeof part === 'string' ? (
+      {parts.map((part, i) =>
+        typeof part === "string" ? (
           <span key={i}>{part}</span>
         ) : (
-          <span 
-            key={i} 
-            style={{ color: 'var(--brand-orange)' }}
-          >
+          <span key={i} className="text-(--brand-orange)">
             {part.text}
           </span>
         )
@@ -83,26 +79,17 @@ function renderQuoteWithHighlights(quote: string, highlights: string[]) {
   )
 }
 
-// Same as original CSS: transition-all duration-500, translate-y-4 -> translate-y-0
 const quoteVariants = {
-  initial: { 
-    opacity: 0, 
-    y: 16, // Same as CSS translate-y-4 (16px)
-  },
-  animate: { 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      duration: 0.5, // Same as CSS duration-500
-    },
-  },
-  exit: { 
-    opacity: 0, 
-    y: -16,
-    transition: {
-      duration: 0.3,
-    },
-  },
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  exit: { opacity: 0, y: -16, transition: { duration: 0.3 } },
+}
+
+function getQuoteTextSize(quoteLength: number): string {
+  if (quoteLength < 150) return "text-xl md:text-2xl lg:text-3xl"
+  if (quoteLength < 250) return "text-lg md:text-xl lg:text-2xl"
+  if (quoteLength < 400) return "text-base md:text-lg lg:text-xl"
+  return "text-sm md:text-base lg:text-lg"
 }
 
 export default function Testimonials() {
@@ -110,49 +97,37 @@ export default function Testimonials() {
   const [isPaused, setIsPaused] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
-  const isInView = useInView(ref, { once: true, amount: 0.2 })
+  const isInView = useInView(ref, { once: true, amount: IN_VIEW_AMOUNT })
 
-  // Auto-rotate testimonials
   useEffect(() => {
     if (isInView && !isPaused) {
-      intervalRef.current = setInterval(() => {
-        setActiveIndex((prev) => (prev + 1) % testimonials.length)
-      }, 5000)
+      intervalRef.current = setInterval(
+        () => setActiveIndex((prev) => (prev + 1) % testimonials.length),
+        AUTO_ROTATE_MS
+      )
     } else {
       if (intervalRef.current) {
         clearInterval(intervalRef.current)
         intervalRef.current = null
       }
     }
-
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current)
     }
   }, [isInView, isPaused])
 
-  const nextTestimonial = () => {
+  const goNext = () => {
     setActiveIndex((prev) => (prev + 1) % testimonials.length)
     setIsPaused(true)
-    setTimeout(() => setIsPaused(false), 10000)
+    setTimeout(() => setIsPaused(false), PAUSE_AFTER_NAV_MS)
   }
-
-  const prevTestimonial = () => {
+  const goPrev = () => {
     setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
     setIsPaused(true)
-    setTimeout(() => setIsPaused(false), 10000)
+    setTimeout(() => setIsPaused(false), PAUSE_AFTER_NAV_MS)
   }
 
   const currentTestimonial = testimonials[activeIndex]
-
-  // Dynamic text size based on quote length
-  const getQuoteTextSize = (quoteLength: number) => {
-    if (quoteLength < 150) return "text-xl md:text-2xl lg:text-3xl"
-    if (quoteLength < 250) return "text-lg md:text-xl lg:text-2xl"
-    if (quoteLength < 400) return "text-base md:text-lg lg:text-xl"
-    return "text-sm md:text-base lg:text-lg"
-  }
 
   return (
     <section
@@ -163,32 +138,31 @@ export default function Testimonials() {
     >
       <div className="max-w-[1400px] mx-auto px-6 md:px-10">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-16">
-          {/* Left column - title and nav */}
           <div className="lg:col-span-4">
-            {/* Same as CSS: transition-all duration-700, translate-y-6 -> translate-y-0 */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
               transition={{ duration: 0.7 }}
             >
-              <p className="text-muted-foreground text-xs tracking-[0.2em] mb-4"><span style={{ color: "var(--brand-orange)" }}>{'//'}</span>TESTIMONIALS</p>
+              <p className="text-muted-foreground text-xs tracking-[0.2em] mb-4">
+                <span className="text-(--brand-orange)">{'//'}</span>TESTIMONIALS
+              </p>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-8">
                 What Our
                 <br />
                 <span className="italic font-normal text-muted-foreground">Clients Say</span>
               </h2>
 
-              {/* Navigation */}
               <div className="flex items-center gap-3">
                 <button
-                  onClick={prevTestimonial}
+                  onClick={goPrev}
                   className="cursor-target w-10 h-10 rounded-full border border-border bg-background flex items-center justify-center hover:bg-foreground hover:text-background hover:border-foreground transition-all duration-300"
                   aria-label="Previous testimonial"
                 >
                   <ArrowLeft className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={nextTestimonial}
+                  onClick={goNext}
                   className="cursor-target w-10 h-10 rounded-full border border-border bg-background flex items-center justify-center hover:bg-foreground hover:text-background hover:border-foreground transition-all duration-300"
                   aria-label="Next testimonial"
                 >
@@ -201,18 +175,16 @@ export default function Testimonials() {
             </motion.div>
           </div>
 
-          {/* Right column - testimonial content with AnimatePresence */}
           <div className="lg:col-span-8 relative">
-            {/* Large quote watermark - right upper corner */}
-            <svg 
-              className="absolute -top-16 -right-16 md:-right-24 w-64 h-64 md:w-md md:h-112 lg:w-xl lg:h-144 text-foreground/6 dark:text-white/6"
-              viewBox="0 0 100 100" 
+            <svg
+              className="absolute -top-16 -right-16 md:-right-24 w-64 h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 text-foreground/6 dark:text-white/6"
+              viewBox="0 0 100 100"
               fill="currentColor"
+              aria-hidden
             >
               <path d="M30 70 Q20 70 20 55 Q20 40 35 30 L40 38 Q30 45 30 55 Q30 60 40 60 Q45 60 45 65 Q45 70 40 70 Z M60 70 Q50 70 50 55 Q50 40 65 30 L70 38 Q60 45 60 55 Q60 60 70 60 Q75 60 75 65 Q75 70 70 70 Z" />
             </svg>
-            
-            {/* Same as CSS: transition-all duration-700 delay-150ms */}
+
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}

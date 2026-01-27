@@ -104,7 +104,8 @@ export async function POST(request: Request) {
         "Sent User Invitation", 
         { email: data.user.email }, 
         "user", 
-        data.user.id
+        data.user.id,
+        currentUser.id
       )
 
       return NextResponse.json({ 
@@ -150,7 +151,8 @@ export async function POST(request: Request) {
         "Created User", 
         { email: data.user.email }, 
         "user", 
-        data.user.id
+        data.user.id,
+        currentUser.id
       )
 
       return NextResponse.json({ 
@@ -223,7 +225,8 @@ export async function DELETE(request: Request) {
       "Deleted User", 
       { email: userToDelete?.email }, 
       "user", 
-      userId
+      userId,
+      currentUser.id
     )
 
     return NextResponse.json({ 

@@ -26,7 +26,7 @@ export async function signIn(formData: FormData) {
   // Log successful login
   const { data: { user } } = await supabase.auth.getUser()
   if (user) {
-    await logActivity("User Login", { email: user.email }, "auth", user.id)
+    await logActivity("User Login", { email: user.email }, "auth", user.id, user.id)
   }
 
   return { success: true }
@@ -39,7 +39,7 @@ export async function signOut() {
   try {
      const { data: { user } } = await supabase.auth.getUser()
      if (user) {
-        await logActivity("User Logout", { email: user.email }, "auth", user.id)
+        await logActivity("User Logout", { email: user.email }, "auth", user.id, user.id)
      }
   } catch (e) {
     console.error("Failed to log logout:", e)

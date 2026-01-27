@@ -11,7 +11,10 @@ export const metadata: Metadata = {
     "Concert Portfolio",
     "Wedding Event Portfolio",
     "TV Production Portfolio",
-    "Successful Events"
+    "Successful Events",
+    "best event production Sri Lanka",
+    "best LED walls Sri Lanka",
+    "best sound system Sri Lanka"
   ],
   alternates: {
     canonical: '/work',

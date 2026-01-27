@@ -12,7 +12,9 @@ export const metadata: Metadata = {
     "Wedding Stage Designs",
     "Event Production Portfolio",
     "LED Wall Setups",
-    "Concert Stage Photos"
+    "Concert Stage Photos",
+    "best LED walls Sri Lanka",
+    "best event company Sri Lanka"
   ],
   alternates: {
     canonical: '/gallery',

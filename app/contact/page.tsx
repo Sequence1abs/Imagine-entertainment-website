@@ -30,7 +30,6 @@ export default function ContactPage() {
   return (
     <PublicLayout>
     <main className="min-h-screen bg-background">
-      {/* Hero Section with Image */}
       <section className="relative min-h-[60vh] md:min-h-[70vh] bg-foreground dark:bg-black text-white overflow-hidden flex items-end">
         <div className="absolute inset-0">
           <Image
@@ -49,7 +48,7 @@ export default function ContactPage() {
           <div className="max-w-3xl">
             <div className="mb-3">
               <p className="text-white/50 dark:text-white/70 text-xs tracking-[0.15em]">
-                <span style={{ color: "var(--brand-orange)" }}>{'//'}</span>GET IN TOUCH
+                <span className="text-(--brand-orange)">{'//'}</span>GET IN TOUCH
               </p>
             </div>
             <h1>
@@ -66,17 +65,13 @@ export default function ContactPage() {
       <section className="pt-16 md:pt-24 px-6 md:px-10 pb-10 md:pb-14">
         <div className="max-w-[1400px] mx-auto">
           <div className="grid lg:grid-cols-[1fr_2fr] gap-12 lg:gap-16">
-            {/* Contact Info - Left Side */}
-            {/* Contact Info - Left Side */}
             <div className="flex flex-col justify-between h-full relative">
-              {/* Watermark */}
               <div className="absolute top-[70%] -translate-y-1/2 left-0 text-[3.5rem] sm:text-[4.5rem] md:text-[5rem] lg:text-[6rem] font-bold text-foreground/5 dark:text-white/5 leading-[0.8] select-none pointer-events-none whitespace-nowrap">
                 WE GIVE<br />
                 YOU THE<br />
                 BEST.
               </div>
 
-              {/* Contact Details */}
               <div className="space-y-12 relative z-10">
                 <div
                   className={`transition-all duration-700 ${
@@ -84,7 +79,7 @@ export default function ContactPage() {
                   }`}
                   style={{ transitionDelay: "0.3s" }}
                 >
-                  <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4"><span style={{ color: "var(--brand-orange)" }}>{'//'}</span>Email</p>
+                  <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4"><span className="text-(--brand-orange)">{'//'}</span>Email</p>
                   <a
                     href="mailto:sales@imaginesl.com"
                     className="text-2xl md:text-3xl font-medium hover:text-muted-foreground transition-colors"
@@ -99,7 +94,7 @@ export default function ContactPage() {
                   }`}
                   style={{ transitionDelay: "0.4s" }}
                 >
-                  <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4"><span style={{ color: "var(--brand-orange)" }}>{'//'}</span>Phone</p>
+                  <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4"><span className="text-(--brand-orange)">{'//'}</span>Phone</p>
                   <a
                     href="tel:+94718933514"
                     className="text-2xl md:text-3xl font-medium hover:text-muted-foreground transition-colors"
@@ -114,7 +109,7 @@ export default function ContactPage() {
                   }`}
                   style={{ transitionDelay: "0.5s" }}
                 >
-                  <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4"><span style={{ color: "var(--brand-orange)" }}>{'//'}</span>Location</p>
+                  <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4"><span className="text-(--brand-orange)">{'//'}</span>Location</p>
                   <address className="text-lg font-medium not-italic leading-relaxed">
                     <p>No : 97 Delkanda,</p>
                     <p>Old Kesbewa Road,</p>
@@ -124,16 +119,14 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              {/* Social Icons - Pushed to Bottom */}
               <div 
                 className={`mt-12 lg:mt-0 relative z-10 transition-all duration-700 ${
                   isLoaded ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
                 }`}
                 style={{ transitionDelay: "0.6s" }}
               >
-                <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4"><span style={{ color: "var(--brand-orange)" }}>{'//'}</span>Follow Us</p>
+                <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4"><span className="text-(--brand-orange)">{'//'}</span>Follow Us</p>
                 <div className="flex gap-3">
-                  {/* Facebook */}
                   <a
                     href="https://www.facebook.com/imagineentertainment"
                     target="_blank"
@@ -145,7 +138,6 @@ export default function ContactPage() {
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                     </svg>
                   </a>
-                  {/* Instagram */}
                   <a
                     href="https://www.instagram.com/imagine.ent.sl"
                     target="_blank"

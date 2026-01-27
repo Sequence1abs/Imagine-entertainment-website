@@ -55,7 +55,9 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  // Helper function to get image dimensions
+  // Base width for masonry height calculation (must match Masonry.tsx)
+  const MASONRY_BASE_WIDTH = 400
+
   const getImageDimensions = (src: string): Promise<{ width: number; height: number }> => {
     return new Promise((resolve) => {
       const img = new window.Image()
@@ -63,68 +65,65 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
         resolve({ width: img.naturalWidth, height: img.naturalHeight })
       }
       img.onerror = () => {
-        resolve({ width: 400, height: 300 }) // Default 4:3 fallback
+        resolve({ width: MASONRY_BASE_WIDTH, height: 300 })
       }
-      img.decoding = 'async'
+      img.decoding = "async"
       img.src = src
     })
   }
 
-  // Default height for skeleton (1:1 aspect ratio)
-  const getDefaultHeight = () => 400
+  const getDefaultHeight = () => MASONRY_BASE_WIDTH
 
-  // Load actual image dimensions and update the item
-  const updateItemDimensions = useCallback(async (item: MasonryItem) => {
-    try {
-      const dimensions = await getImageDimensions(item.img)
-      const aspectRatio = dimensions.height / dimensions.width
-      const baseWidth = 400
-      const calculatedHeight = baseWidth * aspectRatio
-      
-      setMasonryItems(prev => prev.map(p => {
-        if (p.id === item.id) {
-          return { ...p, height: calculatedHeight, loaded: true }
+  // Load actual image dimensions for all items in one batch for Pinterest-style masonry
+  const loadAllDimensions = useCallback(async (items: MasonryItem[]) => {
+    const results = await Promise.all(
+      items.map(async (item) => {
+        try {
+          const dims = await getImageDimensions(item.img)
+          const aspectRatio = dims.height / dims.width
+          const height = MASONRY_BASE_WIDTH * aspectRatio
+          return { id: item.id, height }
+        } catch {
+          return { id: item.id, height: 300 }
         }
-        return p
-      }))
-    } catch {
-      setMasonryItems(prev => prev.map(p => {
-        if (p.id === item.id) return { ...p, loaded: true }
-        return p
-      }))
-    }
+      })
+    )
+    const byId = Object.fromEntries(results.map((r) => [r.id, r.height]))
+    setMasonryItems((prev) => {
+      if (
+        prev.length !== items.length ||
+        items.some((it, i) => prev[i]?.id !== it.id)
+      ) {
+        return prev
+      }
+      return prev.map((p) =>
+        byId[p.id] != null ? { ...p, height: byId[p.id], loaded: true } : p
+      )
+    })
   }, [])
 
-  // Initialize items
+  // Initialize items and load real dimensions so containers match each image’s aspect
   useEffect(() => {
     if (!images || images.length === 0) return
 
-    // Deduplicate images by URL to prevent duplicate images in gallery
     const seenUrls = new Set<string>()
     const uniqueImages = images.filter((img) => {
-      if (seenUrls.has(img.image_url)) {
-        return false
-      }
+      if (seenUrls.has(img.image_url)) return false
       seenUrls.add(img.image_url)
       return true
     })
 
-    // Use gallery variant for faster grid loading
     const newItems: MasonryItem[] = uniqueImages.map((img, index) => ({
       id: `work-gallery-${img.id || index}`,
-      img: getGridImageUrl(img.image_url), // Use optimized gallery variant
-      originalUrl: img.image_url, // Keep original for lightbox
+      img: getGridImageUrl(img.image_url),
+      originalUrl: img.image_url,
       height: getDefaultHeight(),
       loaded: false
     }))
 
     setMasonryItems(newItems)
-
-    // Trigger dimension loading for all items
-    newItems.forEach(item => {
-      updateItemDimensions(item)
-    })
-  }, [images, updateItemDimensions])
+    loadAllDimensions(newItems)
+  }, [images, loadAllDimensions])
 
   // Handle keyboard navigation
   useEffect(() => {

@@ -9,7 +9,6 @@ export async function GET() {
     const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID
     const IMAGES_API_TOKEN = process.env.CLOUDFLARE_IMAGES_API_TOKEN
 
-    // Check if credentials are configured
     if (!ACCOUNT_ID || !IMAGES_API_TOKEN) {
       return NextResponse.json(
         { status: 'error', message: 'Cloudflare Images not configured' },
@@ -17,8 +16,6 @@ export async function GET() {
       )
     }
 
-    // Make a lightweight API call to verify connectivity
-    // List images with limit 1 to verify API access (lightweight check)
     const response = await fetch(
       `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/images/v1?per_page=1`,
       {

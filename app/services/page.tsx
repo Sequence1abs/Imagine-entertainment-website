@@ -120,7 +120,7 @@ export default function ServicesPage() {
                     isLoaded ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
                   }`}
                 >
-                  <span style={{ color: "var(--brand-orange)" }}>{'//'}</span>WHAT WE DO
+                  <span className="text-(--brand-orange)">{'//'}</span>WHAT WE DO
                 </p>
               </div>
               <h1>
@@ -164,7 +164,7 @@ export default function ServicesPage() {
         <div className="max-w-[1400px] mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 mb-12">
             <div>
-              <p className="text-muted-foreground text-xs tracking-[0.15em] mb-3"><span style={{ color: "var(--brand-orange)" }}>{'//'}</span>Technical Services</p>
+              <p className="text-muted-foreground text-xs tracking-[0.15em] mb-3"><span className="text-(--brand-orange)">{'//'}</span>Technical Services</p>
               <h2 className="text-2xl md:text-3xl font-medium">Full Production Support</h2>
             </div>
             <div className="lg:self-end">

@@ -39,6 +39,10 @@ interface DateRange {
 
 const CLOUDFLARE_API_URL = "https://api.cloudflare.com/client/v4/graphql";
 
+// Cloudflare zone quota: adaptive analytics cannot request data older than 8 days (691200s).
+// See: "zone cannot request data older than 691200s" GraphQL error.
+const ADAPTIVE_MAX_AGE_SECONDS = 691200;
+
 const COUNTRY_NAME_TO_CODE: Record<string, string> = {
   "United States": "us",
   "United Kingdom": "gb",
@@ -210,14 +214,18 @@ export async function GET(request: NextRequest) {
   const zoneId = process.env.CLOUDFLARE_ZONE_ID;
   const apiToken = process.env.CLOUDFLARE_API_TOKEN;
 
-  // 1. Validation
+  // 1. Validation and time range (Cloudflare-style: 24h, 7d, 30d)
+  const daysParam = request.nextUrl.searchParams.get("days");
+  const days = Math.min(
+    30,
+    Math.max(1, daysParam ? parseInt(daysParam, 10) : 7)
+  ) || 7;
   if (!zoneId || !apiToken) {
     console.warn("Cloudflare credentials missing in environment variables.");
-    return NextResponse.json(getEmptyData(30));
+    return NextResponse.json(getEmptyData(days));
   }
 
   try {
-    const days = 30;
     // 2. Prepare Queries
     const querySummary = `
       query GetSummary($zoneTag: String!, $startDate: Date!, $endDate: Date!) {
@@ -287,7 +295,7 @@ export async function GET(request: NextRequest) {
     const zonePrev = resCompare.data?.viewer?.zones?.[0];
 
     if (!zoneCurrent) {
-      return NextResponse.json(getEmptyData(30));
+      return NextResponse.json(getEmptyData(days));
     }
 
     // 4. Transform Data
@@ -297,8 +305,8 @@ export async function GET(request: NextRequest) {
       visitors: d.uniq.uniques || 0,
     })) || [];
 
-    // Use adaptive data for full period (30 days) by fetching in 1-day chunks
-    // This bypasses the Cloudflare Free/Pro plan limit of 24h for adaptive queries
+    // Use adaptive data by fetching in 1-day chunks. Cloudflare only allows data
+    // from the last ADAPTIVE_MAX_AGE_SECONDS (8 days); older chunks would hit quota errors.
     const chunkedAdaptiveData: any[] = [];
     const chunks: { start: string; end: string }[] = [];
 
@@ -306,8 +314,11 @@ export async function GET(request: NextRequest) {
     const startDateObj = new Date();
     startDateObj.setDate(startDateObj.getDate() - days);
 
-    // Generate daily chunks
-    let current = new Date(startDateObj);
+    const adaptiveEarliest = new Date(Date.now() - ADAPTIVE_MAX_AGE_SECONDS * 1000);
+    const effectiveStart = startDateObj < adaptiveEarliest ? adaptiveEarliest : startDateObj;
+
+    // Generate daily chunks (only within the allowed adaptive window)
+    let current = new Date(effectiveStart);
     while (current < endDateObj) {
       const next = new Date(current);
       next.setDate(next.getDate() + 1);

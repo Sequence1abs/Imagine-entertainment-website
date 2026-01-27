@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -38,26 +39,47 @@ const fallbackProjects: Record<string, any> = {
   },
 }
 
+async function resolveEvent(id: string) {
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+  if (fallbackProjects[id]) return fallbackProjects[id]
+  if (isUuid) return await getEventById(id)
+  return null
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const event = await resolveEvent(id)
+  if (!event) return { title: 'Project | Imagine Entertainment' }
+  const base = 'https://www.imaginesl.com'
+  const title = `${event.title} | Imagine Entertainment`
+  const desc = event.location || event.category
+    ? `${event.title} — ${[event.category, event.location].filter(Boolean).join(' • ')}. Produced by Imagine Entertainment, Sri Lanka's premier event production company.`
+    : `${event.title}. Produced by Imagine Entertainment, Sri Lanka's premier event production company.`
+  const ogImage = event.cover_image_url
+    ? (event.cover_image_url.startsWith('http') ? event.cover_image_url : `${base}${event.cover_image_url.startsWith('/') ? '' : '/'}${event.cover_image_url}`)
+    : `${base}/og-image.jpg`
+  return {
+    title,
+    description: desc.slice(0, 160),
+    alternates: { canonical: `/work/${id}` },
+    openGraph: {
+      title,
+      description: desc.slice(0, 160),
+      url: `${base}/work/${id}`,
+      type: 'article',
+      images: [{ url: ogImage, width: 1200, height: 630, alt: event.title }],
+    },
+    twitter: { card: 'summary_large_image', title, description: desc.slice(0, 160) },
+  }
+}
+
 interface WorkDetailPageProps {
   params: Promise<{ id: string }>
 }
 
 export default async function WorkDetailPage({ params }: WorkDetailPageProps) {
   const { id } = await params
-  
-  // Check valid UUID format
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
-
-  let event = null
-
-  // 1. Check fallback data first (for static IDs like '1', '2')
-  if (fallbackProjects[id]) {
-    event = fallbackProjects[id]
-  } 
-  // 2. If not in fallback and is valid UUID, try Supabase
-  else if (isUuid) {
-    event = await getEventById(id)
-  }
+  const event = await resolveEvent(id)
 
   if (!event) {
     notFound()

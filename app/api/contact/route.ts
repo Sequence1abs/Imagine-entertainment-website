@@ -2,12 +2,19 @@ import { NextRequest, NextResponse } from "next/server"
 import nodemailer from "nodemailer"
 
 export async function POST(request: NextRequest) {
+  let body: Record<string, unknown>
   try {
+    body = await request.json()
+  } catch {
+    return NextResponse.json(
+      { error: "Invalid request body. Expected JSON." },
+      { status: 400 }
+    )
+  }
 
-    const body = await request.json()
-    const { name, email, company, eventType, message } = body
+  try {
+    const { name, email, company, eventType, message } = body as { name?: string; email?: string; company?: string; eventType?: string; message?: string }
 
-    // Validate required fields
     if (!name || !email || !message) {
       return NextResponse.json(
         { error: "Name, email, and message are required" },
@@ -15,9 +22,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check for email configuration
     const smtpUser = process.env.SMTP_USER
-    const smtpPass = process.env.SMTP_PASSWORD // Updated variable name to match .dev.vars
+    const smtpPass = process.env.SMTP_PASSWORD
     const smtpHost = process.env.SMTP_HOST
     const smtpPort = parseInt(process.env.SMTP_PORT || "465")
 
@@ -29,18 +35,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create transporter (Generic SMTP for Resend)
     const transporter = nodemailer.createTransport({
       host: smtpHost,
       port: smtpPort,
-      secure: smtpPort === 465, // true for 465, false for other ports
+      secure: smtpPort === 465,
       auth: {
         user: smtpUser,
         pass: smtpPass,
       },
     })
 
-    // Email content
     const mailOptions = {
       from: smtpUser,
       to: "hasaldharmagunawardana@gmail.com",
@@ -74,7 +78,6 @@ export async function POST(request: NextRequest) {
       replyTo: email,
     }
 
-    // Send email
     await transporter.sendMail(mailOptions)
 
     return NextResponse.json(
@@ -83,8 +86,6 @@ export async function POST(request: NextRequest) {
     )
   } catch (error: any) {
     console.error("Error sending email:", error)
-    
-    // Provide more specific error messages
     let errorMessage = "Failed to send email. Please try again later."
     
     if (error?.code === "EAUTH") {

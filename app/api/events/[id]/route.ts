@@ -88,7 +88,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       "Updated Event", 
       { title: data.title, updates: Object.keys(body) }, 
       "event", 
-      id
+      id,
+      user.id
     )
 
     return NextResponse.json({ data })
@@ -140,7 +141,8 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       "Deleted Event", 
       { title: eventToDelete?.title }, 
       "event", 
-      id
+      id,
+      user.id
     )
 
     return NextResponse.json({ message: 'Event deleted successfully' })

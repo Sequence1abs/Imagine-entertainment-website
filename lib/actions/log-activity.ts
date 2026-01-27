@@ -8,7 +8,8 @@ export async function logActivity(
   action: string, 
   details: any = null, 
   entityType?: string, 
-  entityId?: string
+  entityId?: string,
+  userId?: string | null
 ) {
   try {
     const supabase = createAdminClient()
@@ -24,18 +25,12 @@ export async function logActivity(
       ip: headerList.get("x-forwarded-for") || "Unknown"
     }
 
-    // Get current user if possible, or leave null (system action)
-    const { data: { user } } = await (await createAdminClient()).auth.getUser()
-
     const payload = {
       action,
-      details: {
-          ...details,
-          user_email: user?.email // Captured for display purposes
-      },
+      details: typeof details === 'object' && details !== null ? { ...details } : {},
       entity_type: entityType,
       entity_id: entityId,
-      user_id: user?.id || null,
+      user_id: userId ?? null,
       device_info: deviceInfo
     }
 

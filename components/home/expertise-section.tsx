@@ -45,7 +45,7 @@ export function ExpertiseSection() {
             isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           }`}
         >
-          <span style={{ color: "var(--brand-orange)" }}>{'//'}</span>Why Choose Us
+          <span className="text-(--brand-orange)">{'//'}</span>Why Choose Us
         </p>
         
         <h2 

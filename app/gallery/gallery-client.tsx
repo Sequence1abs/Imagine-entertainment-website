@@ -34,6 +34,23 @@ interface GalleryClientProps {
   initialImages: string[]
 }
 
+// Base width used by Masonry for aspect-ratio calculation (must match Masonry.tsx)
+const MASONRY_BASE_WIDTH = 400
+
+function getImageDimensions(src: string): Promise<{ width: number; height: number }> {
+  return new Promise((resolve) => {
+    const img = new window.Image()
+    img.onload = () => {
+      resolve({ width: img.naturalWidth, height: img.naturalHeight })
+    }
+    img.onerror = () => {
+      resolve({ width: MASONRY_BASE_WIDTH, height: 300 })
+    }
+    img.decoding = "async"
+    img.src = src
+  })
+}
+
 export default function GalleryClient({ initialImages }: GalleryClientProps) {
   type MasonryItem = {
     id: string
@@ -48,10 +65,8 @@ export default function GalleryClient({ initialImages }: GalleryClientProps) {
   const [hasMore, setHasMore] = useState(true)
   const observerTarget = useRef<HTMLDivElement>(null)
 
-  // Default height for masonry items
-  const getDefaultHeight = () => 400
+  const getDefaultHeight = () => MASONRY_BASE_WIDTH
 
-  // Normalize URL for deduplication
   const normalizeUrl = useCallback((url: string): string => {
     if (!url) return ''
     try {
@@ -64,38 +79,53 @@ export default function GalleryClient({ initialImages }: GalleryClientProps) {
     }
   }, [])
 
-  // Initialize items immediately from server-provided data
+  // Load all image dimensions in one batch to avoid N reflows and masonry stacking bugs
+  const loadAllDimensions = useCallback(async (items: MasonryItem[]) => {
+    const results = await Promise.all(
+      items.map(async (item) => {
+        try {
+          const dims = await getImageDimensions(item.img)
+          const aspectRatio = dims.height / dims.width
+          const height = MASONRY_BASE_WIDTH * aspectRatio
+          return { id: item.id, height }
+        } catch {
+          return { id: item.id, height: MASONRY_BASE_WIDTH }
+        }
+      })
+    )
+    const byId = Object.fromEntries(results.map((r) => [r.id, r.height]))
+    setMasonryItems((prev) => {
+      if (prev.length !== items.length || items.some((it, i) => prev[i]?.id !== it.id)) return prev
+      return prev.map((p) => (byId[p.id] != null ? { ...p, height: byId[p.id], loaded: true } : p))
+    })
+  }, [])
+
+  // Initialize items and load real image dimensions in one batch (avoids stacking/resize bugs)
   useEffect(() => {
     if (initialImages.length === 0) return
 
-    // Create items for initial batch
     const seenUrls = new Set<string>()
     const items: MasonryItem[] = []
-    
     const imagesToShow = initialImages.slice(0, displayedCount)
-    
+
     for (const url of imagesToShow) {
       const normalized = normalizeUrl(url)
       if (!seenUrls.has(normalized)) {
         seenUrls.add(normalized)
         const transformedUrl = getGridImageUrl(url)
-        // Debug: log first few URLs to verify transformation
-        if (items.length < 2) {
-          console.log('[GalleryClient] Original URL:', url)
-          console.log('[GalleryClient] Transformed URL:', transformedUrl)
-        }
         items.push({
           id: `gallery-${normalized}`,
           img: transformedUrl,
           height: getDefaultHeight(),
-          loaded: true
+          loaded: false
         })
       }
     }
 
     setMasonryItems(items)
     setHasMore(displayedCount < initialImages.length)
-  }, [initialImages, displayedCount, normalizeUrl])
+    loadAllDimensions(items)
+  }, [initialImages, displayedCount, normalizeUrl, loadAllDimensions])
 
   // Load more images
   const loadMore = useCallback(() => {

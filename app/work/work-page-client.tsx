@@ -64,7 +64,7 @@ export default function WorkPageClient({ initialProjects }: { initialProjects: P
                     className={`text-muted-foreground text-xs tracking-[0.15em] transition-all duration-700 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
                       }`}
                   >
-                    <span style={{ color: "var(--brand-orange)" }}>{'//'}</span>OUR PORTFOLIO
+                    <span className="text-(--brand-orange)">{'//'}</span>OUR PORTFOLIO
                   </p>
                 </div>
                 <h1>
@@ -135,7 +135,7 @@ export default function WorkPageClient({ initialProjects }: { initialProjects: P
 
         <section className="py-20 md:py-28 bg-muted mx-4 md:mx-6 rounded-2xl text-center">
           <div className="max-w-[1400px] mx-auto px-6 md:px-10">
-            <p className="text-muted-foreground text-xs tracking-[0.15em] mb-4"><span style={{ color: "var(--brand-orange)" }}>{'//'}</span>Start a Project</p>
+            <p className="text-muted-foreground text-xs tracking-[0.15em] mb-4"><span className="text-(--brand-orange)">{'//'}</span>Start a Project</p>
             <h2 className="text-2xl md:text-4xl font-medium mb-6">Have a project in mind?</h2>
             <Link
               href="/contact"

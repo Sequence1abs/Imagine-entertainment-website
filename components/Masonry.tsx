@@ -136,8 +136,13 @@ const Masonry: React.FC<MasonryProps> = ({
     if (!width) return [];
 
     const gap = 12; // Gap between items
-    const columnWidth = (width - (columns - 1) * gap) / columns;
+    const columnWidth = Math.max(1, (width - (columns - 1) * gap) / columns);
     const colHeights = new Array(columns).fill(0);
+
+    // Clamp aspect ratio to avoid extreme tall/short tiles and layout bugs
+    const MIN_ASPECT = 0.35;
+    const MAX_ASPECT = 2.5;
+    const BASE_WIDTH = 400;
 
     const gridItems = items.map(child => {
       // Find the shortest column
@@ -146,10 +151,10 @@ const Masonry: React.FC<MasonryProps> = ({
       // Calculate position
       const x = columnWidth * col + col * gap;
       
-      // Scale height based on column width to maintain aspect ratio
-      // child.height is the height for a base width of 400, so scale it proportionally
-      const aspectRatio = child.height / 400; // 400 is the base width used in gallery
-      const height = columnWidth * aspectRatio;
+      // Scale height based on column width; clamp aspect ratio to prevent stacking/slivers
+      const rawAspect = child.height / BASE_WIDTH;
+      const aspectRatio = Math.min(MAX_ASPECT, Math.max(MIN_ASPECT, rawAspect));
+      const height = Math.max(80, columnWidth * aspectRatio);
       
       // Get current y position for this column
       const y = colHeights[col];
@@ -160,7 +165,6 @@ const Masonry: React.FC<MasonryProps> = ({
       return { ...child, x, y, w: columnWidth, h: height };
     });
 
-    // Store the max height for container calculation
     return gridItems;
   }, [columns, items, width]);
 
@@ -215,28 +219,19 @@ const Masonry: React.FC<MasonryProps> = ({
         const isNewItem = !animatedIds.current.has(item.id);
 
         if (isNewItem) {
-          // It's a new item (or first load), animate entry
-          const initialPos = getInitialPosition(item);
-          const initialState = {
+          // Animate entry: keep layout position from React (avoids stacking); only animate opacity/blur
+          gsap.set(element, {
             opacity: 0,
-            x: initialPos.x,
-            y: initialPos.y,
-            width: item.w,
-            height: item.h,
             ...(blurToFocus && { filter: 'blur(10px)' })
-          };
-
-          // Set initial state immediately
-          gsap.set(element, initialState);
-          
-          // Animate to final position
+          });
           gsap.to(element, {
             opacity: 1,
             ...animationProps,
             ...(blurToFocus && { filter: 'blur(0px)' }),
-            duration: 0.8,
+            duration: 0.6,
             ease: 'power3.out',
-            delay: isNewItem ? (index % columns) * stagger : 0 
+            delay: (index % columns) * stagger,
+            overwrite: 'auto'
           });
 
           // Mark as animated
@@ -331,7 +326,8 @@ const Masonry: React.FC<MasonryProps> = ({
             style={{ 
               cursor: onItemClick || item.url ? 'pointer' : 'default',
               width: `${item.w}px`,
-              height: `${item.h}px`
+              height: `${item.h}px`,
+              transform: `translate(${item.x}px, ${item.y}px)`,
             }}
             onClick={() => {
               if (onItemClick) {

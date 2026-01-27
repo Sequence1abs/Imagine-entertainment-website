@@ -25,7 +25,6 @@ export function useAutoLogout() {
       const timeSinceLastActivity = now - lastActivityRef.current
 
       if (timeSinceLastActivity >= INACTIVITY_LIMIT) {
-        // Double check session existence before logging out
         const { data: { session } } = await supabase.auth.getSession()
         
         if (session) {
@@ -38,7 +37,6 @@ export function useAutoLogout() {
       }
     }
 
-    // Listen for user interactions
     const events = [
       "mousedown",
       "mousemove",
@@ -52,7 +50,6 @@ export function useAutoLogout() {
       document.addEventListener(event, updateActivity)
     })
 
-    // Start checking loop
     timerRef.current = setInterval(checkInactivity, CHECK_INTERVAL)
 
     return () => {

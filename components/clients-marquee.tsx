@@ -3,9 +3,7 @@
 import { useEffect, useState, useRef } from "react"
 import Image from "next/image"
 
-// Combined Clients List (42 total)
 const clients = [
-  // Named Files
   { abbr: "CGTTI", name: "Ceylon German Technical Training Institute", image: "CGTTI.png" },
   { abbr: "HNB", name: "Hatton National Bank", image: "HNB.png" },
   { abbr: "JANA", name: "Janashakthi Insurance", image: "Janashakthi.png" },
@@ -71,8 +69,6 @@ export default function ClientsMarquee() {
 
   useEffect(() => {
     let hasPreloaded = false
-    
-    // Start preloading when section is near viewport (earlier threshold)
     const preloadObserver = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !hasPreloaded) {
@@ -127,7 +123,7 @@ export default function ClientsMarquee() {
           className={`text-muted-foreground text-xs tracking-[0.2em] text-center mb-4 transition-all duration-700 ${isVisible ? "opacity-100" : "opacity-0"
             }`}
         >
-          <span style={{ color: "var(--brand-orange)" }}>{'//'}</span>TRUSTED BY
+          <span className="text-(--brand-orange)">{'//'}</span>TRUSTED BY
         </p>
         <h2
           className={`text-3xl md:text-4xl lg:text-5xl font-medium text-center transition-all duration-700 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
@@ -194,14 +190,15 @@ function ClientCard({
   
   return (
     <div className="shrink-0 px-3 md:px-5">
-      <div className="flex items-center justify-center h-20 md:h-24">
+      <div className="flex items-center justify-center h-20 md:h-24 min-h-20 md:min-h-24">
         {client.image ? (
-          <div className="relative w-28 h-14 md:w-40 md:h-20 transition-transform duration-300 hover:scale-110">
+          <div className="flex items-center justify-center w-28 h-14 md:w-40 md:h-20 min-w-28 min-h-14 md:min-w-40 md:min-h-20 aspect-2/1 overflow-hidden transition-transform duration-300 hover:scale-110">
             <Image
               src={`/brands/${client.image}`}
               alt={`${client.name} Logo`}
-              fill
-              className="object-contain"
+              width={160}
+              height={80}
+              className="object-contain w-full h-full"
               sizes="(max-width: 768px) 112px, 160px"
               priority={shouldPriorityLoad}
               loading={shouldPriorityLoad ? undefined : "lazy"}

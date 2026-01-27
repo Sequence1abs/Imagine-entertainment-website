@@ -39,7 +39,7 @@ export default async function GalleryPage() {
               <div>
                 <div className="overflow-hidden mb-3">
                   <p className="text-muted-foreground text-xs tracking-[0.15em]">
-                    <span style={{ color: "var(--brand-orange)" }}>{'//'}</span>OUR GALLERY
+                    <span className="text-(--brand-orange)">{'//'}</span>OUR GALLERY
                   </p>
                 </div>
                 <h1 className="overflow-hidden pb-2">
