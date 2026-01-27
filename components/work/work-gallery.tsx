@@ -52,6 +52,7 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
   }
 
   const [masonryItems, setMasonryItems] = useState<MasonryItem[]>([])
+  const [dimensionsResolving, setDimensionsResolving] = useState(true)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -72,58 +73,48 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
     })
   }
 
-  const getDefaultHeight = () => MASONRY_BASE_WIDTH
-
-  // Load actual image dimensions for all items in one batch for Pinterest-style masonry
-  const loadAllDimensions = useCallback(async (items: MasonryItem[]) => {
-    const results = await Promise.all(
-      items.map(async (item) => {
-        try {
-          const dims = await getImageDimensions(item.img)
-          const aspectRatio = dims.height / dims.width
-          const height = MASONRY_BASE_WIDTH * aspectRatio
-          return { id: item.id, height }
-        } catch {
-          return { id: item.id, height: 300 }
-        }
-      })
-    )
-    const byId = Object.fromEntries(results.map((r) => [r.id, r.height]))
-    setMasonryItems((prev) => {
-      if (
-        prev.length !== items.length ||
-        items.some((it, i) => prev[i]?.id !== it.id)
-      ) {
-        return prev
-      }
-      return prev.map((p) =>
-        byId[p.id] != null ? { ...p, height: byId[p.id], loaded: true } : p
-      )
-    })
-  }, [])
-
-  // Initialize items and load real dimensions so containers match each image’s aspect
-  useEffect(() => {
-    if (!images || images.length === 0) return
-
+  // Resolve all image dimensions before ever rendering Masonry so the grid is correct from first paint
+  const resolveItemsWithDimensions = useCallback(async (imageList: Array<{ id: string; image_url: string }>): Promise<MasonryItem[]> => {
     const seenUrls = new Set<string>()
-    const uniqueImages = images.filter((img) => {
+    const unique = imageList.filter((img) => {
       if (seenUrls.has(img.image_url)) return false
       seenUrls.add(img.image_url)
       return true
     })
+    const withHeights = await Promise.all(
+      unique.map(async (img, index) => {
+        const id = `work-gallery-${img.id || index}`
+        const imgUrl = getGridImageUrl(img.image_url)
+        try {
+          const dims = await getImageDimensions(imgUrl)
+          const aspectRatio = dims.height / dims.width
+          const height = MASONRY_BASE_WIDTH * aspectRatio
+          return { id, img: imgUrl, originalUrl: img.image_url, height, loaded: true } as MasonryItem
+        } catch {
+          return { id, img: imgUrl, originalUrl: img.image_url, height: 300, loaded: true } as MasonryItem
+        }
+      })
+    )
+    return withHeights
+  }, [])
 
-    const newItems: MasonryItem[] = uniqueImages.map((img, index) => ({
-      id: `work-gallery-${img.id || index}`,
-      img: getGridImageUrl(img.image_url),
-      originalUrl: img.image_url,
-      height: getDefaultHeight(),
-      loaded: false
-    }))
-
-    setMasonryItems(newItems)
-    loadAllDimensions(newItems)
-  }, [images, loadAllDimensions])
+  // Only set masonry items after dimensions are resolved so Masonry never sees placeholder heights
+  useEffect(() => {
+    if (!images || images.length === 0) {
+      setMasonryItems([])
+      setDimensionsResolving(false)
+      return
+    }
+    let cancelled = false
+    setDimensionsResolving(true)
+    resolveItemsWithDimensions(images).then((items) => {
+      if (!cancelled) {
+        setMasonryItems(items)
+        setDimensionsResolving(false)
+      }
+    })
+    return () => { cancelled = true }
+  }, [images, resolveItemsWithDimensions])
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -169,16 +160,28 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
   return (
     <>
       <div className="min-h-[400px]">
-        <Masonry
-          items={masonryItems}
-          animateFrom="bottom"
-          scaleOnHover={false}
-          hoverScale={1}
-          blurToFocus={false}
-          colorShiftOnHover={false}
-          stagger={0.05}
-          onItemClick={handleImageClick}
-        />
+        {dimensionsResolving ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" aria-hidden="true">
+            {Array.from({ length: Math.min(images.length, 8) }).map((_, i) => (
+              <div
+                key={`skeleton-${i}`}
+                className="rounded-xl bg-muted/40 animate-pulse"
+                style={{ aspectRatio: i % 3 === 0 ? '3/4' : i % 3 === 1 ? '1' : '4/3', minHeight: 120 }}
+              />
+            ))}
+          </div>
+        ) : masonryItems.length > 0 ? (
+          <Masonry
+            items={masonryItems}
+            animateFrom="bottom"
+            scaleOnHover={false}
+            hoverScale={1}
+            blurToFocus={false}
+            colorShiftOnHover={false}
+            stagger={0.05}
+            onItemClick={handleImageClick}
+          />
+        ) : null}
       </div>
 
       {/* Lightbox Modal */}

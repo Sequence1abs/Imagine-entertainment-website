@@ -57,6 +57,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SystemStatus } from "@/components/dashboard/system-status";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -230,10 +231,10 @@ function TopPages({ data }: { data: AnalyticsData }) {
         <CardDescription className="text-xs sm:text-sm">Most viewed (Last 7 Days)</CardDescription>
       </CardHeader>
       <CardContent className="pt-0">
-        <Table className="w-full table-fixed">
+        <Table className="w-full">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-auto">Page</TableHead>
+              <TableHead>Page</TableHead>
               <TableHead className="text-right w-16">Views</TableHead>
               <TableHead className="text-right w-20">Visitors</TableHead>
             </TableRow>
@@ -242,8 +243,8 @@ function TopPages({ data }: { data: AnalyticsData }) {
             {data.topPages.length > 0 ? (
               data.topPages.map((page) => (
                 <TableRow key={page.path}>
-                  <TableCell className="font-medium truncate" title={page.path}>
-                    {page.path}
+                  <TableCell className="font-medium max-w-[200px]">
+                    <span className="block truncate" title={page.path}>{page.path}</span>
                   </TableCell>
                   <TableCell className="text-right whitespace-nowrap tabular-nums shrink-0">
                     {page.views.toLocaleString()}
@@ -353,14 +354,14 @@ function DevicesChart({ data }: { data: AnalyticsData }) {
         <CardDescription className="text-xs sm:text-sm">Traffic by device type (Last 7 Days)</CardDescription>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
           <ChartContainer
             config={{
               desktop: { label: "Desktop", color: COLORS[0] },
               mobile: { label: "Mobile", color: COLORS[1] },
               tablet: { label: "Tablet", color: COLORS[2] },
             }}
-            className="h-32 sm:h-48 w-full sm:w-auto sm:shrink-0"
+            className="h-32 sm:h-48 w-full lg:w-auto lg:shrink-0"
           >
             <PieChart>
               <Pie
@@ -385,7 +386,7 @@ function DevicesChart({ data }: { data: AnalyticsData }) {
             {deviceData.map((device, index) => (
               <div
                 key={device.name}
-                className="flex items-center justify-between gap-3"
+                className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 sm:gap-x-4"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <div
@@ -393,9 +394,9 @@ function DevicesChart({ data }: { data: AnalyticsData }) {
                     style={{ backgroundColor: COLORS[index] }}
                   />
                   <device.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground shrink-0" />
-                  <span className="text-xs sm:text-sm">{device.name}</span>
+                  <span className="text-xs sm:text-sm truncate">{device.name}</span>
                 </div>
-                <span className="font-medium text-xs sm:text-sm tabular-nums shrink-0">
+                <span className="font-medium text-xs sm:text-sm tabular-nums shrink-0 text-right">
                   {getPct(device.value)}%
                 </span>
               </div>
@@ -619,31 +620,28 @@ function AnalyticsDashboard({ rangeDays }: { rangeDays: number }) {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 mb-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <Suspense fallback={<TrafficChartSkeleton />}>
           <TrafficChart data={data} />
         </Suspense>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <Suspense fallback={<TopPagesSkeleton />}>
           <TopPages data={data} />
         </Suspense>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <Suspense fallback={<TopReferrersSkeleton />}>
           <TopReferrers data={data} />
+        </Suspense>
+        <Suspense fallback={<DevicesChartSkeleton />}>
+          <DevicesChart data={data} />
         </Suspense>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-        <Suspense fallback={<DevicesChartSkeleton />}>
-          <DevicesChart data={data} />
-        </Suspense>
         <Suspense fallback={<TopCountriesSkeleton />}>
           <TopCountries data={data} />
         </Suspense>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 mb-4">
         <Suspense fallback={<BrowsersChartSkeleton />}>
           <BrowsersChart data={data} />
         </Suspense>
@@ -657,6 +655,8 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-4 sm:space-y-6">
+      <SystemStatus />
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="min-w-0">
           <h1 className="text-xl sm:text-2xl font-bold truncate">Cloudflare Web Analytics</h1>

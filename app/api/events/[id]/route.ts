@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import type { EventFormData } from '@/lib/types/database'
 import { logActivity } from '@/lib/actions/log-activity'
 
@@ -92,6 +93,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       user.id
     )
 
+    // Revalidate Work & Projects and Gallery so add/update/publish/unpublish shows immediately
+    revalidatePath('/work')
+    revalidatePath(`/work/${id}`, 'page')
+    revalidatePath('/gallery')
+
     return NextResponse.json({ data })
   } catch (error) {
     console.error('Error updating event:', error)
@@ -144,6 +150,11 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       id,
       user.id
     )
+
+    // Revalidate Work & Projects and Gallery so the removed event and its images disappear immediately
+    revalidatePath('/work')
+    revalidatePath(`/work/${id}`, 'page')
+    revalidatePath('/gallery')
 
     return NextResponse.json({ message: 'Event deleted successfully' })
   } catch (error) {

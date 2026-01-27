@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { deleteEventImage } from '@/lib/data/events'
 
@@ -28,6 +29,9 @@ export async function DELETE(
     if (error) {
       return NextResponse.json({ error }, { status: 400 })
     }
+
+    // Revalidate gallery so removed event images disappear immediately
+    revalidatePath('/gallery')
 
     return NextResponse.json({ success: true })
   } catch (error) {

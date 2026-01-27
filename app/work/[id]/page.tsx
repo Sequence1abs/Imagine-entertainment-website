@@ -77,6 +77,9 @@ interface WorkDetailPageProps {
   params: Promise<{ id: string }>
 }
 
+// Revalidates on-demand when this event is updated/deleted (see API routes). Fallback every 60s.
+export const revalidate = 60
+
 export default async function WorkDetailPage({ params }: WorkDetailPageProps) {
   const { id } = await params
   const event = await resolveEvent(id)

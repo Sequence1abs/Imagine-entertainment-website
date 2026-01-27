@@ -1,31 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { Loader2 } from "lucide-react"
 import Link from "next/link"
-
-type OverallStatus = "checking" | "online" | "offline" | "degraded"
+import { useSystemStatus } from "@/hooks/use-system-status"
 
 export function SystemStatusPill() {
-  const [status, setStatus] = useState<OverallStatus>("checking")
-
-  useEffect(() => {
-    const checkServices = async () => {
-      try {
-        // Quick health check via keep-alive endpoint
-        const res = await fetch('/api/keep-alive', { method: 'GET' })
-        setStatus(res.ok ? "online" : "degraded")
-      } catch {
-        setStatus("offline")
-      }
-    }
-
-    checkServices()
-    
-    // Refresh every 60 seconds
-    const interval = setInterval(checkServices, 60000)
-    return () => clearInterval(interval)
-  }, [])
+  const { overallStatus } = useSystemStatus({ intervalMs: 60_000 })
 
   const statusConfig = {
     checking: {
@@ -46,14 +26,14 @@ export function SystemStatusPill() {
     }
   }
 
-  const config = statusConfig[status]
+  const config = statusConfig[overallStatus]
 
   return (
     <Link 
       href="/dashboard/settings"
       className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md text-sm font-medium transition-all border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 px-3"
     >
-      {status === "checking" ? (
+      {overallStatus === "checking" ? (
         <Loader2 className="size-3 animate-spin" />
       ) : (
         <span className={`size-2 rounded-full ${config.dot} animate-pulse`} />

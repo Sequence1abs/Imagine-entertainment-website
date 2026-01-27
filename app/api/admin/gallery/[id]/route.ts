@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { deleteGalleryImage } from '@/lib/data/events'
 
@@ -29,6 +30,7 @@ export async function DELETE(
       return NextResponse.json({ error }, { status: 400 })
     }
 
+    revalidatePath('/gallery')
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error deleting gallery image:', error)

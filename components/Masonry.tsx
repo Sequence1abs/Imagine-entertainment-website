@@ -5,25 +5,17 @@ import { gsap } from 'gsap';
 
 import './Masonry.css';
 
-// Register GSAP plugins if needed
-if (typeof window !== 'undefined') {
-  gsap.config({ nullTargetWarn: false });
-}
-
 const useMedia = (queries: string[], values: number[], defaultValue: number): number => {
-  const get = useCallback(() => {
-    if (typeof window === 'undefined') return defaultValue;
-    return values[queries.findIndex(q => matchMedia(q).matches)] ?? defaultValue;
-  }, [queries, values, defaultValue]);
-
+  // Use defaultValue for SSR and initial client render so server and first paint match
   const [value, setValue] = useState<number>(defaultValue);
 
   useEffect(() => {
+    const get = () => values[queries.findIndex(q => matchMedia(q).matches)] ?? defaultValue;
     setValue(get());
     const handler = () => setValue(get());
     queries.forEach(q => matchMedia(q).addEventListener('change', handler));
     return () => queries.forEach(q => matchMedia(q).removeEventListener('change', handler));
-  }, [get, queries]);
+  }, [queries, values, defaultValue]);
 
   return value;
 };
@@ -85,6 +77,9 @@ const Masonry: React.FC<MasonryProps> = ({
   colorShiftOnHover = false,
   onItemClick
 }) => {
+  useEffect(() => {
+    gsap.config({ nullTargetWarn: false });
+  }, []);
   const queries = useMemo(() => 
     ['(min-width:1500px)', '(min-width:1000px)', '(min-width:600px)', '(min-width:400px)'], 
     []

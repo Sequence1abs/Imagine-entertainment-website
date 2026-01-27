@@ -3,8 +3,10 @@ import { getAllGalleryImages } from "@/lib/data/events"
 import GalleryClient from "./gallery-client"
 import PublicLayout from "@/components/layouts/public-layout"
 
-// Server component - fetches data on server for faster initial load
-export const revalidate = 3600 // Revalidate every hour
+// Server component - fetches data on server for faster initial load.
+// Revalidates on-demand when events/images are updated (see API routes).
+// Only images from published events appear; unpublishing hides them immediately.
+export const revalidate = 60
 
 // Fisher-Yates shuffle
 function shuffleArray<T>(array: T[]): T[] {

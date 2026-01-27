@@ -85,7 +85,7 @@ export default function PrivacyPolicy() {
               </section>
 
               <div className="pt-8 border-t border-border mt-12">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground" suppressHydrationWarning>
                   Last updated: {new Date().getFullYear()}
                 </p>
               </div>

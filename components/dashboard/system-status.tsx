@@ -1,97 +1,14 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { Database, Cloud, Server, CheckCircle2, XCircle, Loader2 } from "lucide-react"
+import { useSystemStatus, type ServiceStatusState } from "@/hooks/use-system-status"
 
-interface ServiceStatus {
-  name: string
-  status: "checking" | "online" | "offline" | "degraded"
-  latency?: number
-  icon: typeof Database
-  description: string
-}
+const ICON_BY_NAME = { Database, "Image Storage": Cloud, "API Server": Server } as const
 
 export function SystemStatus() {
-  const [services, setServices] = useState<ServiceStatus[]>([
-    {
-      name: "Database",
-      status: "checking",
-      icon: Database,
-      description: "Supabase PostgreSQL"
-    },
-    {
-      name: "Image Storage",
-      status: "checking",
-      icon: Cloud,
-      description: "Cloudflare Images"
-    },
-    {
-      name: "API Server",
-      status: "checking",
-      icon: Server,
-      description: "Next.js Backend"
-    },
-  ])
+  const { services } = useSystemStatus({ intervalMs: 30_000 })
 
-  useEffect(() => {
-    const checkServices = async () => {
-      // Check Database (Supabase)
-      const dbStart = performance.now()
-      try {
-        const res = await fetch('/api/keep-alive', { method: 'GET' })
-        const dbLatency = Math.round(performance.now() - dbStart)
-        setServices(prev => prev.map(s =>
-          s.name === "Database"
-            ? { ...s, status: res.ok ? "online" : "offline", latency: dbLatency }
-            : s
-        ))
-      } catch {
-        setServices(prev => prev.map(s =>
-          s.name === "Database" ? { ...s, status: "offline" } : s
-        ))
-      }
-
-      // Check Image Storage (Cloudflare Images)
-      const imageStart = performance.now()
-      try {
-        const res = await fetch('/api/health/cloudflare-images', { method: 'GET' })
-        const imageLatency = Math.round(performance.now() - imageStart)
-        setServices(prev => prev.map(s =>
-          s.name === "Image Storage"
-            ? { ...s, status: res.ok ? "online" : "offline", latency: imageLatency }
-            : s
-        ))
-      } catch {
-        setServices(prev => prev.map(s =>
-          s.name === "Image Storage" ? { ...s, status: "offline" } : s
-        ))
-      }
-
-      // Check API Server (self-check)
-      const apiStart = performance.now()
-      try {
-        const res = await fetch('/api/events', { method: 'GET' })
-        const apiLatency = Math.round(performance.now() - apiStart)
-        setServices(prev => prev.map(s => 
-          s.name === "API Server" 
-            ? { ...s, status: res.ok ? "online" : "degraded", latency: apiLatency }
-            : s
-        ))
-      } catch {
-        setServices(prev => prev.map(s => 
-          s.name === "API Server" ? { ...s, status: "offline" } : s
-        ))
-      }
-    }
-
-    checkServices()
-    
-    // Refresh every 30 seconds
-    const interval = setInterval(checkServices, 30000)
-    return () => clearInterval(interval)
-  }, [])
-
-  const getStatusColor = (status: ServiceStatus["status"]) => {
+  const getStatusColor = (status: ServiceStatusState) => {
     switch (status) {
       case "online": return "text-green-500"
       case "offline": return "text-red-500"
@@ -100,7 +17,7 @@ export function SystemStatus() {
     }
   }
 
-  const getStatusBg = (status: ServiceStatus["status"]) => {
+  const getStatusBg = (status: ServiceStatusState) => {
     switch (status) {
       case "online": return "bg-green-500/10"
       case "offline": return "bg-red-500/10"
@@ -109,7 +26,7 @@ export function SystemStatus() {
     }
   }
 
-  const getStatusIcon = (status: ServiceStatus["status"]) => {
+  const getStatusIcon = (status: ServiceStatusState) => {
     switch (status) {
       case "online": return <CheckCircle2 className="size-4 text-green-500" />
       case "offline": return <XCircle className="size-4 text-red-500" />
@@ -118,8 +35,34 @@ export function SystemStatus() {
     }
   }
 
-  const allOnline = services.every(s => s.status === "online")
-  const anyOffline = services.some(s => s.status === "offline")
+  const allOnline = services.every((s) => s.status === "online")
+  const anyOffline = services.some((s) => s.status === "offline")
+  const anyChecking = services.some((s) => s.status === "checking")
+  const anyDegraded = services.some((s) => s.status === "degraded")
+
+  const bannerLabel = allOnline
+    ? "All Systems Operational"
+    : anyChecking
+      ? "Checking..."
+      : anyOffline
+        ? "Service Disruption"
+        : anyDegraded
+          ? "Partially Degraded"
+          : "Checking..."
+
+  const bannerStyle = allOnline
+    ? "bg-green-500/10 text-green-500"
+    : anyOffline
+      ? "bg-red-500/10 text-red-500"
+      : anyChecking || anyDegraded
+        ? "bg-yellow-500/10 text-yellow-500"
+        : "bg-muted/50 text-muted-foreground"
+
+  const bannerDot = allOnline
+    ? "bg-green-500"
+    : anyOffline
+      ? "bg-red-500"
+      : "bg-yellow-500"
 
   return (
     <div className="bg-card border border-border rounded-lg p-6 space-y-6">
@@ -128,26 +71,22 @@ export function SystemStatus() {
           <h2 className="text-lg font-semibold">System Status</h2>
           <p className="text-sm text-muted-foreground">Live health check of connected services</p>
         </div>
-        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium w-fit ${
-          allOnline ? "bg-green-500/10 text-green-500" : 
-          anyOffline ? "bg-red-500/10 text-red-500" : 
-          "bg-yellow-500/10 text-yellow-500"
-        }`}>
-          <span className={`size-2 rounded-full ${
-            allOnline ? "bg-green-500" : anyOffline ? "bg-red-500" : "bg-yellow-500"
-          } animate-pulse`} />
-          {allOnline ? "All Systems Operational" : anyOffline ? "Service Disruption" : "Checking..."}
+        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium w-fit ${bannerStyle}`}>
+          <span className={`size-2 rounded-full ${bannerDot} animate-pulse`} />
+          {bannerLabel}
         </div>
       </div>
       
       <div className="grid gap-4 md:grid-cols-3">
-        {services.map((service) => (
+        {services.map((service) => {
+          const Icon = ICON_BY_NAME[service.name as keyof typeof ICON_BY_NAME] ?? Database
+          return (
           <div 
             key={service.name}
             className={`flex items-center gap-4 p-4 rounded-lg border border-border ${getStatusBg(service.status)}`}
           >
             <div className={`p-3 rounded-lg ${getStatusBg(service.status)}`}>
-              <service.icon className={`size-5 ${getStatusColor(service.status)}`} />
+              <Icon className={`size-5 ${getStatusColor(service.status)}`} />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
@@ -160,7 +99,8 @@ export function SystemStatus() {
               )}
             </div>
           </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { addEventImage } from '@/lib/data/events'
 
@@ -29,6 +30,9 @@ export async function POST(request: NextRequest) {
     if (error) {
       return NextResponse.json({ error }, { status: 400 })
     }
+
+    // Revalidate gallery so new event images (when event is published) show immediately
+    revalidatePath('/gallery')
 
     return NextResponse.json({ image, success: true })
   } catch (error) {

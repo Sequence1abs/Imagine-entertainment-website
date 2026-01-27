@@ -24,9 +24,10 @@ function sortProjects(projects: Project[]): Project[] {
   })
 }
 
-// Server component - fetches data on server for faster initial load
-// Next.js will cache this page for faster subsequent loads
-export const revalidate = 3600 // Revalidate every hour
+// Server component - fetches data on server for faster initial load.
+// Revalidates on-demand when events are created/updated/published/deleted (see API routes).
+// Fallback revalidate keeps data fresh when no mutations occur.
+export const revalidate = 60 // Revalidate every 60s if no on-demand invalidation
 
 export default async function WorkPage() {
   // Fetch events on the server (faster than client-side fetch)

@@ -230,7 +230,7 @@ export default function Footer() {
 
 
         <div className="border-t border-border py-8 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-foreground/70">
-          <p className="order-2 md:order-1 text-center md:text-left">
+          <p className="order-2 md:order-1 text-center md:text-left" suppressHydrationWarning>
             © {new Date().getFullYear()} IMAGINE ENTERTAINMENT (PVT) LTD. All rights reserved.
             <span className="hidden sm:inline"> · Site last updated: January 2025</span>
           </p>

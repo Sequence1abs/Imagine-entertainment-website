@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { addGalleryImage, getStandaloneGalleryImages } from '@/lib/data/events'
 
@@ -83,6 +84,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error }, { status: 400 })
     }
 
+    revalidatePath('/gallery')
     return NextResponse.json({ image, success: true })
   } catch (error) {
     console.error('Error adding gallery image:', error)

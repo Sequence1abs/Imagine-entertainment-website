@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { createEvent, getAllEvents } from '@/lib/data/events'
 import { logActivity } from '@/lib/actions/log-activity'
@@ -53,6 +54,10 @@ export async function POST(request: NextRequest) {
       event.id,
       user.id
     )
+
+    // Revalidate Work & Projects and Gallery so the new event (and its images when added) shows immediately
+    revalidatePath('/work')
+    revalidatePath('/gallery')
 
     return NextResponse.json({ event, success: true })
   } catch (error) {

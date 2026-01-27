@@ -264,6 +264,8 @@ export default function RootLayout({
         ═══════════════════════════════════════════════════════════════════════
       */}
       <head>
+        {/* Prevent iOS from auto-linking phone/email/date which can cause hydration mismatch */}
+        <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
         {/* Preconnect to critical domains */}
         <link rel="preconnect" href="https://assets.imaginesl.com" />
         <link rel="preconnect" href="https://images.imaginesl.com" />

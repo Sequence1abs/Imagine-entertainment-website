@@ -60,12 +60,12 @@ export default function GalleryClient({ initialImages }: GalleryClientProps) {
   }
 
   const [allImages] = useState<string[]>(initialImages)
+  const [allItems, setAllItems] = useState<MasonryItem[]>([])
   const [masonryItems, setMasonryItems] = useState<MasonryItem[]>([])
+  const [dimensionsResolving, setDimensionsResolving] = useState(true)
   const [displayedCount, setDisplayedCount] = useState(20)
   const [hasMore, setHasMore] = useState(true)
   const observerTarget = useRef<HTMLDivElement>(null)
-
-  const getDefaultHeight = () => MASONRY_BASE_WIDTH
 
   const normalizeUrl = useCallback((url: string): string => {
     if (!url) return ''
@@ -79,62 +79,75 @@ export default function GalleryClient({ initialImages }: GalleryClientProps) {
     }
   }, [])
 
-  // Load all image dimensions in one batch to avoid N reflows and masonry stacking bugs
-  const loadAllDimensions = useCallback(async (items: MasonryItem[]) => {
-    const results = await Promise.all(
-      items.map(async (item) => {
-        try {
-          const dims = await getImageDimensions(item.img)
-          const aspectRatio = dims.height / dims.width
-          const height = MASONRY_BASE_WIDTH * aspectRatio
-          return { id: item.id, height }
-        } catch {
-          return { id: item.id, height: MASONRY_BASE_WIDTH }
+  // Resolve all image dimensions for the current slice before ever rendering Masonry
+  const resolveItemsWithDimensions = useCallback(
+    async (urls: string[]): Promise<MasonryItem[]> => {
+      const seenUrls = new Set<string>()
+      const unique: { id: string; img: string }[] = []
+      for (const url of urls) {
+        const normalized = normalizeUrl(url)
+        if (!seenUrls.has(normalized)) {
+          seenUrls.add(normalized)
+          unique.push({ id: `gallery-${normalized}`, img: getGridImageUrl(url) })
         }
-      })
-    )
-    const byId = Object.fromEntries(results.map((r) => [r.id, r.height]))
-    setMasonryItems((prev) => {
-      if (prev.length !== items.length || items.some((it, i) => prev[i]?.id !== it.id)) return prev
-      return prev.map((p) => (byId[p.id] != null ? { ...p, height: byId[p.id], loaded: true } : p))
-    })
-  }, [])
-
-  // Initialize items and load real image dimensions in one batch (avoids stacking/resize bugs)
-  useEffect(() => {
-    if (initialImages.length === 0) return
-
-    const seenUrls = new Set<string>()
-    const items: MasonryItem[] = []
-    const imagesToShow = initialImages.slice(0, displayedCount)
-
-    for (const url of imagesToShow) {
-      const normalized = normalizeUrl(url)
-      if (!seenUrls.has(normalized)) {
-        seenUrls.add(normalized)
-        const transformedUrl = getGridImageUrl(url)
-        items.push({
-          id: `gallery-${normalized}`,
-          img: transformedUrl,
-          height: getDefaultHeight(),
-          loaded: false
-        })
       }
+      const withHeights = await Promise.all(
+        unique.map(async (item) => {
+          try {
+            const dims = await getImageDimensions(item.img)
+            const aspectRatio = dims.height / dims.width
+            const height = MASONRY_BASE_WIDTH * aspectRatio
+            return { ...item, height, loaded: true } as MasonryItem
+          } catch {
+            return { ...item, height: MASONRY_BASE_WIDTH, loaded: true } as MasonryItem
+          }
+        })
+      )
+      return withHeights
+    },
+    [normalizeUrl]
+  )
+
+  // Resolve all image dimensions once up front so Masonry always receives final heights
+  useEffect(() => {
+    if (initialImages.length === 0) {
+      setAllItems([])
+      setMasonryItems([])
+      setHasMore(false)
+      setDimensionsResolving(false)
+      return
     }
+    let cancelled = false
+    setDimensionsResolving(true)
+    resolveItemsWithDimensions(initialImages).then((items) => {
+      if (!cancelled) {
+        setAllItems(items)
+        setDimensionsResolving(false)
+      }
+    })
+    return () => { cancelled = true }
+  }, [initialImages, resolveItemsWithDimensions])
 
-    setMasonryItems(items)
-    setHasMore(displayedCount < initialImages.length)
-    loadAllDimensions(items)
-  }, [initialImages, displayedCount, normalizeUrl, loadAllDimensions])
-
-  // Load more images
-  const loadMore = useCallback(() => {
-    if (displayedCount >= allImages.length) {
+  // Derive currently visible masonry items from the fully-dimensioned list
+  useEffect(() => {
+    if (allItems.length === 0) {
+      setMasonryItems([])
       setHasMore(false)
       return
     }
-    setDisplayedCount(prev => Math.min(prev + LOAD_MORE_COUNT, allImages.length))
-  }, [displayedCount, allImages.length])
+    const next = allItems.slice(0, Math.min(displayedCount, allItems.length))
+    setMasonryItems(next)
+    setHasMore(next.length < allItems.length)
+  }, [allItems, displayedCount])
+
+  // Load more images
+  const loadMore = useCallback(() => {
+    if (displayedCount >= allItems.length) {
+      setHasMore(false)
+      return
+    }
+    setDisplayedCount(prev => Math.min(prev + LOAD_MORE_COUNT, allItems.length))
+  }, [displayedCount, allItems.length])
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
@@ -165,15 +178,27 @@ export default function GalleryClient({ initialImages }: GalleryClientProps) {
   return (
     <>
       <div className="min-h-[600px]">
-        <Masonry
-          items={masonryItems}
-          animateFrom="bottom"
-          scaleOnHover={false}
-          hoverScale={1}
-          blurToFocus={false}
-          colorShiftOnHover={false}
-          stagger={0.02}
-        />
+        {dimensionsResolving ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" aria-hidden="true">
+            {Array.from({ length: Math.min(displayedCount, 12) }).map((_, i) => (
+              <div
+                key={`skeleton-${i}`}
+                className="rounded-xl bg-muted/40 animate-pulse"
+                style={{ aspectRatio: i % 3 === 0 ? '3/4' : i % 3 === 1 ? '1' : '4/3', minHeight: 120 }}
+              />
+            ))}
+          </div>
+        ) : masonryItems.length > 0 ? (
+          <Masonry
+            items={masonryItems}
+            animateFrom="bottom"
+            scaleOnHover={false}
+            hoverScale={1}
+            blurToFocus={false}
+            colorShiftOnHover={false}
+            stagger={0.02}
+          />
+        ) : null}
       </div>
       
       {hasMore && (

@@ -77,16 +77,20 @@ export function DashboardLayoutClient({ children, isAuthenticated, user }: Dashb
     )
   }
 
-  // Prevent hydration mismatch by not rendering Radix UI components until mounted
+  // Prevent hydration mismatch: render a fixed skeleton until mounted.
+  // Rendering {children} here can cause server/client DOM mismatch (e.g. streaming, different order).
   if (!mounted) {
     return (
-      <div className="flex min-h-svh w-full bg-sidebar">
+      <div className="flex min-h-svh w-full bg-sidebar" suppressHydrationWarning>
         <div className="w-[--sidebar-width] shrink-0" style={{ "--sidebar-width": "16rem" } as React.CSSProperties} />
         <div className="flex-1 p-2">
           <div className="flex h-[calc(100svh-1rem)] flex-col rounded-xl bg-background">
             <div className="flex h-12 shrink-0 items-center gap-2 border-b px-4" />
             <div className="flex-1 overflow-auto p-4">
-              {children}
+              <div className="flex flex-col gap-4">
+                <div className="h-8 w-48 bg-muted/50 rounded animate-pulse" aria-hidden />
+                <div className="h-64 bg-muted/50 rounded animate-pulse" aria-hidden />
+              </div>
             </div>
           </div>
         </div>
