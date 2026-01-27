@@ -8,7 +8,7 @@ import { GalleryUpload } from '@/components/dashboard/gallery-upload'
 import { toast } from 'sonner'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { logActivity } from '@/lib/actions/log-activity'
-import { uploadToCloudinary } from '@/lib/cloudinary-upload'
+import { getThumbnailUrl } from '@/lib/config'
 
 interface GalleryImage {
   id: string
@@ -37,7 +37,22 @@ export default function GalleryPage() {
         const response = await fetch('/api/admin/gallery')
         if (response.ok) {
           const data = await response.json()
-          setImages(data.images || [])
+          const fetchedImages = data.images || []
+          
+          // Debug: Log image URLs to check format
+          if (fetchedImages.length > 0) {
+            console.log('Fetched gallery images:', fetchedImages.length)
+            fetchedImages.forEach((img: GalleryImage, index: number) => {
+              console.log(`Image ${index + 1}:`, {
+                id: img.id,
+                url: img.image_url,
+                thumbnail: getThumbnailUrl(img.image_url),
+                type: img.type
+              })
+            })
+          }
+          
+          setImages(fetchedImages)
         } else {
           throw new Error("Failed to fetch images")
         }
@@ -51,50 +66,85 @@ export default function GalleryPage() {
     fetchImages()
   }, [])
 
-  // No longer needed: local uploadToCloudinary removed in favor of lib/cloudinary-upload
+  // Using Cloudflare Images upload with gallery_ prefix
 
-  // Handle upload
+  // Handle upload - optimized with parallel uploads
   const handleUpload = async () => {
     if (newFiles.length === 0) return
 
     setIsUploading(true)
-    let successCount = 0
+    const filesToUpload = [...newFiles]
+    setNewFiles([]) // Clear immediately for better UX
 
     try {
-      for (const file of newFiles) {
+      // Upload all images in parallel
+      const uploadPromises = filesToUpload.map(async (file) => {
         try {
-          const result = await uploadToCloudinary(file, 'IMAGINE/General')
-          if (result?.url) {
+          const uploadFormData = new FormData()
+          uploadFormData.append('file', file)
+          uploadFormData.append('prefix', 'gallery_')
+          uploadFormData.append('folder', 'IMAGINE/General')
+          
+          const uploadResponse = await fetch('/api/upload', {
+            method: 'POST',
+            body: uploadFormData,
+          })
+          
+          if (!uploadResponse.ok) {
+            const errorData = await uploadResponse.json()
+            throw new Error(errorData.error || 'Failed to upload image')
+          }
+          
+          const result = await uploadResponse.json()
+          return result?.url || null
+        } catch (error) {
+          console.error('Gallery upload failed for file:', file.name, error)
+          return null
+        }
+      })
+      
+      // Wait for all uploads to complete
+      const uploadedUrls = await Promise.all(uploadPromises)
+      const validUrls = uploadedUrls.filter((url): url is string => url !== null)
+      
+      // Save all images to database in parallel
+      if (validUrls.length > 0) {
+        const savePromises = validUrls.map(async (url) => {
+          try {
             const response = await fetch('/api/admin/gallery', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ image_url: result.url }),
+              body: JSON.stringify({ image_url: url }),
             })
 
             if (response.ok) {
               const data = await response.json()
               if (data.image) {
                 setImages(prev => [{ ...data.image, type: 'standalone' }, ...prev])
-                successCount++
-
-                // Log upload
-                await logActivity("Uploaded Gallery Image", { url: data.image.image_url }, "image", data.image.id)
+                
+                // Log upload (non-blocking)
+                logActivity("Uploaded Gallery Image", { url: data.image.image_url }, "image", data.image.id).catch(console.error)
+                
+                return true
               }
             }
+            return false
+          } catch (error) {
+            console.error('Failed to save image to database:', error)
+            return false
           }
-        } catch (error) {
-          console.error('Gallery upload failed for file:', error)
-          toast.error(error instanceof Error ? error.message : `Failed to upload ${file.name}`)
+        })
+        
+        const saveResults = await Promise.all(savePromises)
+        const successCount = saveResults.filter(Boolean).length
+
+        if (successCount === filesToUpload.length) {
+          toast.success("All images uploaded successfully")
+        } else if (successCount > 0) {
+          toast.warning(`Uploaded ${successCount} of ${filesToUpload.length} images`)
+        } else {
+          toast.error("Failed to upload images")
         }
-      }
-
-      // Reset
-      setNewFiles([])
-
-      if (successCount === newFiles.length) {
-        toast.success("All images uploaded successfully")
-      } else if (successCount > 0) {
-        toast.warning(`Uploaded ${successCount} of ${newFiles.length} images`)
       } else {
         toast.error("Failed to upload images")
       }
@@ -149,18 +199,6 @@ export default function GalleryPage() {
     setShowDeleteConfirm(true)
   }
 
-  // Helper to optimize Cloudinary URLs for thumbnails
-  const getThumbnailUrl = (url: string) => {
-    if (!url) return '';
-    if (url.includes('cloudinary.com')) {
-      // Split at /upload/ and insert transformation params
-      const parts = url.split('/upload/');
-      if (parts.length === 2) {
-        return `${parts[0]}/upload/w_400,h_400,c_fill,q_auto,f_auto/${parts[1]}`;
-      }
-    }
-    return url;
-  }
 
   return (
     <div className="space-y-6">
@@ -221,24 +259,49 @@ export default function GalleryPage() {
             </div>
           ) : images.length > 0 ? (
             <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
-              {images.map((image) => (
-                <div
-                  key={image.id}
-                  className="group relative aspect-square bg-muted rounded-lg overflow-hidden"
-                >
-                  <Image
-                    src={getThumbnailUrl(image.image_url)}
-                    alt={image.alt_text || 'Gallery image'}
-                    fill
-                    sizes="(max-width: 768px) 33vw, (max-width: 1200px) 25vw, 20vw"
-                    className="object-cover transition-transform group-hover:scale-105"
-                    // Removed unoptimized to allow Next.js optimization or use our manual optimization
-                    // We keep 'unoptimized' if we want to rely strictly on our Cloudinary transform string
-                    // But using Next.js Image with a manually optimized source is fine too. 
-                    // To be safe and fast, let's rely on the Cloudinary transform string we built.
-                    unoptimized={true}
-                  />
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+              {images.map((image) => {
+                // Use original image URL directly - thumbnails will be handled by Cloudflare Images variants
+                // If thumbnail variant doesn't exist, the original will load
+                const displayUrl = image.image_url || '';
+                
+                return (
+                  <div
+                    key={image.id}
+                    className="group relative aspect-square bg-muted rounded-lg overflow-hidden"
+                  >
+                    {displayUrl ? (
+                      <img
+                        src={displayUrl}
+                        alt={image.alt_text || 'Gallery image'}
+                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                        onError={(e) => {
+                          // Log error for debugging
+                          const target = e.target as HTMLImageElement;
+                          console.error('Image failed to load:', {
+                            id: image.id,
+                            url: displayUrl,
+                            attemptedUrl: target.src
+                          });
+                          // Show placeholder on error
+                          target.style.display = 'none';
+                          const parent = target.parentElement;
+                          if (parent && !parent.querySelector('.error-placeholder')) {
+                            const placeholder = document.createElement('div');
+                            placeholder.className = 'error-placeholder w-full h-full flex items-center justify-center bg-muted';
+                            placeholder.innerHTML = '<svg class="w-8 h-8 text-muted-foreground/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>';
+                            parent.appendChild(placeholder);
+                          }
+                        }}
+                        onLoad={() => {
+                          console.log('Image loaded successfully:', displayUrl);
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-muted">
+                        <ImageIcon className="size-8 text-muted-foreground/50" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                     <Button
                       onClick={() => setSelectedImage(image.image_url)}
                       variant="secondary"
@@ -265,7 +328,8 @@ export default function GalleryPage() {
                     </span>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="py-12 text-center">

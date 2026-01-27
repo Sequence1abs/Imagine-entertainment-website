@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowUpRight } from "lucide-react"
+import { getCloudflareImageUrl } from "@/lib/config"
 
 export function CTASection() {
   const [isVisible, setIsVisible] = useState(false)
@@ -20,8 +21,7 @@ export function CTASection() {
     return () => observer.disconnect()
   }, [])
 
-  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-  const ctaImageUrl = `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto/dramatic-concert-stage-lighting-dark-atmospheric-p_h5ck3u.jpg`
+  const ctaImageUrl = getCloudflareImageUrl("76891f87-aef5-469a-a32b-a57f54d43e00")
 
   return (
     <section ref={ref} className="relative h-[45vh] md:h-[60vh] overflow-hidden mx-4 md:mx-6 rounded-2xl">
@@ -31,6 +31,7 @@ export function CTASection() {
         fill
         className="object-cover"
         sizes="(max-width: 768px) 100vw, 100vw"
+        unoptimized
       />
       <div className="absolute inset-0 bg-black/50 dark:bg-black/70" />
       <div className="absolute inset-0 flex items-center justify-center">
@@ -52,7 +53,7 @@ export function CTASection() {
               href="/contact" 
               className="cursor-target group inline-flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 rounded-full"
             >
-              <span className="text-xl md:text-2xl font-medium text-white dark:text-white">Let's Talk</span>
+              <span className="text-xl md:text-2xl font-medium text-white dark:text-white">Let&apos;s Talk</span>
               <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
             </Link>
           </div>

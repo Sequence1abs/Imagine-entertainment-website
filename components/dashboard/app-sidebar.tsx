@@ -161,7 +161,9 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <form action={signOut} className="w-full">
+                  <form action={async () => {
+                    await signOut()
+                  }} className="w-full">
                     <button type="submit" className="flex items-center w-full">
                       <LogOut className="mr-2" />
                       Sign out

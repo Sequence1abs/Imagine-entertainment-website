@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { ActivityLog } from "@/lib/types/database"
 import { formatDistanceToNow } from "date-fns"
@@ -19,6 +19,23 @@ export function ActivityLogList() {
   const [logs, setLogs] = useState<ActivityLog[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
+
+  const fetchLogs = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('activity_logs')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50)
+
+      if (error) throw error
+      setLogs(data || [])
+    } catch (error) {
+      console.error('Error fetching logs:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [supabase])
 
   useEffect(() => {
     fetchLogs()
@@ -40,24 +57,9 @@ export function ActivityLogList() {
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [])
+  }, [fetchLogs, supabase])
 
-  const fetchLogs = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('activity_logs')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(50)
 
-      if (error) throw error
-      setLogs(data || [])
-    } catch (error) {
-      console.error('Error fetching logs:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   if (loading) {
     return (

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
+import NextImage from "next/image"
 import { usePathname } from "next/navigation"
 import { ArrowUpRight, ChevronDown, Menu, X } from "lucide-react"
 import { useTheme } from "next-themes"
@@ -130,6 +131,7 @@ export default function Navigation() {
   const [servicesOpen, setServicesOpen] = useState(false)
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false)
   const servicesTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  
   const pathname = usePathname()
   const { theme, resolvedTheme } = useTheme()
 
@@ -255,15 +257,18 @@ export default function Navigation() {
   const iconColor = getIconColor()
   const themeToggleColor = getThemeToggleColor()
 
+  // Always start with transparent state to match server render
+  const navState = mounted ? getNavAnimationState() : "transparent"
+
   return (
     <>
       <motion.nav
-        initial="hidden"
-        animate={mounted ? getNavAnimationState() : "hidden"}
+        initial="transparent"
+        animate={navState}
         variants={navVariants}
         transition={{ 
           duration: 0.6, 
-          ease: [0.25, 0.1, 0.25, 1],
+          ease: [0.25, 0.1, 0.25, 1] as const,
           opacity: { duration: 0.5, delay: 0.1 },
           y: { duration: 0.5, delay: 0.1 },
           backgroundColor: { duration: 0.4, ease: "easeInOut" },
@@ -278,21 +283,22 @@ export default function Navigation() {
         }}
         suppressHydrationWarning
       >
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10" suppressHydrationWarning>
-          <div className="flex items-center justify-between h-16 md:h-20 min-h-16 md:min-h-20 w-full" suppressHydrationWarning>
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+          <div className="flex items-center justify-between h-16 md:h-20 min-h-16 md:min-h-20 w-full">
             <Link href="/" className="relative z-50 flex items-center gap-2" onClick={() => setIsOpen(false)}>
-              <motion.img
-                src={getLogoSource()}
-                alt="Imagine Entertainment"
-                className="h-10 md:h-11 w-auto text-transparent"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-                key={getLogoSource()}
-              />
+              <div className="relative h-[60px] md:h-[68px] w-[180px] md:w-[196px] transition-opacity duration-200">
+                <NextImage
+                  src={getLogoSource()}
+                  alt="Imagine Entertainment"
+                  fill
+                  className="object-contain"
+                  priority
+                  quality={90}
+                />
+              </div>
             </Link>
 
-            <div className="hidden lg:flex items-center gap-12" suppressHydrationWarning>
+            <div className="hidden lg:flex items-center gap-12">
               {menuItems.map((item) => {
                 if (item.hasDropdown) {
                   return (
@@ -407,7 +413,7 @@ export default function Navigation() {
               })}
             </div>
 
-            <div className="flex items-center gap-3 min-w-fit shrink-0" suppressHydrationWarning>
+            <div className="flex items-center gap-3 min-w-fit shrink-0">
               <div className="shrink-0 w-[42px] h-[42px] flex items-center justify-center">
                 <ThemeToggle 
                   iconColor={scrolled ? (isDarkMode ? "white" : "foreground") : themeToggleColor} 
@@ -473,7 +479,6 @@ export default function Navigation() {
             exit="closed"
             variants={mobileMenuVariants}
             className="fixed inset-0 z-40 bg-background/95 dark:bg-black/90 text-foreground dark:text-foreground backdrop-blur-md supports-backdrop-filter:bg-background/95"
-            suppressHydrationWarning
             drag="y"
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={{ top: 0.2, bottom: 0.05 }}
@@ -484,7 +489,7 @@ export default function Navigation() {
               }
             }}
           >
-            <div className="h-full flex flex-col px-6 md:px-10 pb-8 pt-24 overflow-y-auto no-scrollbar" suppressHydrationWarning>
+            <div className="h-full flex flex-col px-6 md:px-10 pb-8 pt-24 overflow-y-auto no-scrollbar">
               <div className="flex-1 flex flex-col justify-start space-y-6">
                 {menuItems.map((item) => {
                   if (item.hasDropdown) {
@@ -493,7 +498,6 @@ export default function Navigation() {
                         key={item.label}
                         variants={menuItemVariants}
                         className="overflow-hidden"
-                        suppressHydrationWarning
                       >
                         <div className="py-1">
                           <button
@@ -574,7 +578,6 @@ export default function Navigation() {
                       key={item.label}
                       variants={menuItemVariants}
                       className="overflow-hidden"
-                      suppressHydrationWarning
                     >
                       <Link href={item.href} onClick={() => setIsOpen(false)} className="block py-1">
                         <div className="flex items-center justify-between group">
@@ -617,7 +620,6 @@ export default function Navigation() {
                 <motion.div
                   variants={menuItemVariants}
                   className="flex items-center justify-center gap-8"
-                  suppressHydrationWarning
                 >
                   <a
                     href={socialLinks.facebook}

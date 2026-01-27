@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 import { useState } from 'react';
 import { useFileUpload, type FileWithPreview } from '@/hooks/use-file-upload';
 import { Alert, AlertContent, AlertDescription, AlertIcon, AlertTitle } from '@/components/ui/alert';
@@ -129,11 +131,12 @@ export default function CoverUpload({
               )}
 
               {/* Actual image */}
-              <img
+              <Image
                 src={coverImage.preview}
                 alt="Cover"
+                fill
                 className={cn(
-                  'h-full w-full object-cover transition-opacity duration-300',
+                  'object-cover transition-opacity duration-300',
                   imageLoading ? 'opacity-0' : 'opacity-100',
                 )}
                 onLoad={() => setImageLoading(false)}

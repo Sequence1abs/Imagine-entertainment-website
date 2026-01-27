@@ -26,7 +26,27 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'res.cloudinary.com',
+        hostname: 'flagcdn.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'imagedelivery.net',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.imaginesl.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.r2.dev',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'assets.imaginesl.com',
         pathname: '/**',
       },
     ],
@@ -64,6 +84,15 @@ const nextConfig = {
   // Aggressive caching headers to reduce Vercel Edge Requests
   async headers() {
     return [
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-XSS-Protection', value: '1; mode=block' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' }
+        ],
+      },
       {
         // Video files - 1 year cache for hero video and other media
         source: '/:path*.(mp4|webm|ogg|mov)',

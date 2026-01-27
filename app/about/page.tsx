@@ -2,9 +2,11 @@
 
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import Footer from "@/components/footer"
 import PublicLayout from "@/components/layouts/public-layout"
+import { getCloudflareImageUrl } from "@/lib/config"
 
 export default function AboutPage() {
   const [isLoaded, setIsLoaded] = useState(true)
@@ -14,18 +16,20 @@ export default function AboutPage() {
     return () => clearTimeout(timer)
   }, [])
 
+  const imageHash = process.env.CLOUDFLARE_IMAGES_HASH || process.env.NEXT_PUBLIC_CLOUDFLARE_IMAGES_HASH
+  
   return (
     <PublicLayout>
     <main className="min-h-screen bg-background">
       {/* Hero */}
       <section className="relative min-h-[60vh] md:min-h-[70vh] bg-foreground dark:bg-black text-white overflow-hidden flex items-end">
         <div className="absolute inset-0">
-          <img
-            src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto,w_1920/About_1st_Appearence-min_o65dz0.jpg`}
+          <Image
+            src="/images/about_hero (2).jpg"
             alt="Imagine Entertainment live event production with stunning stage lighting and visual effects"
-            className="w-full h-full object-cover opacity-40 dark:opacity-70"
-            loading="eager"
-            fetchPriority="high"
+            fill
+            className="object-cover opacity-40 dark:opacity-70"
+            priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-foreground via-foreground/60 to-foreground/40 dark:from-black/90 dark:via-black/70 dark:to-black/50" />
           <div className="absolute inset-0 bg-black/40 dark:bg-black/50" />
@@ -40,7 +44,7 @@ export default function AboutPage() {
                     isLoaded ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
                   }`}
                 >
-                  <span style={{ color: "var(--brand-orange)" }}>//</span>IMAGINE ENTERTAINMENT
+                  <span style={{ color: "var(--brand-orange)" }}>{'//'}</span>IMAGINE ENTERTAINMENT
                 </p>
               </div>
 
@@ -247,10 +251,13 @@ function LeadershipSection() {
         >
           {/* Image - Grayscale to Color on Hover */}
           <div className="relative aspect-[3/4] mb-8 overflow-hidden rounded-lg">
-            <img
-              src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/Mr_Sajith_Kodikara_Managing_Director_ry6wdi.png`}
+            <Image
+              src={getCloudflareImageUrl("5e7f2167-7bae-42f5-daad-9e5b18dc6c00")}
               alt="Mr. Sajith Morawaka Kodikara - Managing Director of Imagine Entertainment, leading the company with 37 years of industry experience"
-              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
+              fill
+              className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              unoptimized
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
           </div>
@@ -271,10 +278,13 @@ function LeadershipSection() {
         >
           {/* Image - Grayscale to Color on Hover */}
           <div className="relative aspect-[3/4] mb-8 overflow-hidden rounded-lg">
-            <img
-              src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/Mr_Sandun_Kodikara_Director_tiz6ed.png`}
+            <Image
+              src={getCloudflareImageUrl("3d8e6193-32c0-4b3a-de76-4b73f5eb4100")}
               alt="Mr. Sandun Morawaka Kodikara - Director of Imagine Entertainment, co-leading the company's vision and creative direction"
-              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
+              fill
+              className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              unoptimized
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
           </div>
@@ -347,6 +357,8 @@ function TeamSection() {
     return () => observer.disconnect()
   }, [])
 
+  const imageHash = process.env.CLOUDFLARE_IMAGES_HASH || process.env.NEXT_PUBLIC_CLOUDFLARE_IMAGES_HASH
+
   return (
     <section ref={ref} className="pt-16 md:pt-20 lg:pt-24 pb-8 md:pb-10 lg:pb-12">
       {/* Header */}
@@ -369,10 +381,13 @@ function TeamSection() {
         style={{ transitionDelay: "0.15s" }}
       >
         <div className="relative aspect-video md:aspect-auto md:h-[80vh]">
-          <img
-            src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/About-01_rsdanf.jpg`}
+          <Image
+            src={getCloudflareImageUrl("b67aeb66-8df2-4c4a-5f68-3561c72a5a00")}
             alt="Our House"
-            className="w-full h-full object-cover md:object-cover"
+            fill
+            className="object-cover"
+            sizes="100vw"
+            unoptimized
           />
         </div>
       </div>
@@ -443,7 +458,7 @@ function AboutStatsSection() {
               </div>
               
               <p className="text-muted-foreground dark:text-white/60 text-lg md:text-xl leading-relaxed max-w-md">
-                Of shaping Sri Lanka's entertainment landscape with passion and precision.
+                Of shaping Sri Lanka&apos;s entertainment landscape with passion and precision.
               </p>
             </div>
           </div>

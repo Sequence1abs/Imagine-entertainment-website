@@ -23,7 +23,6 @@ import { CoverUpload } from '@/components/dashboard/cover-upload'
 import { GalleryUpload } from '@/components/dashboard/gallery-upload'
 import { LocationAutocomplete } from '@/components/dashboard/location-autocomplete'
 import { toast } from 'sonner'
-import { uploadToCloudinary } from '@/lib/cloudinary-upload'
 
 export default function NewEventPage() {
   const router = useRouter()
@@ -72,7 +71,7 @@ export default function NewEventPage() {
     })
   }
 
-  // No longer needed: local uploadToCloudinary removed in favor of lib/cloudinary-upload
+  // Using Cloudflare Images upload with event_ prefix
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -97,7 +96,22 @@ export default function NewEventPage() {
       if (coverImageFile) {
         setIsUploadingCover(true)
         try {
-          const result = await uploadToCloudinary(coverImageFile, cloudFolder)
+          const uploadFormData = new FormData()
+          uploadFormData.append('file', coverImageFile)
+          uploadFormData.append('prefix', 'event_')
+          uploadFormData.append('folder', cloudFolder)
+          
+          const uploadResponse = await fetch('/api/upload', {
+            method: 'POST',
+            body: uploadFormData,
+          })
+          
+          if (!uploadResponse.ok) {
+            const errorData = await uploadResponse.json()
+            throw new Error(errorData.error || 'Failed to upload cover image')
+          }
+          
+          const result = await uploadResponse.json()
           if (result?.url) coverImageUrl = result.url
           else throw new Error("Failed to upload cover image")
         } catch (error) {
@@ -131,32 +145,61 @@ export default function NewEventPage() {
 
       const { event } = await response.json()
 
-      // Upload gallery images
+      // Upload gallery images in parallel for faster performance
       if (galleryImages.length > 0 && event?.id) {
         setIsUploadingGallery(true)
-        let successCount = 0
-        for (const img of galleryImages) {
-          try {
-            const result = await uploadToCloudinary(img.file, cloudFolder)
-            if (result?.url) {
-              await fetch('/api/admin/events/images', {
+        try {
+          // Upload all images in parallel
+          const uploadPromises = galleryImages.map(async (img) => {
+            const uploadFormData = new FormData()
+            uploadFormData.append('file', img.file)
+            uploadFormData.append('prefix', 'event_')
+            uploadFormData.append('folder', cloudFolder)
+            
+            const uploadResponse = await fetch('/api/upload', {
+              method: 'POST',
+              body: uploadFormData,
+            })
+            
+            if (!uploadResponse.ok) {
+              const errorData = await uploadResponse.json()
+              throw new Error(errorData.error || 'Failed to upload gallery image')
+            }
+            
+            const result = await uploadResponse.json()
+            return result?.url || null
+          })
+          
+          // Wait for all uploads to complete
+          const uploadedUrls = await Promise.all(uploadPromises)
+          
+          // Filter out failed uploads and batch save to database
+          const validUrls = uploadedUrls.filter((url): url is string => url !== null)
+          
+          if (validUrls.length > 0) {
+            // Save all images to database in parallel
+            const savePromises = validUrls.map(url =>
+              fetch('/api/admin/events/images', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                   event_id: event.id,
-                  image_url: result.url,
+                  image_url: url,
                 }),
               })
-              successCount++
-            }
-          } catch (error) {
-            console.error('Gallery image upload failed:', error)
-            toast.error(error instanceof Error ? error.message : 'Gallery image upload failed')
+            )
+            
+            await Promise.all(savePromises)
           }
-        }
-        setIsUploadingGallery(false)
-        if (successCount < galleryImages.length) {
-          toast.warning(`Event created, but some images failed to upload (${successCount}/${galleryImages.length})`)
+          
+          if (validUrls.length < galleryImages.length) {
+            toast.warning(`Event created, but ${galleryImages.length - validUrls.length} image(s) failed to upload`)
+          }
+        } catch (error) {
+          console.error('Gallery image upload failed:', error)
+          toast.error(error instanceof Error ? error.message : 'Some gallery images failed to upload')
+        } finally {
+          setIsUploadingGallery(false)
         }
       }
 

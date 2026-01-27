@@ -1,17 +1,18 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import type { Event, EventWithImages, EventImage, GalleryImage, EventFormData } from '@/lib/types/database'
-import { deleteFromCloudinary } from '@/lib/actions/cloudinary-delete'
+import { deleteFromCloudflareImages } from '@/lib/actions/cloudflare-delete'
 
 // ============ PUBLIC READ OPERATIONS ============
 // All public read operations use admin client since they don't need user context
 
 // Get all published events (for public /work page)
+// Optimized to only fetch needed fields for faster queries
 export async function getPublishedEvents(): Promise<Event[]> {
   const supabase = createAdminClient()
 
   const { data, error } = await supabase
     .from('events')
-    .select('*')
+    .select('id, title, category, cover_image_url, event_date, location, description, is_published, created_at, updated_at')
     .eq('is_published', true)
     .order('event_date', { ascending: false })
 
@@ -20,7 +21,7 @@ export async function getPublishedEvents(): Promise<Event[]> {
     return []
   }
 
-  return data || []
+  return (data || []) as Event[]
 }
 
 // Get single event by ID (for public /work/[id] page)
@@ -44,28 +45,54 @@ export async function getEventById(id: string): Promise<EventWithImages | null> 
     return null
   }
 
-  return data as EventWithImages
+  if (!data) {
+    return null
+  }
+
+  // Deduplicate event_images by image_url to prevent duplicate images in gallery
+  const eventData = data as EventWithImages
+  if (eventData.event_images && eventData.event_images.length > 0) {
+    const seenUrls = new Set<string>()
+    const uniqueImages = eventData.event_images.filter((img) => {
+      if (seenUrls.has(img.image_url)) {
+        return false
+      }
+      seenUrls.add(img.image_url)
+      return true
+    })
+    eventData.event_images = uniqueImages
+  }
+
+  return eventData
 }
 
-// Get all gallery images (for public /gallery page)
-// Uses admin client since this is public data and doesn't need user context
+/**
+ * Get all gallery images (for public /gallery page)
+ * IMPORTANT: This function ONLY fetches images from the database (Supabase),
+ * NOT directly from Cloudflare Images API. Only images uploaded through the
+ * dashboard and stored in the database are returned.
+ * 
+ * Uses admin client since this is public data and doesn't need user context
+ * 
+ * Deduplicates images by URL to ensure each unique image appears only once
+ */
 export async function getAllGalleryImages(): Promise<string[]> {
   const supabase = createAdminClient()
 
-  // Get standalone gallery images
+  // Get standalone gallery images (uploaded via dashboard with 'gallery_' prefix)
   const { data: galleryImages, error: galleryError } = await supabase
     .from('gallery_images')
-    .select('image_url')
+    .select('image_url, created_at')
     .order('created_at', { ascending: false })
 
   if (galleryError) {
     console.error('Error fetching gallery_images:', galleryError)
   }
 
-  // Get event images from published events
+  // Get event images from published events (uploaded via dashboard with 'event_' prefix)
   const { data: eventImages, error: eventError } = await supabase
     .from('event_images')
-    .select('image_url, events!inner(is_published)')
+    .select('image_url, created_at, events!inner(is_published)')
     .eq('events.is_published', true)
     .order('created_at', { ascending: false })
 
@@ -73,17 +100,58 @@ export async function getAllGalleryImages(): Promise<string[]> {
     console.error('Error fetching event_images:', eventError)
   }
 
-  const images: string[] = []
+  // Normalize URL to handle variations (trailing slashes, case sensitivity, Cloudflare variants, etc.)
+  const normalizeUrl = (url: string): string => {
+    if (!url) return '';
+    try {
+      const urlObj = new URL(url);
+      // Remove Cloudflare variant suffixes (/public, /gallery, /thumbnail, /hero) to get base image ID
+      // This ensures the same image with different variants is treated as the same image
+      let pathname = urlObj.pathname;
+      pathname = pathname.replace(/\/(public|gallery|thumbnail|hero)$/, '');
+      
+      // Reconstruct URL without variant suffix
+      const normalizedUrl = `${urlObj.protocol}//${urlObj.host}${pathname}`;
+      
+      // Remove trailing slash and normalize
+      return normalizedUrl.replace(/\/$/, '');
+    } catch {
+      // If URL parsing fails, try to extract base URL manually
+      // Remove Cloudflare variant suffixes
+      const withoutVariant = url.replace(/\/(public|gallery|thumbnail|hero)(\/|$)/, '/');
+      return withoutVariant.trim().toLowerCase().replace(/\/$/, '');
+    }
+  };
 
-  if (galleryImages) {
-    images.push(...galleryImages.map(img => img.image_url))
+  // Use Map to track normalized URLs and keep the first occurrence
+  const uniqueImageUrls = new Map<string, string>()
+
+  // Add gallery images (deduplicates automatically via normalized URL)
+  if (galleryImages && galleryImages.length > 0) {
+    galleryImages.forEach(img => {
+      if (img.image_url && img.image_url.trim()) {
+        const normalized = normalizeUrl(img.image_url);
+        if (!uniqueImageUrls.has(normalized)) {
+          uniqueImageUrls.set(normalized, img.image_url); // Store original URL
+        }
+      }
+    })
   }
 
-  if (eventImages) {
-    images.push(...eventImages.map(img => img.image_url))
+  // Add event images (deduplicates automatically via normalized URL)
+  if (eventImages && eventImages.length > 0) {
+    eventImages.forEach(img => {
+      if (img.image_url && img.image_url.trim()) {
+        const normalized = normalizeUrl(img.image_url);
+        if (!uniqueImageUrls.has(normalized)) {
+          uniqueImageUrls.set(normalized, img.image_url); // Store original URL
+        }
+      }
+    })
   }
 
-  return images
+  // Convert Map values back to array (preserves original URLs)
+  return Array.from(uniqueImageUrls.values())
 }
 
 // ============ ADMIN OPERATIONS ============
@@ -153,7 +221,7 @@ export async function updateEvent(id: string, formData: Partial<EventFormData>):
   return { data, error: null }
 }
 
-// Delete event (with all associated images from Cloudinary)
+// Delete event (with all associated images from Cloudflare Images)
 export async function deleteEvent(id: string): Promise<{ error: string | null }> {
   const supabase = await createClient()
 
@@ -170,21 +238,29 @@ export async function deleteEvent(id: string): Promise<{ error: string | null }>
     .select('image_url')
     .eq('event_id', id)
 
-  // Delete cover image from Cloudinary
+  // Delete cover image from Cloudflare Images
   if (event?.cover_image_url) {
-    const coverResult = await deleteFromCloudinary(event.cover_image_url)
-    if (!coverResult.success) {
-      console.warn('Failed to delete cover image from Cloudinary:', coverResult.error)
+    if (event.cover_image_url.includes('images.imaginesl.com') || event.cover_image_url.includes('imagedelivery.net')) {
+      const coverResult = await deleteFromCloudflareImages(event.cover_image_url)
+      if (!coverResult.success) {
+        console.warn('Failed to delete cover image from Cloudflare Images:', coverResult.error)
+      }
+    } else {
+      console.log('Cover image URL is not Cloudflare Images, skipping deletion:', event.cover_image_url)
     }
   }
 
-  // Delete all event images from Cloudinary
+  // Delete all event images from Cloudflare Images
   if (eventImages && eventImages.length > 0) {
     for (const img of eventImages) {
       if (img.image_url) {
-        const result = await deleteFromCloudinary(img.image_url)
-        if (!result.success) {
-          console.warn('Failed to delete event image from Cloudinary:', result.error)
+        if (img.image_url.includes('images.imaginesl.com') || img.image_url.includes('imagedelivery.net')) {
+          const result = await deleteFromCloudflareImages(img.image_url)
+          if (!result.success) {
+            console.warn('Failed to delete event image from Cloudflare Images:', result.error)
+          }
+        } else {
+          console.log('Event image URL is not Cloudflare Images, skipping deletion:', img.image_url)
         }
       }
     }
@@ -239,11 +315,11 @@ export async function addEventImage(eventId: string, imageUrl: string, altText?:
   return { data, error: null }
 }
 
-// Delete event image (from Cloudinary and database)
+// Delete event image (from Cloudflare Images and database)
 export async function deleteEventImage(imageId: string): Promise<{ error: string | null }> {
   const supabase = await createClient()
 
-  // First, get the image URL so we can delete from Cloudinary
+  // First, get the image URL so we can delete from Cloudflare Images
   const { data: imageData, error: fetchError } = await supabase
     .from('event_images')
     .select('image_url')
@@ -255,11 +331,16 @@ export async function deleteEventImage(imageId: string): Promise<{ error: string
     return { error: fetchError.message }
   }
 
-  // Delete from Cloudinary first (don't fail if this fails, continue with DB deletion)
+  // Delete from Cloudflare Images (don't fail if this fails, continue with DB deletion)
   if (imageData?.image_url) {
-    const cloudinaryResult = await deleteFromCloudinary(imageData.image_url)
-    if (!cloudinaryResult.success) {
-      console.warn('Failed to delete from Cloudinary, continuing with DB deletion:', cloudinaryResult.error)
+    if (imageData.image_url.includes('images.imaginesl.com') || imageData.image_url.includes('imagedelivery.net')) {
+      const cloudflareResult = await deleteFromCloudflareImages(imageData.image_url)
+      if (!cloudflareResult.success) {
+        console.warn('Failed to delete from Cloudflare Images, continuing with DB deletion:', cloudflareResult.error)
+      }
+    } else {
+      // R2 or other URLs - log but don't fail
+      console.log('Image URL is not Cloudflare Images, skipping deletion:', imageData.image_url)
     }
   }
 
@@ -317,11 +398,11 @@ export async function getStandaloneGalleryImages(): Promise<GalleryImage[]> {
   return data || []
 }
 
-// Delete gallery image (from Cloudinary and database)
+// Delete gallery image (from Cloudflare Images and database)
 export async function deleteGalleryImage(imageId: string): Promise<{ error: string | null }> {
   const supabase = await createClient()
 
-  // First, get the image URL so we can delete from Cloudinary
+  // First, get the image URL so we can delete from Cloudflare Images
   const { data: imageData, error: fetchError } = await supabase
     .from('gallery_images')
     .select('image_url')
@@ -333,11 +414,16 @@ export async function deleteGalleryImage(imageId: string): Promise<{ error: stri
     return { error: fetchError.message }
   }
 
-  // Delete from Cloudinary first (don't fail if this fails, continue with DB deletion)
+  // Delete from Cloudflare Images (don't fail if this fails, continue with DB deletion)
   if (imageData?.image_url) {
-    const cloudinaryResult = await deleteFromCloudinary(imageData.image_url)
-    if (!cloudinaryResult.success) {
-      console.warn('Failed to delete from Cloudinary, continuing with DB deletion:', cloudinaryResult.error)
+    if (imageData.image_url.includes('images.imaginesl.com') || imageData.image_url.includes('imagedelivery.net')) {
+      const cloudflareResult = await deleteFromCloudflareImages(imageData.image_url)
+      if (!cloudflareResult.success) {
+        console.warn('Failed to delete from Cloudflare Images, continuing with DB deletion:', cloudflareResult.error)
+      }
+    } else {
+      // R2 or other URLs - log but don't fail
+      console.log('Image URL is not Cloudflare Images, skipping deletion:', imageData.image_url)
     }
   }
 

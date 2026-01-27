@@ -68,6 +68,12 @@ logs/
 .next/dev/logs/
 .next/cache/
 
+# Cloudflare & Wrangler
+.worker-next
+.open-next
+.wrangler
+.dev.vars
+
 # npm lock files (optional - uncomment if you want to commit lock files)
 # package-lock.json
 # pnpm-lock.yaml

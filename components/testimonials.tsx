@@ -65,7 +65,7 @@ function renderQuoteWithHighlights(quote: string, highlights: string[]) {
   
   return (
     <>
-      "
+      &quot;
       {parts.map((part, i) => 
         typeof part === 'string' ? (
           <span key={i}>{part}</span>
@@ -78,7 +78,7 @@ function renderQuoteWithHighlights(quote: string, highlights: string[]) {
           </span>
         )
       )}
-      "
+      &quot;
     </>
   )
 }
@@ -171,7 +171,7 @@ export default function Testimonials() {
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
               transition={{ duration: 0.7 }}
             >
-              <p className="text-muted-foreground text-xs tracking-[0.2em] mb-4"><span style={{ color: "var(--brand-orange)" }}>//</span>TESTIMONIALS</p>
+              <p className="text-muted-foreground text-xs tracking-[0.2em] mb-4"><span style={{ color: "var(--brand-orange)" }}>{'//'}</span>TESTIMONIALS</p>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-8">
                 What Our
                 <br />

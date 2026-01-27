@@ -4,7 +4,7 @@ import Footer from "@/components/footer"
 import PublicLayout from "@/components/layouts/public-layout"
 
 // Dynamic imports for client components - they load in parallel after initial render
-const ServicesGrid = dynamic(() => import("@/components/home/services-grid").then(mod => ({ default: mod.ServicesGrid })))
+const ServicesGrid = dynamic(() => import("@/components/home/services-grid-v2").then(mod => ({ default: mod.ServicesGrid })))
 const StatsSection = dynamic(() => import("@/components/home/stats-section").then(mod => ({ default: mod.StatsSection })))
 const ExpertiseSection = dynamic(() => import("@/components/home/expertise-section").then(mod => ({ default: mod.ExpertiseSection })))
 const StatementReveal = dynamic(() => import("@/components/home/statement-reveal").then(mod => ({ default: mod.StatementReveal })))

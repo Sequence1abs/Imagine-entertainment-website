@@ -1,4 +1,6 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+"use client"
+
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
 
 import './Masonry.css';
@@ -9,19 +11,19 @@ if (typeof window !== 'undefined') {
 }
 
 const useMedia = (queries: string[], values: number[], defaultValue: number): number => {
-  const get = () => {
+  const get = useCallback(() => {
     if (typeof window === 'undefined') return defaultValue;
     return values[queries.findIndex(q => matchMedia(q).matches)] ?? defaultValue;
-  };
+  }, [queries, values, defaultValue]);
 
   const [value, setValue] = useState<number>(defaultValue);
 
   useEffect(() => {
     setValue(get());
-    const handler = () => setValue(get);
+    const handler = () => setValue(get());
     queries.forEach(q => matchMedia(q).addEventListener('change', handler));
     return () => queries.forEach(q => matchMedia(q).removeEventListener('change', handler));
-  }, [queries]);
+  }, [get, queries]);
 
   return value;
 };
@@ -41,20 +43,6 @@ const useMeasure = <T extends HTMLElement>() => {
   }, []);
 
   return [ref, size] as const;
-};
-
-const preloadImages = async (urls: string[]): Promise<void> => {
-  if (typeof window === 'undefined') return;
-  await Promise.all(
-    urls.map(
-      src =>
-        new Promise<void>(resolve => {
-          const img = new Image();
-          img.src = src;
-          img.onload = img.onerror = () => resolve();
-        })
-    )
-  );
 };
 
 interface Item {
@@ -97,17 +85,23 @@ const Masonry: React.FC<MasonryProps> = ({
   colorShiftOnHover = false,
   onItemClick
 }) => {
-  const columns = useMedia(
-    ['(min-width:1500px)', '(min-width:1000px)', '(min-width:600px)', '(min-width:400px)'],
-    [5, 4, 3, 2],
-    2
+  const queries = useMemo(() => 
+    ['(min-width:1500px)', '(min-width:1000px)', '(min-width:600px)', '(min-width:400px)'], 
+    []
   );
+  const values = useMemo(() => [5, 4, 3, 2], []);
+  const columns = useMedia(queries, values, 2);
 
   const [containerRef, { width }] = useMeasure<HTMLDivElement>();
-  const [imagesReady, setImagesReady] = useState(false);
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const itemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  
+  // Track which images have loaded
+  const handleImageLoad = useCallback((id: string) => {
+    setLoadedImages(prev => new Set(prev).add(id));
+  }, []);
 
-  const getInitialPosition = (item: GridItem) => {
+  const getInitialPosition = useCallback((item: GridItem) => {
     // Relative positioning instead of absolute window items
     const offset = 200;
     
@@ -136,11 +130,7 @@ const Masonry: React.FC<MasonryProps> = ({
         // Default fallthrough to bottom animation
         return { x: item.x, y: item.y + offset };
     }
-  };
-
-  useEffect(() => {
-    preloadImages(items.map(i => i.img)).then(() => setImagesReady(true));
-  }, [items]);
+  }, [animateFrom]);
 
   const grid = useMemo<GridItem[]>(() => {
     if (!width) return [];
@@ -251,7 +241,7 @@ const Masonry: React.FC<MasonryProps> = ({
 
     hasMounted.current = true;
     });
-  }, [grid, imagesReady, stagger, animateFrom, blurToFocus, duration, ease, columns]);
+  }, [grid, stagger, animateFrom, blurToFocus, duration, ease, columns, getInitialPosition]);
 
   const handleMouseEnter = (e: React.MouseEvent, item: GridItem) => {
     const element = itemRefs.current.get(item.id);
@@ -305,7 +295,10 @@ const Masonry: React.FC<MasonryProps> = ({
       className="list"
       style={{ height: containerHeight > 0 ? `${containerHeight}px` : 'auto' }}
     >
-      {grid.map(item => {
+      {grid.map((item, index) => {
+        const isPriority = index < 12; // First 12 images get priority loading
+        const isEager = index < 20; // First 20 images load eagerly (above the fold)
+        
         return (
           <div
             key={item.id}
@@ -324,7 +317,6 @@ const Masonry: React.FC<MasonryProps> = ({
               height: `${item.h}px`
             }}
             onClick={() => {
-              const index = items.findIndex(i => i.id === item.id);
               if (onItemClick) {
                 onItemClick(item, index);
               } else if (item.url) {
@@ -334,24 +326,39 @@ const Masonry: React.FC<MasonryProps> = ({
             onMouseEnter={e => handleMouseEnter(e, item)}
             onMouseLeave={e => handleMouseLeave(e, item)}
           >
-            <div className="item-img" style={{ backgroundImage: item.loaded ? `url(${item.img})` : 'none' }}>
-              {/* Skeleton placeholder - shows while image is loading */}
-              {!item.loaded && (
-                <div className="image-skeleton" />
-              )}
-              {/* Actual image - fades in when loaded */}
-              {item.loaded && (
-                <div 
-                  className="image-loaded"
-                  style={{ 
-                    backgroundImage: `url(${item.img})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: '12px'
-                  }}
-                />
+            <div className="item-img">
+              {/* Native img - always render, loads immediately */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={item.img}
+                alt=""
+                crossOrigin="anonymous"
+                className={`masonry-image ${loadedImages.has(item.id) ? 'opacity-100' : 'opacity-0'}`}
+                style={{ 
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center',
+                  borderRadius: '12px',
+                  transition: 'opacity 0.2s ease-in-out',
+                  display: 'block',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  zIndex: 1
+                }}
+                loading={isEager ? 'eager' : 'lazy'}
+                decoding="async"
+                fetchPriority={isPriority ? 'high' : 'auto'}
+                onLoad={() => handleImageLoad(item.id)}
+                onError={(e) => {
+                  console.error('[Masonry] Image failed to load:', item.img, e)
+                  handleImageLoad(item.id) // Mark as loaded even on error to hide skeleton
+                }}
+              />
+              {/* Skeleton placeholder - shows behind image while loading */}
+              {!loadedImages.has(item.id) && (
+                <div className="image-skeleton" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }} />
               )}
               {colorShiftOnHover && (
                 <div

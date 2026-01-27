@@ -115,6 +115,8 @@ export function UsersTable() {
       const response = await fetch('/api/admin/users')
       if (!response.ok) throw new Error('Failed to fetch users')
       const data = await response.json()
+      console.log('Fetched users:', data.users)
+      console.log('Current user ID:', data.currentUserId)
       setUsers(data.users)
       setCurrentUserId(data.currentUserId)
     } catch (err) {
@@ -177,12 +179,13 @@ export function UsersTable() {
     if (!userToDelete) return
     
     setIsDeleting(true)
+    const userIdToDelete = userToDelete.id
     
     try {
       const response = await fetch('/api/admin/users', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: userToDelete.id })
+        body: JSON.stringify({ userId: userIdToDelete })
       })
 
       const data = await response.json()
@@ -191,16 +194,25 @@ export function UsersTable() {
         throw new Error(data.error || 'Failed to delete user')
       }
 
-      // Success
+      // Success - close dialog immediately and reset state
       setShowDeleteDialog(false)
-      await fetchUsers() // Wait for list refresh
       setUserToDelete(null)
+      setIsDeleting(false)
+      
+      // Refresh the users list after a brief delay to ensure dialog is closed
+      setTimeout(() => {
+        fetchUsers()
+      }, 100)
       
     } catch (err) {
-      // Show error in alert since dialog might be closed or blocking view
-      alert(err instanceof Error ? err.message : 'Failed to delete user')
-    } finally {
+      // Close dialog even on error to prevent UI from getting stuck
+      setShowDeleteDialog(false)
+      setUserToDelete(null)
       setIsDeleting(false)
+      // Show error after dialog is closed
+      setTimeout(() => {
+        alert(err instanceof Error ? err.message : 'Failed to delete user')
+      }, 150)
     }
   }
 
@@ -248,7 +260,7 @@ export function UsersTable() {
         )}
 
         {/* Table */}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto relative">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-muted/30">
@@ -317,17 +329,27 @@ export function UsersTable() {
                     {formatDate(user.last_sign_in_at)}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    {!user.is_current && (
+                    {!user.is_current ? (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon-sm">
+                          <Button 
+                            variant="ghost" 
+                            size="icon-sm" 
+                            className="h-8 w-8"
+                            aria-label={`Actions for ${user.email}`}
+                          >
                             <MoreHorizontal className="size-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        <DropdownMenuContent 
+                          align="end" 
+                          sideOffset={5}
+                          className="z-[100] min-w-[150px] bg-popover"
+                        >
                           <DropdownMenuItem
-                            className="text-red-500 focus:text-red-500"
-                            onClick={() => {
+                            variant="destructive"
+                            onSelect={() => {
+                              console.log('Delete selected for user:', user.email, 'User ID:', user.id, 'Is current:', user.is_current)
                               setUserToDelete(user)
                               setShowDeleteDialog(true)
                             }}
@@ -337,6 +359,8 @@ export function UsersTable() {
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">Current user</span>
                     )}
                   </td>
                 </tr>
@@ -450,7 +474,13 @@ export function UsersTable() {
       {/* Delete Confirmation Dialog */}
       <ConfirmDialog
         open={showDeleteDialog}
-        onOpenChange={setShowDeleteDialog}
+        onOpenChange={(open) => {
+          if (!open && !isDeleting) {
+            // Only allow closing if not currently deleting
+            setShowDeleteDialog(false)
+            setUserToDelete(null)
+          }
+        }}
         title="Delete User"
         description={`Are you sure you want to delete ${userToDelete?.email}? This action cannot be undone.`}
         onConfirm={handleDeleteUser}

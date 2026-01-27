@@ -1,0 +1,39 @@
+{
+  "name": "imagine-entertainment-website",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2024-09-23",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "triggers": {
+    "crons": [
+      "0 0 */3 * *"
+    ]
+  },
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "SMTP_HOST": "smtp.resend.com",
+    "SMTP_PORT": "587",
+    "SMTP_USER": "resend"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "NEXT_CACHE_WORKERS_KV",
+      "id": "create-namespace-id"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "NEXT_CACHE_WORKERS_R2",
+      "bucket_name": "imagine-next-cache"
+    },
+    {
+      "binding": "ASSETS_BUCKET",
+      "bucket_name": "imagine-entertainment",
+      "preview_bucket_name": "imagine-entertainment"
+    }
+  ]
+}

@@ -1,23 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
-
-// Dynamic import for nodemailer to handle cases where it's not installed
-let nodemailer: any
-try {
-  nodemailer = require("nodemailer")
-} catch (e) {
-  console.warn("nodemailer not installed. Please run: npm install nodemailer @types/nodemailer")
-}
+import nodemailer from "nodemailer"
 
 export async function POST(request: NextRequest) {
   try {
-    // Check if nodemailer is installed
-    if (!nodemailer) {
-      console.error("nodemailer is not installed. Please run: npm install nodemailer @types/nodemailer")
-      return NextResponse.json(
-        { error: "Email service not configured. Please install nodemailer." },
-        { status: 500 }
-      )
-    }
 
     const body = await request.json()
     const { name, email, company, eventType, message } = body
@@ -31,21 +16,24 @@ export async function POST(request: NextRequest) {
     }
 
     // Check for email configuration
-    const smtpUser = process.env.SMTP_USER || process.env.EMAIL_USER
-    const smtpPass = process.env.SMTP_PASS || process.env.EMAIL_PASS
+    const smtpUser = process.env.SMTP_USER
+    const smtpPass = process.env.SMTP_PASSWORD // Updated variable name to match .dev.vars
+    const smtpHost = process.env.SMTP_HOST
+    const smtpPort = parseInt(process.env.SMTP_PORT || "465")
 
-    if (!smtpUser || !smtpPass) {
-      console.error("SMTP credentials not configured. Please set SMTP_USER and SMTP_PASS environment variables.")
+    if (!smtpUser || !smtpPass || !smtpHost) {
+      console.error("SMTP credentials not configured. Please set SMTP_HOST, SMTP_USER, and SMTP_PASSWORD.")
       return NextResponse.json(
         { error: "Email service not configured. Please set up SMTP credentials." },
         { status: 500 }
       )
     }
 
-    // Create transporter (using Gmail SMTP as example)
-    // You'll need to set up environment variables for production
+    // Create transporter (Generic SMTP for Resend)
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpPort === 465, // true for 465, false for other ports
       auth: {
         user: smtpUser,
         pass: smtpPass,

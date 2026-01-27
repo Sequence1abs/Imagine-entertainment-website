@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useRef, useCallback } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
 import Masonry from "@/components/Masonry"
 
@@ -12,6 +12,34 @@ interface WorkGalleryProps {
   }>
 }
 
+// Transform URL to use Cloudflare Images delivery domain
+const transformUrl = (url: string, variant: 'public' | 'thumbnail' = 'public'): string => {
+  if (!url || !url.trim()) return url
+  
+  // Convert custom domain to standard Cloudflare delivery domain
+  let transformedUrl = url.replace('images.imaginesl.com', 'imagedelivery.net')
+  
+  // Only process Cloudflare Images URLs
+  if (!transformedUrl.includes('imagedelivery.net')) {
+    return url
+  }
+  
+  // Ensure URL has variant suffix
+  if (/\/(public|thumbnail|gallery|hero)$/.test(transformedUrl)) {
+    // Replace with desired variant
+    return transformedUrl.replace(/\/(public|thumbnail|gallery|hero)$/, `/${variant}`)
+  } else {
+    return transformedUrl.endsWith('/') 
+      ? transformedUrl + variant 
+      : transformedUrl + '/' + variant
+  }
+}
+
+// Use public variant for both (guaranteed to exist)
+// Note: If you configure 'thumbnail' variant in Cloudflare, you can use it for grid
+const getGridImageUrl = (url: string) => transformUrl(url, 'public')
+const getFullImageUrl = (url: string) => transformUrl(url, 'public')
+
 export default function WorkGallery({ images }: WorkGalleryProps) {
   /* Masonry item type definition */
   type MasonryItem = {
@@ -20,6 +48,7 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
     url?: string
     height: number
     loaded?: boolean
+    originalUrl?: string // Store original for lightbox
   }
 
   const [masonryItems, setMasonryItems] = useState<MasonryItem[]>([])
@@ -29,24 +58,20 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
   // Helper function to get image dimensions
   const getImageDimensions = (src: string): Promise<{ width: number; height: number }> => {
     return new Promise((resolve) => {
-      const img = new Image()
+      const img = new window.Image()
       img.onload = () => {
         resolve({ width: img.naturalWidth, height: img.naturalHeight })
       }
       img.onerror = () => {
-        resolve({ width: 1200, height: 1600 }) // Default fallback
+        resolve({ width: 400, height: 300 }) // Default 4:3 fallback
       }
+      img.decoding = 'async'
       img.src = src
     })
   }
 
-  // Generate a random height for the skeleton
-  const getRandomHeight = () => {
-    const ratios = [0.75, 1, 1.25, 1.5]
-    const ratio = ratios[Math.floor(Math.random() * ratios.length)]
-    const baseWidth = 400
-    return baseWidth * ratio
-  }
+  // Default height for skeleton (1:1 aspect ratio)
+  const getDefaultHeight = () => 400
 
   // Load actual image dimensions and update the item
   const updateItemDimensions = useCallback(async (item: MasonryItem) => {
@@ -62,7 +87,7 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
         }
         return p
       }))
-    } catch (e) {
+    } catch {
       setMasonryItems(prev => prev.map(p => {
         if (p.id === item.id) return { ...p, loaded: true }
         return p
@@ -74,16 +99,28 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
   useEffect(() => {
     if (!images || images.length === 0) return
 
-    const newItems: MasonryItem[] = images.map(img => ({
-      id: `work-gallery-${img.id}`,
-      img: img.image_url,
-      height: getRandomHeight(),
+    // Deduplicate images by URL to prevent duplicate images in gallery
+    const seenUrls = new Set<string>()
+    const uniqueImages = images.filter((img) => {
+      if (seenUrls.has(img.image_url)) {
+        return false
+      }
+      seenUrls.add(img.image_url)
+      return true
+    })
+
+    // Use gallery variant for faster grid loading
+    const newItems: MasonryItem[] = uniqueImages.map((img, index) => ({
+      id: `work-gallery-${img.id || index}`,
+      img: getGridImageUrl(img.image_url), // Use optimized gallery variant
+      originalUrl: img.image_url, // Keep original for lightbox
+      height: getDefaultHeight(),
       loaded: false
     }))
 
     setMasonryItems(newItems)
 
-    // Trigger dimension loading
+    // Trigger dimension loading for all items
     newItems.forEach(item => {
       updateItemDimensions(item)
     })
@@ -136,9 +173,9 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
         <Masonry
           items={masonryItems}
           animateFrom="bottom"
-          scaleOnHover={true}
-          hoverScale={0.98}
-          blurToFocus={true}
+          scaleOnHover={false}
+          hoverScale={1}
+          blurToFocus={false}
           colorShiftOnHover={false}
           stagger={0.05}
           onItemClick={handleImageClick}
@@ -151,6 +188,22 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm touch-none"
           onClick={() => setLightboxOpen(false)}
         >
+          {/* Preload adjacent images with full quality for instant navigation */}
+          {images.length > 1 && (
+            <>
+              <link 
+                rel="preload" 
+                as="image" 
+                href={getFullImageUrl(images[(currentIndex + 1) % images.length].image_url)} 
+              />
+              <link 
+                rel="preload" 
+                as="image" 
+                href={getFullImageUrl(images[(currentIndex - 1 + images.length) % images.length].image_url)} 
+              />
+            </>
+          )}
+          
           {/* Close button - larger touch target on mobile */}
           <button
             onClick={() => setLightboxOpen(false)}
@@ -174,15 +227,19 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
             </button>
           )}
 
-          {/* Image container */}
+          {/* Image container - using native img for instant full-quality loading */}
           <div 
-            className="relative max-w-[95vw] md:max-w-[90vw] max-h-[85vh] md:max-h-[90vh] flex items-center justify-center px-12 md:px-16"
+            className="relative w-[90vw] h-[80vh] md:w-[85vw] md:h-[85vh] flex items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={images[currentIndex].image_url}
+              src={getFullImageUrl(images[currentIndex].image_url)}
               alt={images[currentIndex].alt_text || `Gallery image ${currentIndex + 1}`}
-              className="max-w-full max-h-[85vh] md:max-h-[90vh] object-contain rounded-lg shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+              className="max-w-full max-h-full object-contain rounded-lg shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
             />
           </div>
 

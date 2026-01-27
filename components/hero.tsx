@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowUpRight } from "lucide-react"
 import { motion } from "framer-motion"
 
@@ -35,16 +36,26 @@ export default function Hero() {
     }
   }, [])
 
-  // Self-hosted video for better caching and no CDN costs
-  const videoUrl = "/Final_Web.mp4"
+  // Self-hosted video from R2
+  const videoUrl = "https://assets.imaginesl.com/Final_Web.mp4"
 
   return (
     <section className="relative min-h-dvh h-dvh bg-black overflow-hidden">
       
+      {/* Poster Image - Visible immediately, high priority */}
+      <Image
+        src="/hero-poster.jpg"
+        alt="Imagine Entertainment showreel placeholder"
+        fill
+        className={`object-cover transition-opacity duration-1000 ${videoReady ? 'opacity-0' : 'opacity-100'}`}
+        priority
+        quality={90}
+      />
+      
       {/* Video - Fades in when ready */}
       <video
         ref={videoRef}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${videoReady ? 'opacity-100' : 'opacity-0'}`}
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${videoReady ? 'opacity-100' : 'opacity-0'}`}
         autoPlay
         loop
         muted
@@ -52,7 +63,7 @@ export default function Hero() {
         preload="auto"
         aria-label="Imagine Entertainment showreel"
       >
-        <source src={videoUrl} type="video/mp4" />
+        <source src="https://assets.imaginesl.com/Final_Web_optimized.mp4" type="video/mp4" />
       </video>
       
       {/* Gradient Overlay */}

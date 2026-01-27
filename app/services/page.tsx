@@ -2,14 +2,12 @@
 
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowRight, ArrowUpRight } from "lucide-react"
 import Footer from "@/components/footer"
 import PublicLayout from "@/components/layouts/public-layout"
 
-// Cloudinary base URL
-const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-const getCloudinaryUrl = (publicId: string) => 
-  `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto/${publicId}.jpg`
+import { getCloudflareImageUrl } from "@/lib/config"
 
 const services = [
   {
@@ -25,7 +23,7 @@ const services = [
       "Hybrid & Virtual Events",
       "Total Studio Production",
     ],
-    image: getCloudinaryUrl("corporate_ka9aei"),
+    image: getCloudflareImageUrl("784ec4d5-b17a-44e2-8ac3-972109413c00"),
   },
   {
     number: "02",
@@ -41,14 +39,14 @@ const services = [
       "Animated TV & Films",
       "Televised Theatre & Performing Arts",
     ],
-    image: getCloudinaryUrl("TV_FILM_p7a2sm"),
+    image: getCloudflareImageUrl("1b106750-e725-4a0c-d2b8-060dbad77f00"),
   },
   {
     number: "03",
     title: "Musical Concert",
     description: "Full production services for concerts, festivals, and music events of all scales.",
     items: ["Concerts & Tours", "Music Festivals", "Dance Music Events", "Classical Music Concerts"],
-    image: getCloudinaryUrl("music_efyntt"),
+    image: getCloudflareImageUrl("8c4d5f4d-010e-497c-7195-4459bacc4e00"),
   },
   {
     number: "04",
@@ -60,14 +58,14 @@ const services = [
       "Pyrotechnics & Special Effects Rigging",
       "Custom Rigging Solutions",
     ],
-    image: getCloudinaryUrl("rigging_sjkbut"),
+    image: getCloudflareImageUrl("8fc88259-8e13-411d-b9f1-bb4d3decf700"),
   },
   {
     number: "05",
     title: "Public, Sports & Major Events",
     description: "Large-scale event production for public gatherings, sporting events, and ceremonies.",
     items: ["Sporting Events", "Public Events", "Opening & Closing Ceremonies"],
-    image: getCloudinaryUrl("public_sports_zzrust"),
+    image: getCloudflareImageUrl("dbe466bb-2212-495c-123b-50739c819700"),
   },
   {
     number: "06",
@@ -81,7 +79,7 @@ const services = [
       "Rehearsal, Recording & Post-Production Facilities",
       "End-to-End Technical Production Management",
     ],
-    image: getCloudinaryUrl("inhouse_fxds5f"),
+    image: getCloudflareImageUrl("8c11d2f0-c4ec-4dec-a0c3-a8be93f6fa00"),
   },
   {
     number: "07",
@@ -97,7 +95,7 @@ const services = [
       "Destination Weddings & Luxury Experiences",
       "Themed & Cultural Wedding Productions",
     ],
-    image: getCloudinaryUrl("weddings_e86ttg"),
+    image: getCloudflareImageUrl("f0616e1b-ee30-472c-279e-b618e6149000"),
   },
 ]
 
@@ -122,7 +120,7 @@ export default function ServicesPage() {
                     isLoaded ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
                   }`}
                 >
-                  <span style={{ color: "var(--brand-orange)" }}>//</span>WHAT WE DO
+                  <span style={{ color: "var(--brand-orange)" }}>{'//'}</span>WHAT WE DO
                 </p>
               </div>
               <h1>
@@ -166,7 +164,7 @@ export default function ServicesPage() {
         <div className="max-w-[1400px] mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 mb-12">
             <div>
-              <p className="text-muted-foreground text-xs tracking-[0.15em] mb-3"><span style={{ color: "var(--brand-orange)" }}>//</span>Technical Services</p>
+              <p className="text-muted-foreground text-xs tracking-[0.15em] mb-3"><span style={{ color: "var(--brand-orange)" }}>{'//'}</span>Technical Services</p>
               <h2 className="text-2xl md:text-3xl font-medium">Full Production Support</h2>
             </div>
             <div className="lg:self-end">
@@ -253,10 +251,13 @@ function ServiceCard({ service, index }: { service: (typeof services)[0]; index:
 
       <div className="order-1 lg:order-2">
         <div className="relative overflow-hidden aspect-4/3 bg-muted rounded-xl group">
-          <img
+          <Image
             src={service.image || "/placeholder.svg"}
             alt={service.title}
-            className="w-full h-full object-cover img-scale"
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-700"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            unoptimized
           />
         </div>
       </div>
@@ -313,15 +314,17 @@ function ServicesCTASection() {
     return () => observer.disconnect()
   }, [])
 
-  const ctaImageUrl = `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto/dramatic-concert-stage-lighting-dark-atmospheric-p_h5ck3u.jpg`
+  const ctaImageUrl = getCloudflareImageUrl("76891f87-aef5-469a-a32b-a57f54d43e00")
 
   return (
     <section ref={ref} className="relative py-28 md:py-36 overflow-hidden mx-4 md:mx-6 mt-16 rounded-2xl">
       <div className="absolute inset-0 bg-foreground dark:bg-black">
-        <img
+        <Image
           src={ctaImageUrl}
           alt="Production"
-          className="w-full h-full object-cover opacity-30 dark:opacity-50"
+          fill
+          className="object-cover opacity-30 dark:opacity-50"
+          unoptimized
         />
       </div>
       <div className="absolute inset-0 bg-black/40 dark:bg-black/70" />
@@ -339,7 +342,7 @@ function ServicesCTASection() {
           }`}
           style={{ transitionDelay: "0.1s" }}
         >
-          Let's create something extraordinary
+          Let&apos;s create something extraordinary
         </h2>
         <div 
           className={`transition-all duration-700 ${

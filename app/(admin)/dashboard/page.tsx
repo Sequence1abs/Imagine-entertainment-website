@@ -1,5 +1,5 @@
 "use client";
-
+import Image from "next/image";
 import {
   Card,
   CardContent,
@@ -432,13 +432,12 @@ function TopCountries({ data }: { data: AnalyticsData }) {
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-3">
                       <div className="relative w-6 h-4 overflow-hidden rounded-sm border bg-muted group">
-                        <img
+                        <Image
                           src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`}
                           alt={country.country}
-                          className="object-cover w-full h-full"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://flagcdn.com/w40/un.png';
-                          }}
+                          fill
+                          className="object-cover"
+                          sizes="24px"
                         />
                       </div>
                       <span>{country.country}</span>
@@ -541,7 +540,7 @@ function AnalyticsDashboard() {
             <p>Please check your Cloudflare credentials in <code>.env.local</code>:</p>
             <ul className="list-disc pl-5 space-y-1">
               <li><code>CLOUDFLARE_ZONE_ID</code></li>
-              <li><code>CLOUDFLARE_API_TOKEN</code> (Ensure it has "Analytics:Read" permissions)</li>
+              <li><code>CLOUDFLARE_API_TOKEN</code> (Ensure it has &quot;Analytics:Read&quot; permissions)</li>
             </ul>
             <Button
               variant="outline"

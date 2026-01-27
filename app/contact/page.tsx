@@ -2,9 +2,11 @@
 
 import { useEffect, useState, useRef } from "react"
 import type React from "react"
+import Image from "next/image"
 import { ArrowRight, ChevronDown, Check } from "lucide-react"
 import Footer from "@/components/footer"
 import PublicLayout from "@/components/layouts/public-layout"
+import { getCloudflareImageUrl } from "@/lib/config"
 
 const projectTypes = [
   { value: "corporate", label: "Corporate" },
@@ -31,12 +33,13 @@ export default function ContactPage() {
       {/* Hero Section with Image */}
       <section className="relative min-h-[60vh] md:min-h-[70vh] bg-foreground dark:bg-black text-white overflow-hidden flex items-end">
         <div className="absolute inset-0">
-          <img
-            src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto,w_1920/IMG-2854_ywimbk.jpg`}
+          <Image
+            src={getCloudflareImageUrl("a2ef7192-cc3c-46ff-a961-425f7c25b400")}
             alt="Let's talk"
-            className="w-full h-full object-cover opacity-40 dark:opacity-70"
-            loading="eager"
-            fetchPriority="high"
+            fill
+            className="object-cover opacity-40 dark:opacity-70"
+            priority
+            unoptimized
           />
           <div className="absolute inset-0 bg-linear-to-t from-foreground via-foreground/60 to-foreground/40 dark:from-black/90 dark:via-black/70 dark:to-black/50" />
           <div className="absolute inset-0 bg-black/40 dark:bg-black/50" />
@@ -46,12 +49,12 @@ export default function ContactPage() {
           <div className="max-w-3xl">
             <div className="mb-3">
               <p className="text-white/50 dark:text-white/70 text-xs tracking-[0.15em]">
-                <span style={{ color: "var(--brand-orange)" }}>//</span>GET IN TOUCH
+                <span style={{ color: "var(--brand-orange)" }}>{'//'}</span>GET IN TOUCH
               </p>
             </div>
             <h1>
               <span className="block text-4xl md:text-5xl lg:text-6xl font-medium leading-[1.1] text-white dark:text-white">
-                Let's Create Something
+                Let&apos;s Create Something
                 <br />
                 <span className="italic font-normal text-white/80 dark:text-white/70">Extraordinary</span>
               </span>
@@ -81,7 +84,7 @@ export default function ContactPage() {
                   }`}
                   style={{ transitionDelay: "0.3s" }}
                 >
-                  <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4"><span style={{ color: "var(--brand-orange)" }}>//</span>Email</p>
+                  <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4"><span style={{ color: "var(--brand-orange)" }}>{'//'}</span>Email</p>
                   <a
                     href="mailto:sales@imaginesl.com"
                     className="text-2xl md:text-3xl font-medium hover:text-muted-foreground transition-colors"
@@ -96,7 +99,7 @@ export default function ContactPage() {
                   }`}
                   style={{ transitionDelay: "0.4s" }}
                 >
-                  <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4"><span style={{ color: "var(--brand-orange)" }}>//</span>Phone</p>
+                  <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4"><span style={{ color: "var(--brand-orange)" }}>{'//'}</span>Phone</p>
                   <a
                     href="tel:+94718933514"
                     className="text-2xl md:text-3xl font-medium hover:text-muted-foreground transition-colors"
@@ -111,7 +114,7 @@ export default function ContactPage() {
                   }`}
                   style={{ transitionDelay: "0.5s" }}
                 >
-                  <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4"><span style={{ color: "var(--brand-orange)" }}>//</span>Location</p>
+                  <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4"><span style={{ color: "var(--brand-orange)" }}>{'//'}</span>Location</p>
                   <address className="text-lg font-medium not-italic leading-relaxed">
                     <p>No : 97 Delkanda,</p>
                     <p>Old Kesbewa Road,</p>
@@ -128,7 +131,7 @@ export default function ContactPage() {
                 }`}
                 style={{ transitionDelay: "0.6s" }}
               >
-                <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4"><span style={{ color: "var(--brand-orange)" }}>//</span>Follow Us</p>
+                <p className="text-xs tracking-[0.15em] text-muted-foreground mb-4"><span style={{ color: "var(--brand-orange)" }}>{'//'}</span>Follow Us</p>
                 <div className="flex gap-3">
                   {/* Facebook */}
                   <a
@@ -208,8 +211,8 @@ export default function ContactPage() {
                 <div className="relative z-10">
                   {/* Form Header */}
                   <div className="mb-8">
-                    <h2 className="text-2xl md:text-3xl font-medium mb-3">Got ideas? Let's bring them to life.</h2>
-                    <p className="text-muted-foreground text-sm md:text-base">Tell us about your project and we'll get back to you within 24 hours.</p>
+                    <h2 className="text-2xl md:text-3xl font-medium mb-3">Got ideas? Let&apos;s bring them to life.</h2>
+                    <p className="text-muted-foreground text-sm md:text-base">Tell us about your project and we&apos;ll get back to you within 24 hours.</p>
                   </div>
                   
                   <ContactForm />

@@ -1,6 +1,8 @@
-import Navigation from "@/components/navigation"
+"use client"
+
 import { CookieConsent } from "@/components/cookie-consent"
 import CursorProvider from "@/components/cursor-provider"
+import NavigationWrapper from "@/components/navigation-wrapper"
 
 export default function PublicLayout({
   children,
@@ -10,7 +12,7 @@ export default function PublicLayout({
   return (
     <>
       <CursorProvider />
-      <Navigation />
+      <NavigationWrapper />
       {children}
       <CookieConsent />
     </>

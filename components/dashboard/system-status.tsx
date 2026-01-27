@@ -23,7 +23,7 @@ export function SystemStatus() {
       name: "Image Storage",
       status: "checking",
       icon: Cloud,
-      description: "Cloudinary CDN"
+      description: "Cloudflare Images"
     },
     {
       name: "API Server",
@@ -40,24 +40,32 @@ export function SystemStatus() {
       try {
         const res = await fetch('/api/keep-alive', { method: 'GET' })
         const dbLatency = Math.round(performance.now() - dbStart)
-        setServices(prev => prev.map(s => 
-          s.name === "Database" 
+        setServices(prev => prev.map(s =>
+          s.name === "Database"
             ? { ...s, status: res.ok ? "online" : "offline", latency: dbLatency }
             : s
         ))
       } catch {
-        setServices(prev => prev.map(s => 
+        setServices(prev => prev.map(s =>
           s.name === "Database" ? { ...s, status: "offline" } : s
         ))
       }
 
-      // Check Cloudinary (via env check - if configured, assume online)
-      const cloudinaryConfigured = !!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-      setServices(prev => prev.map(s => 
-        s.name === "Image Storage" 
-          ? { ...s, status: cloudinaryConfigured ? "online" : "offline" }
-          : s
-      ))
+      // Check Image Storage (Cloudflare Images)
+      const imageStart = performance.now()
+      try {
+        const res = await fetch('/api/health/cloudflare-images', { method: 'GET' })
+        const imageLatency = Math.round(performance.now() - imageStart)
+        setServices(prev => prev.map(s =>
+          s.name === "Image Storage"
+            ? { ...s, status: res.ok ? "online" : "offline", latency: imageLatency }
+            : s
+        ))
+      } catch {
+        setServices(prev => prev.map(s =>
+          s.name === "Image Storage" ? { ...s, status: "offline" } : s
+        ))
+      }
 
       // Check API Server (self-check)
       const apiStart = performance.now()

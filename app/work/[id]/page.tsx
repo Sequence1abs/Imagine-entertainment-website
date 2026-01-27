@@ -83,11 +83,14 @@ export default async function WorkDetailPage({ params }: WorkDetailPageProps) {
               fill
               className="object-cover opacity-50 dark:opacity-60"
               priority
+              quality={90}
+              fetchPriority="high"
+              sizes="100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground via-foreground/60 to-transparent dark:from-black/90 dark:via-black/60 dark:to-transparent" />
           </div>
 
-          <div className="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-10 pb-16 md:pb-20">
+          <div className="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-10 pb-8 md:pb-10">
             {/* Back Link */}
             <Link 
               href="/work" 
@@ -129,7 +132,7 @@ export default async function WorkDetailPage({ params }: WorkDetailPageProps) {
 
         {/* Gallery Grid */}
         {event.event_images && event.event_images.length > 0 && (
-          <section className="py-16 md:py-24 px-6 md:px-10">
+          <section className="pt-8 md:pt-12 pb-16 md:pb-24 px-6 md:px-10">
             <div className="max-w-[1400px] mx-auto">
               <h2 className="text-2xl md:text-3xl font-medium mb-8">Project Gallery</h2>
               <WorkGallery images={event.event_images} />
@@ -140,8 +143,8 @@ export default async function WorkDetailPage({ params }: WorkDetailPageProps) {
         {/* CTA Section */}
         <section className="mt-16 md:mt-24 py-16 md:py-24 px-6 md:px-10 bg-muted mx-4 md:mx-6 rounded-2xl text-center mb-16">
           <div className="max-w-[1400px] mx-auto">
-            <p className="text-muted-foreground text-xs tracking-[0.15em] mb-4">//Like What You See?</p>
-            <h2 className="text-2xl md:text-4xl font-medium mb-6">Let's create something extraordinary</h2>
+            <p className="text-muted-foreground text-xs tracking-[0.15em] mb-4">{'//'}Like What You See?</p>
+            <h2 className="text-2xl md:text-4xl font-medium mb-6">Let&apos;s create something extraordinary</h2>
             <Link
               href="/contact"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background text-lg font-medium hover:bg-foreground/90 transition-colors"

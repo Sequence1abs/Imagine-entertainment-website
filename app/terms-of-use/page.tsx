@@ -58,7 +58,7 @@ export default function TermsOfUse() {
               <section>
                 <h2 className="text-2xl font-semibold mb-4">4. Limitation of Liability</h2>
                 <p className="text-muted-foreground">
-                  Imagine Entertainment (Pvt) Ltd shall not be liable for any direct, indirect, incidental, consequential, to punitive damages arising out of your access to or use of this website. We make no warranties or representations about the accuracy or completeness of this site's content.
+                  Imagine Entertainment (Pvt) Ltd shall not be liable for any direct, indirect, incidental, consequential, to punitive damages arising out of your access to or use of this website. We make no warranties or representations about the accuracy or completeness of this site&apos;s content.
                 </p>
               </section>
 

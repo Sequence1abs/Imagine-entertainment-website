@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { useTheme } from "next-themes"
 import { socialLinks } from "@/lib/socials"
 import { motion, useInView } from "framer-motion"
@@ -84,11 +85,14 @@ export default function Footer() {
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
           >
-            <img
-              src={logoSource}
-              alt="Imagine Entertainment"
-              className="h-16 md:h-20 w-auto mb-4 transition-all duration-300"
-            />
+            <div className="relative h-16 md:h-20 w-48 mb-4">
+              <Image
+                src={logoSource}
+                alt="Imagine Entertainment"
+                fill
+                className="object-contain object-left"
+              />
+            </div>
             <p className="text-foreground/90 text-base font-medium mb-2">
               Bringing stories to life
             </p>

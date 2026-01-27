@@ -248,9 +248,14 @@ export default function RootLayout({
         ═══════════════════════════════════════════════════════════════════════
       */}
       <head>
-        {/* Preconnect to critical third-party origins */}
-        <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        {/* Preconnect to critical domains */}
+        <link rel="preconnect" href="https://assets.imaginesl.com" />
+        <link rel="preconnect" href="https://images.imaginesl.com" />
+        <link rel="preconnect" href="https://imagedelivery.net" />
+        <link rel="dns-prefetch" href="https://assets.imaginesl.com" />
+        <link rel="dns-prefetch" href="https://images.imaginesl.com" />
+        <link rel="dns-prefetch" href="https://imagedelivery.net" />
+        <link rel="preload" href="/hero-poster.jpg" as="image" />
       </head>
       <body className={cn("font-sans antialiased overflow-x-hidden", outfit.variable)} suppressHydrationWarning>
         <ConsoleWatermark />
