@@ -22,7 +22,7 @@
   "kv_namespaces": [
     {
       "binding": "NEXT_CACHE_WORKERS_KV",
-      "id": "create-namespace-id"
+      "id": "ac4637955cad426eb200168a23c17b4b"
     }
   ],
   "r2_buckets": [
