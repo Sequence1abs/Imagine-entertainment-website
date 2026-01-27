@@ -3,7 +3,14 @@
   "main": ".open-next/worker.js",
   "compatibility_date": "2024-09-23",
   "compatibility_flags": [
-    "nodejs_compat"
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ],
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "imagine-entertainment-website"
+    }
   ],
   "workers_dev": false,
   "preview_urls": false,
@@ -30,15 +37,9 @@
     "NEXT_PUBLIC_R2_DEV_URL": "https://pub-381b9410b47e4afca7a3ceafc36b57ef.r2.dev",
     "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-MHYFQXZ7L1"
   },
-  "kv_namespaces": [
-    {
-      "binding": "NEXT_CACHE_WORKERS_KV",
-      "id": "ac4637955cad426eb200168a23c17b4b"
-    }
-  ],
   "r2_buckets": [
     {
-      "binding": "NEXT_CACHE_WORKERS_R2",
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
       "bucket_name": "imagine-next-cache"
     },
     {
