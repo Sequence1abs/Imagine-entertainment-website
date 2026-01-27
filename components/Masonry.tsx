@@ -139,7 +139,7 @@ const Masonry: React.FC<MasonryProps> = ({
     const columnWidth = (width - (columns - 1) * gap) / columns;
     const colHeights = new Array(columns).fill(0);
 
-    return items.map(child => {
+    const gridItems = items.map(child => {
       // Find the shortest column
       const col = colHeights.indexOf(Math.min(...colHeights));
       
@@ -159,87 +159,100 @@ const Masonry: React.FC<MasonryProps> = ({
 
       return { ...child, x, y, w: columnWidth, h: height };
     });
+
+    // Store the max height for container calculation
+    return gridItems;
   }, [columns, items, width]);
 
   const hasMounted = useRef(false);
 
-  // Calculate container height based on tallest column
+  // Calculate container height based on tallest column from grid items
   const containerHeight = useMemo(() => {
-    if (grid.length === 0 || !width) return 0
-    const gap = 12
-    const columnWidth = (width - (columns - 1) * gap) / columns
-    const colHeights = new Array(columns).fill(0)
+    if (grid.length === 0 || !width) return 0;
     
-    // Recalculate column heights from grid items
+    // Find the maximum bottom position of all items
+    let maxHeight = 0;
     grid.forEach(item => {
-      const col = Math.round(item.x / (columnWidth + gap))
-      if (col >= 0 && col < columns) {
-        colHeights[col] = Math.max(colHeights[col], item.y + item.h)
+      const bottom = item.y + item.h;
+      if (bottom > maxHeight) {
+        maxHeight = bottom;
       }
-    })
+    });
     
-    return Math.max(...colHeights, 0) + 20 // Add some padding
-  }, [grid, columns, width])
+    return maxHeight + 20; // Add some padding
+  }, [grid, width]);
 
   const animatedIds = useRef<Set<string>>(new Set());
 
   useLayoutEffect(() => {
-    if (grid.length === 0) return;
+    if (grid.length === 0) {
+      // Clean up refs when grid is empty
+      itemRefs.current.clear();
+      return;
+    }
 
-    // Wait a frame to ensure all refs are set
-    requestAnimationFrame(() => {
-    grid.forEach((item, index) => {
-        const element = itemRefs.current.get(item.id);
-        if (!element) return;
-
-      const animationProps = {
-        x: item.x,
-        y: item.y,
-        width: item.w,
-        height: item.h
-      };
-
-      const isNewItem = !animatedIds.current.has(item.id);
-
-      if (isNewItem) {
-        // It's a new item (or first load), animate entry
-        const initialPos = getInitialPosition(item);
-        const initialState = {
-          opacity: 0,
-          x: initialPos.x,
-          y: initialPos.y,
-          width: item.w,
-          height: item.h,
-          ...(blurToFocus && { filter: 'blur(10px)' })
-        };
-
-        // Set initial state immediately
-        gsap.set(element, initialState);
-        
-        // Animate to final position
-        gsap.to(element, {
-          opacity: 1,
-          ...animationProps,
-          ...(blurToFocus && { filter: 'blur(0px)' }),
-          duration: 0.8,
-          ease: 'power3.out',
-          delay: isNewItem ? (index % columns) * stagger : 0 
-        });
-
-        // Mark as animated
-        animatedIds.current.add(item.id);
-      } else {
-        // Existing item update (resize or reorder)
-        gsap.to(element, {
-          ...animationProps,
-          duration: duration,
-          ease: ease,
-          overwrite: 'auto'
-        });
+    // Clean up animatedIds for items that are no longer in the grid
+    const currentIds = new Set(grid.map(item => item.id));
+    animatedIds.current.forEach(id => {
+      if (!currentIds.has(id)) {
+        animatedIds.current.delete(id);
       }
     });
 
-    hasMounted.current = true;
+    // Wait a frame to ensure all refs are set
+    requestAnimationFrame(() => {
+      grid.forEach((item, index) => {
+        const element = itemRefs.current.get(item.id);
+        if (!element) return;
+
+        const animationProps = {
+          x: item.x,
+          y: item.y,
+          width: item.w,
+          height: item.h
+        };
+
+        const isNewItem = !animatedIds.current.has(item.id);
+
+        if (isNewItem) {
+          // It's a new item (or first load), animate entry
+          const initialPos = getInitialPosition(item);
+          const initialState = {
+            opacity: 0,
+            x: initialPos.x,
+            y: initialPos.y,
+            width: item.w,
+            height: item.h,
+            ...(blurToFocus && { filter: 'blur(10px)' })
+          };
+
+          // Set initial state immediately
+          gsap.set(element, initialState);
+          
+          // Animate to final position
+          gsap.to(element, {
+            opacity: 1,
+            ...animationProps,
+            ...(blurToFocus && { filter: 'blur(0px)' }),
+            duration: 0.8,
+            ease: 'power3.out',
+            delay: isNewItem ? (index % columns) * stagger : 0 
+          });
+
+          // Mark as animated
+          animatedIds.current.add(item.id);
+        } else {
+          // Existing item update (resize or reorder)
+          gsap.to(element, {
+            ...animationProps,
+            duration: duration,
+            ease: ease,
+            overwrite: 'auto'
+          });
+        }
+      });
+
+      hasMounted.current = true;
     });
   }, [grid, stagger, animateFrom, blurToFocus, duration, ease, columns, getInitialPosition]);
 
@@ -293,7 +306,11 @@ const Masonry: React.FC<MasonryProps> = ({
     <div 
       ref={containerRef} 
       className="list"
-      style={{ height: containerHeight > 0 ? `${containerHeight}px` : 'auto' }}
+      style={{ 
+        height: containerHeight > 0 ? `${containerHeight}px` : 'auto',
+        minHeight: grid.length > 0 ? '400px' : '0px',
+        position: 'relative'
+      }}
     >
       {grid.map((item, index) => {
         const isPriority = index < 12; // First 12 images get priority loading
