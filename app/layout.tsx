@@ -273,7 +273,6 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://assets.imaginesl.com" />
         <link rel="dns-prefetch" href="https://images.imaginesl.com" />
         <link rel="dns-prefetch" href="https://imagedelivery.net" />
-        <link rel="preload" href="/hero-poster.jpg" as="image" />
       </head>
       <body className={cn("font-sans antialiased overflow-x-hidden", outfit.variable)} suppressHydrationWarning>
         <ConsoleWatermark />

@@ -42,13 +42,13 @@ export default function Hero() {
   return (
     <section className="relative min-h-dvh h-dvh bg-black overflow-hidden">
       
-      {/* Poster Image - Visible immediately, high priority */}
+      {/* Poster Image - Loads after nav/layout so navigation shows first */}
       <Image
         src="/hero-poster.jpg"
         alt="Imagine Entertainment showreel placeholder"
         fill
         className={`object-cover transition-opacity duration-1000 ${videoReady ? 'opacity-0' : 'opacity-100'}`}
-        priority
+        priority={false}
         quality={90}
       />
       
