@@ -252,7 +252,7 @@ function LeadershipSection() {
           {/* Image - Grayscale to Color on Hover */}
           <div className="relative aspect-[3/4] mb-8 overflow-hidden rounded-lg">
             <Image
-              src={getCloudflareImageUrl("5e7f2167-7bae-42f5-daad-9e5b18dc6c00")}
+              src={getCloudflareImageUrl("5e7f2167-7bae-42f5-daad-9e5b18dc6c00", "gallery")}
               alt="Mr. Sajith Morawaka Kodikara - Managing Director of Imagine Entertainment, leading the company with 37 years of industry experience"
               fill
               className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
@@ -279,7 +279,7 @@ function LeadershipSection() {
           {/* Image - Grayscale to Color on Hover */}
           <div className="relative aspect-[3/4] mb-8 overflow-hidden rounded-lg">
             <Image
-              src={getCloudflareImageUrl("3d8e6193-32c0-4b3a-de76-4b73f5eb4100")}
+              src={getCloudflareImageUrl("3d8e6193-32c0-4b3a-de76-4b73f5eb4100", "gallery")}
               alt="Mr. Sandun Morawaka Kodikara - Director of Imagine Entertainment, co-leading the company's vision and creative direction"
               fill
               className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
@@ -382,7 +382,7 @@ function TeamSection() {
       >
         <div className="relative aspect-video md:aspect-auto md:h-[80vh]">
           <Image
-            src={getCloudflareImageUrl("b67aeb66-8df2-4c4a-5f68-3561c72a5a00")}
+            src={getCloudflareImageUrl("b67aeb66-8df2-4c4a-5f68-3561c72a5a00", "hero")}
             alt="Our House"
             fill
             className="object-cover"

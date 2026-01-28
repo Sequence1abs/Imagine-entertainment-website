@@ -21,7 +21,8 @@ export function CTASection() {
     return () => observer.disconnect()
   }, [])
 
-  const ctaImageUrl = getCloudflareImageUrl("76891f87-aef5-469a-a32b-a57f54d43e00")
+  // Use hero variant: large enough for full-width background, smaller than original.
+  const ctaImageUrl = getCloudflareImageUrl("76891f87-aef5-469a-a32b-a57f54d43e00", "hero")
 
   return (
     <section ref={ref} className="relative h-[45vh] md:h-[60vh] overflow-hidden mx-4 md:mx-6 rounded-2xl">

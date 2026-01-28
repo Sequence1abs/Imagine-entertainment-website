@@ -35,9 +35,9 @@ const transformUrl = (url: string, variant: 'public' | 'thumbnail' = 'public'): 
   }
 }
 
-// Use public variant for both (guaranteed to exist)
-// Note: If you configure 'thumbnail' variant in Cloudflare, you can use it for grid
-const getGridImageUrl = (url: string) => transformUrl(url, 'public')
+// Use a smaller variant for the masonry grid, and full/public for lightbox.
+// NOTE: 'thumbnail' must be configured in Cloudflare Images (small width, lower quality).
+const getGridImageUrl = (url: string) => transformUrl(url, 'thumbnail')
 const getFullImageUrl = (url: string) => transformUrl(url, 'public')
 
 export default function WorkGallery({ images }: WorkGalleryProps) {

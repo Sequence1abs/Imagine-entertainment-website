@@ -14,7 +14,7 @@ const services = [
     title: "Corporate Events",
     eventType: "Corporate",
     filterCategory: "Corporate",
-    image: getCloudflareImageUrl("784ec4d5-b17a-44e2-8ac3-972109413c00"),
+    image: getCloudflareImageUrl("784ec4d5-b17a-44e2-8ac3-972109413c00", "gallery"),
     span: "md:col-span-1",
   },
   {
@@ -22,7 +22,7 @@ const services = [
     title: "Television & Film Production",
     eventType: "Television & Film",
     filterCategory: "Television & Film",
-    image: getCloudflareImageUrl("1b106750-e725-4a0c-d2b8-060dbad77f00"),
+    image: getCloudflareImageUrl("1b106750-e725-4a0c-d2b8-060dbad77f00", "gallery"),
     span: "md:col-span-1",
   },
   {
@@ -30,7 +30,7 @@ const services = [
     title: "Musical Concert",
     eventType: "Musical Concert",
     filterCategory: "Music",
-    image: getCloudflareImageUrl("8c4d5f4d-010e-497c-7195-4459bacc4e00"),
+    image: getCloudflareImageUrl("8c4d5f4d-010e-497c-7195-4459bacc4e00", "gallery"),
     span: "md:col-span-2",
   },
   {
@@ -38,7 +38,7 @@ const services = [
     title: "Rigging Services",
     eventType: "Rigging",
     filterCategory: "Rigging Services",
-    image: getCloudflareImageUrl("8fc88259-8e13-411d-b9f1-bb4d3decf700"),
+    image: getCloudflareImageUrl("8fc88259-8e13-411d-b9f1-bb4d3decf700", "gallery"),
     span: "md:col-span-1",
   },
   {
@@ -46,7 +46,7 @@ const services = [
     title: "In-House Studio",
     eventType: "In-House Studio",
     filterCategory: "In-House Studio",
-    image: getCloudflareImageUrl("8c11d2f0-c4ec-4dec-a0c3-a8be93f6fa00"),
+    image: getCloudflareImageUrl("8c11d2f0-c4ec-4dec-a0c3-a8be93f6fa00", "gallery"),
     span: "md:col-span-1",
   },
   {
@@ -54,7 +54,7 @@ const services = [
     title: "Public, Sports & Major Events",
     eventType: "Public/Sports Events",
     filterCategory: "Public/Sports Events",
-    image: getCloudflareImageUrl("dbe466bb-2212-495c-123b-50739c819700"),
+    image: getCloudflareImageUrl("dbe466bb-2212-495c-123b-50739c819700", "gallery"),
     span: "md:col-span-2",
   },
   {
@@ -62,7 +62,7 @@ const services = [
     title: "Weddings & Private Celebrations",
     eventType: "Weddings & Private Celebrations",
     filterCategory: "Weddings & Private Celebrations",
-    image: getCloudflareImageUrl("f0616e1b-ee30-472c-279e-b618e6149000"),
+    image: getCloudflareImageUrl("f0616e1b-ee30-472c-279e-b618e6149000", "gallery"),
     span: "md:col-span-1",
   },
 ]

@@ -33,7 +33,8 @@ export default function ContactPage() {
       <section className="relative min-h-[60vh] md:min-h-[70vh] bg-foreground dark:bg-black text-white overflow-hidden flex items-end">
         <div className="absolute inset-0">
           <Image
-            src={getCloudflareImageUrl("a2ef7192-cc3c-46ff-a961-425f7c25b400")}
+            // Use hero variant for the full-width contact hero background.
+            src={getCloudflareImageUrl("a2ef7192-cc3c-46ff-a961-425f7c25b400", "hero")}
             alt="Let's talk"
             fill
             className="object-cover opacity-40 dark:opacity-70"

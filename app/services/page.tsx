@@ -23,7 +23,7 @@ const services = [
       "Hybrid & Virtual Events",
       "Total Studio Production",
     ],
-    image: getCloudflareImageUrl("784ec4d5-b17a-44e2-8ac3-972109413c00"),
+    image: getCloudflareImageUrl("784ec4d5-b17a-44e2-8ac3-972109413c00", "gallery"),
   },
   {
     number: "02",
@@ -39,14 +39,14 @@ const services = [
       "Animated TV & Films",
       "Televised Theatre & Performing Arts",
     ],
-    image: getCloudflareImageUrl("1b106750-e725-4a0c-d2b8-060dbad77f00"),
+    image: getCloudflareImageUrl("1b106750-e725-4a0c-d2b8-060dbad77f00", "gallery"),
   },
   {
     number: "03",
     title: "Musical Concert",
     description: "Full production services for concerts, festivals, and music events of all scales.",
     items: ["Concerts & Tours", "Music Festivals", "Dance Music Events", "Classical Music Concerts"],
-    image: getCloudflareImageUrl("8c4d5f4d-010e-497c-7195-4459bacc4e00"),
+    image: getCloudflareImageUrl("8c4d5f4d-010e-497c-7195-4459bacc4e00", "gallery"),
   },
   {
     number: "04",
@@ -58,14 +58,14 @@ const services = [
       "Pyrotechnics & Special Effects Rigging",
       "Custom Rigging Solutions",
     ],
-    image: getCloudflareImageUrl("8fc88259-8e13-411d-b9f1-bb4d3decf700"),
+    image: getCloudflareImageUrl("8fc88259-8e13-411d-b9f1-bb4d3decf700", "gallery"),
   },
   {
     number: "05",
     title: "Public, Sports & Major Events",
     description: "Large-scale event production for public gatherings, sporting events, and ceremonies.",
     items: ["Sporting Events", "Public Events", "Opening & Closing Ceremonies"],
-    image: getCloudflareImageUrl("dbe466bb-2212-495c-123b-50739c819700"),
+    image: getCloudflareImageUrl("dbe466bb-2212-495c-123b-50739c819700", "gallery"),
   },
   {
     number: "06",
@@ -79,7 +79,7 @@ const services = [
       "Rehearsal, Recording & Post-Production Facilities",
       "End-to-End Technical Production Management",
     ],
-    image: getCloudflareImageUrl("8c11d2f0-c4ec-4dec-a0c3-a8be93f6fa00"),
+    image: getCloudflareImageUrl("8c11d2f0-c4ec-4dec-a0c3-a8be93f6fa00", "gallery"),
   },
   {
     number: "07",
@@ -95,7 +95,7 @@ const services = [
       "Destination Weddings & Luxury Experiences",
       "Themed & Cultural Wedding Productions",
     ],
-    image: getCloudflareImageUrl("f0616e1b-ee30-472c-279e-b618e6149000"),
+    image: getCloudflareImageUrl("f0616e1b-ee30-472c-279e-b618e6149000", "gallery"),
   },
 ]
 
@@ -314,7 +314,7 @@ function ServicesCTASection() {
     return () => observer.disconnect()
   }, [])
 
-  const ctaImageUrl = getCloudflareImageUrl("76891f87-aef5-469a-a32b-a57f54d43e00")
+  const ctaImageUrl = getCloudflareImageUrl("76891f87-aef5-469a-a32b-a57f54d43e00", "hero")
 
   return (
     <section ref={ref} className="relative py-28 md:py-36 overflow-hidden mx-4 md:mx-6 mt-16 rounded-2xl">
