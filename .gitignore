@@ -17,6 +17,7 @@
 
 # misc
 .DS_Store
+nul
 *.pem
 .env
 .env.local

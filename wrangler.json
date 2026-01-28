@@ -37,6 +37,13 @@
     "NEXT_PUBLIC_R2_DEV_URL": "https://pub-381b9410b47e4afca7a3ceafc36b57ef.r2.dev",
     "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-MHYFQXZ7L1"
   },
+  "d1_databases": [
+    {
+      "binding": "NEXT_TAG_CACHE_D1",
+      "database_id": "11ca2214-bb62-418e-8cb5-7f0f710aedba",
+      "database_name": "imagine-next-tag-cache"
+    }
+  ],
   "r2_buckets": [
     {
       "binding": "NEXT_INC_CACHE_R2_BUCKET",

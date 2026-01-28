@@ -1,0 +1,15 @@
+diff --git a/node_modules/@opennextjs/cloudflare/dist/cli/build/patches/ast/patch-vercel-og-library.js b/node_modules/@opennextjs/cloudflare/dist/cli/build/patches/ast/patch-vercel-og-library.js
+index e877b2d..51c614b 100644
+--- a/node_modules/@opennextjs/cloudflare/dist/cli/build/patches/ast/patch-vercel-og-library.js
++++ b/node_modules/@opennextjs/cloudflare/dist/cli/build/patches/ast/patch-vercel-og-library.js
+@@ -11,6 +11,10 @@ import { patchVercelOgFallbackFont, patchVercelOgImport } from "./vercel-og.js";
+  * @returns Whether the @vercel/og library is used.
+  */
+ export function patchVercelOgLibrary(buildOpts) {
++    // Skip @vercel/og when OPENNEXT_DISABLE_OG=1 (avoids resvg.wasm missing file on Cloudflare deploy).
++    if (process.env.OPENNEXT_DISABLE_OG === "1" || process.env.OPENNEXT_DISABLE_OG === "true") {
++        return false;
++    }
+     const { appBuildOutputPath, outputDir } = buildOpts;
+     const functionsPath = path.join(outputDir, "server-functions/default");
+     const packagePath = path.join(functionsPath, getPackagePath(buildOpts));

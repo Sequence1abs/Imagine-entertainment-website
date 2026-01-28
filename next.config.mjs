@@ -6,6 +6,19 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // Keep @vercel/og out of the server bundle (we use static OG images via metadata only).
+  // Reduces Worker size for Cloudflare's 3 MiB free-tier limit.
+  serverExternalPackages: ['@vercel/og'],
+  // Exclude @vercel/og from file tracing so OpenNext sets useOg=false and externals it
+  // (~2.2 MB saved). We only use static metadata openGraph images, not ImageResponse.
+  // Exclude both the JS and WASM files to prevent Wrangler from trying to resolve them.
+  outputFileTracingExcludes: {
+    '/*': [
+      'node_modules/next/dist/compiled/@vercel/og/**',
+      '**/resvg.wasm',
+      '**/yoga.wasm',
+    ],
+  },
   // Enable compression
   compress: true,
   // Disable source maps in production for smaller bundles
