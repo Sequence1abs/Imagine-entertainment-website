@@ -63,7 +63,19 @@ interface MasonryProps {
   blurToFocus?: boolean;
   colorShiftOnHover?: boolean;
   onItemClick?: (item: Item, index: number) => void;
+  /** Pinterest-style infinite loading: show only this many items initially (default 18) */
+  initialBatchSize?: number;
+  /** How many items to add per load-more (default 12) */
+  batchSize?: number;
+  /** When provided, Masonry calls this when user scrolls near bottom (controlled / API mode). */
+  onLoadMore?: () => void;
+  /** In controlled mode (onLoadMore), set to false when no more data (hides sentinel) */
+  hasMore?: boolean;
+  /** When true and onLoadMore not provided, only show initial batch and reveal more on scroll (full list must be passed in items). Default false. */
+  batchInternally?: boolean;
 }
+
+const SENTINEL_HEIGHT = 120;
 
 const Masonry: React.FC<MasonryProps> = ({
   items,
@@ -75,7 +87,12 @@ const Masonry: React.FC<MasonryProps> = ({
   hoverScale = 0.95,
   blurToFocus = true,
   colorShiftOnHover = false,
-  onItemClick
+  onItemClick,
+  initialBatchSize = 18,
+  batchSize = 12,
+  onLoadMore,
+  hasMore: hasMoreProp,
+  batchInternally = false
 }) => {
   useEffect(() => {
     gsap.config({ nullTargetWarn: false });
@@ -90,6 +107,55 @@ const Masonry: React.FC<MasonryProps> = ({
   const [containerRef, { width }] = useMeasure<HTMLDivElement>();
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const itemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  // Pinterest-style infinite loading: controlled (onLoadMore) or internal batching (batchInternally)
+  const isControlled = typeof onLoadMore === 'function';
+  const [visibleCount, setVisibleCount] = useState(() =>
+    Math.min(initialBatchSize, items.length)
+  );
+  const visibleItems = useMemo(() => {
+    if (isControlled) return items;
+    if (batchInternally) return items.slice(0, visibleCount);
+    return items;
+  }, [isControlled, batchInternally, items, visibleCount]);
+  const hasMore = isControlled
+    ? (hasMoreProp ?? true)
+    : batchInternally
+      ? visibleCount < items.length
+      : false;
+
+  // Sync visible count when items load or shrink (only when using internal batching)
+  useEffect(() => {
+    if (!batchInternally || isControlled) return;
+    if (items.length === 0) return;
+    setVisibleCount((prev) => {
+      if (prev > items.length) return Math.min(initialBatchSize, items.length);
+      if (prev === 0) return Math.min(initialBatchSize, items.length);
+      return prev;
+    });
+  }, [batchInternally, isControlled, items.length, initialBatchSize]);
+
+  // Intersection Observer: load more when sentinel enters viewport
+  useEffect(() => {
+    if (!hasMore) return;
+    const el = sentinelRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0].isIntersecting) return;
+        if (isControlled) {
+          onLoadMore?.();
+        } else if (batchInternally) {
+          setVisibleCount((prev) => Math.min(prev + batchSize, items.length));
+        }
+      },
+      { root: null, rootMargin: '200px', threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasMore, isControlled, batchInternally, onLoadMore, batchSize, items.length]);
   
   // Track which images have loaded
   const handleImageLoad = useCallback((id: string) => {
@@ -139,7 +205,7 @@ const Masonry: React.FC<MasonryProps> = ({
     const MAX_ASPECT = 2.5;
     const BASE_WIDTH = 400;
 
-    const gridItems = items.map(child => {
+    const gridItems = visibleItems.map(child => {
       // Find the shortest column
       const col = colHeights.indexOf(Math.min(...colHeights));
       
@@ -161,11 +227,11 @@ const Masonry: React.FC<MasonryProps> = ({
     });
 
     return gridItems;
-  }, [columns, items, width]);
+  }, [columns, visibleItems, width]);
 
   const hasMounted = useRef(false);
 
-  // Calculate container height based on tallest column from grid items
+  // Calculate container height based on tallest column from grid items (+ sentinel area for infinite scroll)
   const containerHeight = useMemo(() => {
     if (grid.length === 0 || !width) return 0;
     
@@ -178,8 +244,9 @@ const Masonry: React.FC<MasonryProps> = ({
       }
     });
     
-    return maxHeight + 20; // Add some padding
-  }, [grid, width]);
+    const baseHeight = maxHeight + 20; // Add some padding
+    return baseHeight + (hasMore ? SENTINEL_HEIGHT : 0);
+  }, [grid, width, hasMore]);
 
   const animatedIds = useRef<Set<string>>(new Set());
 
@@ -388,6 +455,22 @@ const Masonry: React.FC<MasonryProps> = ({
           </div>
         );
       })}
+      {/* Sentinel: when this enters viewport, load more (Pinterest-style infinite scroll) */}
+      {hasMore && (
+        <div
+          ref={sentinelRef}
+          className="masonry-sentinel"
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: containerHeight - SENTINEL_HEIGHT,
+            width: '100%',
+            height: SENTINEL_HEIGHT,
+            pointerEvents: 'none'
+          }}
+          aria-hidden="true"
+        />
+      )}
     </div>
   );
 };

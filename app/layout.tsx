@@ -264,13 +264,20 @@ export default function RootLayout({
       <head>
         {/* Prevent iOS from auto-linking phone/email/date which can cause hydration mismatch */}
         <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
-        {/* Preconnect to critical domains */}
+        {/* Preconnect to critical domains for faster first request (content delivery + load distribution) */}
         <link rel="preconnect" href="https://assets.imaginesl.com" />
         <link rel="preconnect" href="https://images.imaginesl.com" />
         <link rel="preconnect" href="https://imagedelivery.net" />
         <link rel="dns-prefetch" href="https://assets.imaginesl.com" />
         <link rel="dns-prefetch" href="https://images.imaginesl.com" />
         <link rel="dns-prefetch" href="https://imagedelivery.net" />
+        {/* Supabase (API/database) - warm connection for faster data fetches */}
+        {process.env.NEXT_PUBLIC_SUPABASE_URL && (
+          <>
+            <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} />
+            <link rel="dns-prefetch" href={process.env.NEXT_PUBLIC_SUPABASE_URL} />
+          </>
+        )}
         <link rel="preload" href="/Imagine_logo_white_long.png" as="image" />
       </head>
       <body className={cn("font-sans antialiased overflow-x-hidden", outfit.variable)} suppressHydrationWarning>

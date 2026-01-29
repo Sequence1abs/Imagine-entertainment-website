@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
+import { fetchWithRetry } from "@/lib/fetch-with-retry"
 
 export type ServiceStatusState = "checking" | "online" | "offline" | "degraded"
 
@@ -26,10 +27,10 @@ async function checkAllServices(): Promise<ServiceStatusItem[]> {
     latency: undefined,
   }))
 
-  // Check Database (Supabase)
+  // Check Database (Supabase) - retry on transient failure
   const dbStart = performance.now()
   try {
-    const res = await fetch("/api/keep-alive", { method: "GET" })
+    const res = await fetchWithRetry("/api/keep-alive", { method: "GET" })
     const dbLatency = Math.round(performance.now() - dbStart)
     const idx = results.findIndex((s) => s.name === "Database")
     if (idx >= 0) {
@@ -44,10 +45,10 @@ async function checkAllServices(): Promise<ServiceStatusItem[]> {
     if (idx >= 0) results[idx] = { ...results[idx], status: "offline" }
   }
 
-  // Check Image Storage (Cloudflare Images)
+  // Check Image Storage (Cloudflare Images) - retry on transient failure
   const imageStart = performance.now()
   try {
-    const res = await fetch("/api/health/cloudflare-images", { method: "GET" })
+    const res = await fetchWithRetry("/api/health/cloudflare-images", { method: "GET" })
     const imageLatency = Math.round(performance.now() - imageStart)
     const idx = results.findIndex((s) => s.name === "Image Storage")
     if (idx >= 0) {
@@ -62,10 +63,10 @@ async function checkAllServices(): Promise<ServiceStatusItem[]> {
     if (idx >= 0) results[idx] = { ...results[idx], status: "offline" }
   }
 
-  // Check API Server (self-check)
+  // Check API Server (self-check) - retry on transient failure
   const apiStart = performance.now()
   try {
-    const res = await fetch("/api/events", { method: "GET" })
+    const res = await fetchWithRetry("/api/events", { method: "GET" })
     const apiLatency = Math.round(performance.now() - apiStart)
     const idx = results.findIndex((s) => s.name === "API Server")
     if (idx >= 0) {

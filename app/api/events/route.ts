@@ -16,7 +16,7 @@ export async function GET() {
     console.error('Error in /api/events:', error)
     return NextResponse.json(
       { events: [], error: 'Failed to fetch events', success: false },
-      { status: 500 }
+      { status: 500, headers: { 'Cache-Control': 'private, no-store, max-age=0' } }
     )
   }
 }

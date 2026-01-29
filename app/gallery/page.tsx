@@ -2,6 +2,7 @@ import { Suspense } from "react"
 import { getAllGalleryImages } from "@/lib/data/events"
 import GalleryClient from "./gallery-client"
 import PublicLayout from "@/components/layouts/public-layout"
+import { MasonrySkeleton } from "@/components/loading"
 
 // Server component - fetches data on server for faster initial load.
 // Revalidates on-demand when events/images are updated (see API routes).
@@ -60,8 +61,8 @@ export default async function GalleryPage() {
           </div>
 
           <Suspense fallback={
-            <div className="min-h-[600px] flex items-center justify-center">
-              <div className="text-muted-foreground">Loading gallery...</div>
+            <div className="min-h-[600px] w-full">
+              <MasonrySkeleton minHeight={600} showSpinner />
             </div>
           }>
             <GalleryClient initialImages={images} />

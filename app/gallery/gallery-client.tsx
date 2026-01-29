@@ -1,9 +1,8 @@
 "use client"
 
-import { useEffect, useState, useRef, useCallback } from "react"
+import { useEffect, useState, useCallback } from "react"
 import Masonry from "@/components/Masonry"
-
-const LOAD_MORE_COUNT = 15
+import { MasonrySkeleton } from "@/components/loading"
 
 // Transform URL to use Cloudflare Images delivery domain
 // Use 'public' variant which always exists (thumbnail/gallery may not be configured)
@@ -59,13 +58,13 @@ export default function GalleryClient({ initialImages }: GalleryClientProps) {
     loaded?: boolean
   }
 
+  const INITIAL_BATCH = 18
+  const LOAD_MORE_BATCH = 12
+
   const [allImages] = useState<string[]>(initialImages)
-  const [allItems, setAllItems] = useState<MasonryItem[]>([])
   const [masonryItems, setMasonryItems] = useState<MasonryItem[]>([])
   const [dimensionsResolving, setDimensionsResolving] = useState(true)
-  const [displayedCount, setDisplayedCount] = useState(20)
-  const [hasMore, setHasMore] = useState(true)
-  const observerTarget = useRef<HTMLDivElement>(null)
+  const [loadingMore, setLoadingMore] = useState(false)
 
   const normalizeUrl = useCallback((url: string): string => {
     if (!url) return ''
@@ -79,7 +78,7 @@ export default function GalleryClient({ initialImages }: GalleryClientProps) {
     }
   }, [])
 
-  // Resolve all image dimensions for the current slice before ever rendering Masonry
+  // Resolve image dimensions for a slice (Pinterest-style: only resolve what we need)
   const resolveItemsWithDimensions = useCallback(
     async (urls: string[]): Promise<MasonryItem[]> => {
       const seenUrls = new Set<string>()
@@ -108,64 +107,45 @@ export default function GalleryClient({ initialImages }: GalleryClientProps) {
     [normalizeUrl]
   )
 
-  // Resolve all image dimensions once up front so Masonry always receives final heights
+  // Resolve only first batch so we don't load all images at once (Pinterest-style)
   useEffect(() => {
     if (initialImages.length === 0) {
-      setAllItems([])
       setMasonryItems([])
-      setHasMore(false)
       setDimensionsResolving(false)
       return
     }
     let cancelled = false
     setDimensionsResolving(true)
-    resolveItemsWithDimensions(initialImages).then((items) => {
-      if (!cancelled) {
-        setAllItems(items)
-        setDimensionsResolving(false)
-      }
-    })
+    const firstBatch = initialImages.slice(0, INITIAL_BATCH)
+    resolveItemsWithDimensions(firstBatch)
+      .then((items) => {
+        if (!cancelled) {
+          setMasonryItems(items)
+          setDimensionsResolving(false)
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setMasonryItems([])
+          setDimensionsResolving(false)
+        }
+      })
     return () => { cancelled = true }
   }, [initialImages, resolveItemsWithDimensions])
 
-  // Derive currently visible masonry items from the fully-dimensioned list
-  useEffect(() => {
-    if (allItems.length === 0) {
-      setMasonryItems([])
-      setHasMore(false)
-      return
+  const loadMore = useCallback(async () => {
+    if (loadingMore || masonryItems.length >= initialImages.length) return
+    const start = masonryItems.length
+    const batch = initialImages.slice(start, start + LOAD_MORE_BATCH)
+    if (batch.length === 0) return
+    setLoadingMore(true)
+    try {
+      const nextItems = await resolveItemsWithDimensions(batch)
+      setMasonryItems((prev) => [...prev, ...nextItems])
+    } finally {
+      setLoadingMore(false)
     }
-    const next = allItems.slice(0, Math.min(displayedCount, allItems.length))
-    setMasonryItems(next)
-    setHasMore(next.length < allItems.length)
-  }, [allItems, displayedCount])
-
-  // Load more images
-  const loadMore = useCallback(() => {
-    if (displayedCount >= allItems.length) {
-      setHasMore(false)
-      return
-    }
-    setDisplayedCount(prev => Math.min(prev + LOAD_MORE_COUNT, allItems.length))
-  }, [displayedCount, allItems.length])
-
-  // Intersection Observer for infinite scroll
-  useEffect(() => {
-    const currentTarget = observerTarget.current
-    if (!currentTarget || !hasMore) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          loadMore()
-        }
-      },
-      { threshold: 0.1, rootMargin: '400px' }
-    )
-
-    observer.observe(currentTarget)
-    return () => observer.disconnect()
-  }, [hasMore, loadMore])
+  }, [initialImages, masonryItems.length, loadingMore, resolveItemsWithDimensions])
 
   if (initialImages.length === 0) {
     return (
@@ -175,45 +155,39 @@ export default function GalleryClient({ initialImages }: GalleryClientProps) {
     )
   }
 
+  // Show skeleton whenever we're loading or have no items yet (never show empty black area)
+  const showSkeleton = dimensionsResolving || masonryItems.length === 0
+  const showMasonry = masonryItems.length > 0
+
   return (
     <>
-      <div className="min-h-[600px]">
-        {dimensionsResolving ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" aria-hidden="true">
-            {Array.from({ length: Math.min(displayedCount, 12) }).map((_, i) => (
-              <div
-                key={`skeleton-${i}`}
-                className="rounded-xl bg-muted/40 animate-pulse"
-                style={{ aspectRatio: i % 3 === 0 ? '3/4' : i % 3 === 1 ? '1' : '4/3', minHeight: 120 }}
-              />
-            ))}
-          </div>
-        ) : masonryItems.length > 0 ? (
-          <Masonry
-            items={masonryItems}
-            animateFrom="bottom"
-            scaleOnHover={false}
-            hoverScale={1}
-            blurToFocus={false}
-            colorShiftOnHover={false}
-            stagger={0.02}
-          />
-        ) : null}
+      <div className="min-h-[600px] w-full">
+        {showSkeleton && (
+          <MasonrySkeleton minHeight={500} ariaBusy={dimensionsResolving} showSpinner />
+        )}
+        {showMasonry && (
+          <>
+            <Masonry
+              items={masonryItems}
+              animateFrom="bottom"
+              scaleOnHover={false}
+              hoverScale={1}
+              blurToFocus={false}
+              colorShiftOnHover={false}
+              stagger={0.02}
+              initialBatchSize={INITIAL_BATCH}
+              batchSize={LOAD_MORE_BATCH}
+              onLoadMore={loadMore}
+              hasMore={masonryItems.length < initialImages.length}
+            />
+            {masonryItems.length >= initialImages.length && (
+              <div className="flex items-center justify-center py-8">
+                <p className="text-muted-foreground text-sm">All images loaded</p>
+              </div>
+            )}
+          </>
+        )}
       </div>
-      
-      {hasMore && (
-        <div 
-          ref={observerTarget} 
-          className="flex items-center justify-center py-12 w-full h-20"
-          aria-hidden="true"
-        />
-      )}
-      
-      {!hasMore && masonryItems.length > 0 && (
-        <div className="flex items-center justify-center py-8">
-          <p className="text-muted-foreground text-sm">All images loaded</p>
-        </div>
-      )}
     </>
   )
 }

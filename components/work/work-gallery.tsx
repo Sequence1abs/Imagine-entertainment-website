@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
 import Masonry from "@/components/Masonry"
+import { MasonrySkeleton } from "@/components/loading"
 
 interface WorkGalleryProps {
   images: Array<{
@@ -51,8 +52,12 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
     originalUrl?: string // Store original for lightbox
   }
 
+  const BATCH_SIZE = 12
+  const INITIAL_BATCH = 18
+
   const [masonryItems, setMasonryItems] = useState<MasonryItem[]>([])
   const [dimensionsResolving, setDimensionsResolving] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -73,32 +78,38 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
     })
   }
 
-  // Resolve all image dimensions before ever rendering Masonry so the grid is correct from first paint
-  const resolveItemsWithDimensions = useCallback(async (imageList: Array<{ id: string; image_url: string }>): Promise<MasonryItem[]> => {
-    const seenUrls = new Set<string>()
-    const unique = imageList.filter((img) => {
-      if (seenUrls.has(img.image_url)) return false
-      seenUrls.add(img.image_url)
-      return true
-    })
-    const withHeights = await Promise.all(
-      unique.map(async (img, index) => {
-        const id = `work-gallery-${img.id || index}`
-        const imgUrl = getGridImageUrl(img.image_url)
-        try {
-          const dims = await getImageDimensions(imgUrl)
-          const aspectRatio = dims.height / dims.width
-          const height = MASONRY_BASE_WIDTH * aspectRatio
-          return { id, img: imgUrl, originalUrl: img.image_url, height, loaded: true } as MasonryItem
-        } catch {
-          return { id, img: imgUrl, originalUrl: img.image_url, height: 300, loaded: true } as MasonryItem
-        }
+  // Resolve image dimensions for a slice (Pinterest-style: only resolve what we need)
+  const resolveItemsWithDimensions = useCallback(
+    async (
+      imageList: Array<{ id: string; image_url: string }>,
+      idOffset = 0
+    ): Promise<MasonryItem[]> => {
+      const seenUrls = new Set<string>()
+      const unique = imageList.filter((img) => {
+        if (seenUrls.has(img.image_url)) return false
+        seenUrls.add(img.image_url)
+        return true
       })
-    )
-    return withHeights
-  }, [])
+      const withHeights = await Promise.all(
+        unique.map(async (img, index) => {
+          const id = `work-gallery-${img.id || idOffset + index}`
+          const imgUrl = getGridImageUrl(img.image_url)
+          try {
+            const dims = await getImageDimensions(imgUrl)
+            const aspectRatio = dims.height / dims.width
+            const height = MASONRY_BASE_WIDTH * aspectRatio
+            return { id, img: imgUrl, originalUrl: img.image_url, height, loaded: true } as MasonryItem
+          } catch {
+            return { id, img: imgUrl, originalUrl: img.image_url, height: 300, loaded: true } as MasonryItem
+          }
+        })
+      )
+      return withHeights
+    },
+    []
+  )
 
-  // Only set masonry items after dimensions are resolved so Masonry never sees placeholder heights
+  // Resolve only the first batch so we don't load all images at once (Pinterest-style)
   useEffect(() => {
     if (!images || images.length === 0) {
       setMasonryItems([])
@@ -107,14 +118,36 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
     }
     let cancelled = false
     setDimensionsResolving(true)
-    resolveItemsWithDimensions(images).then((items) => {
-      if (!cancelled) {
-        setMasonryItems(items)
-        setDimensionsResolving(false)
-      }
-    })
+    const firstBatch = images.slice(0, INITIAL_BATCH)
+    resolveItemsWithDimensions(firstBatch, 0)
+      .then((items) => {
+        if (!cancelled) {
+          setMasonryItems(items)
+          setDimensionsResolving(false)
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setMasonryItems([])
+          setDimensionsResolving(false)
+        }
+      })
     return () => { cancelled = true }
   }, [images, resolveItemsWithDimensions])
+
+  const loadMore = useCallback(async () => {
+    if (loadingMore || masonryItems.length >= images.length) return
+    const start = masonryItems.length
+    const batch = images.slice(start, start + BATCH_SIZE)
+    if (batch.length === 0) return
+    setLoadingMore(true)
+    try {
+      const nextItems = await resolveItemsWithDimensions(batch, start)
+      setMasonryItems((prev) => [...prev, ...nextItems])
+    } finally {
+      setLoadingMore(false)
+    }
+  }, [images, masonryItems.length, loadingMore, resolveItemsWithDimensions])
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -124,9 +157,9 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
       if (e.key === 'Escape') {
         setLightboxOpen(false)
       } else if (e.key === 'ArrowLeft') {
-        setCurrentIndex(prev => (prev > 0 ? prev - 1 : images.length - 1))
+        setCurrentIndex(prev => (prev > 0 ? prev - 1 : masonryItems.length - 1))
       } else if (e.key === 'ArrowRight') {
-        setCurrentIndex(prev => (prev < images.length - 1 ? prev + 1 : 0))
+        setCurrentIndex(prev => (prev < masonryItems.length - 1 ? prev + 1 : 0))
       }
     }
 
@@ -138,7 +171,7 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
       document.removeEventListener('keydown', handleKeyDown)
       document.body.style.overflow = ''
     }
-  }, [lightboxOpen, images.length])
+  }, [lightboxOpen, masonryItems.length])
 
   const handleImageClick = useCallback((_item: any, index: number) => {
     setCurrentIndex(index)
@@ -146,11 +179,11 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
   }, [])
 
   const goToPrevious = () => {
-    setCurrentIndex(prev => (prev > 0 ? prev - 1 : images.length - 1))
+    setCurrentIndex(prev => (prev > 0 ? prev - 1 : masonryItems.length - 1))
   }
 
   const goToNext = () => {
-    setCurrentIndex(prev => (prev < images.length - 1 ? prev + 1 : 0))
+    setCurrentIndex(prev => (prev < masonryItems.length - 1 ? prev + 1 : 0))
   }
 
   if (!images || images.length === 0) {
@@ -161,15 +194,7 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
     <>
       <div className="min-h-[400px]">
         {dimensionsResolving ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" aria-hidden="true">
-            {Array.from({ length: Math.min(images.length, 8) }).map((_, i) => (
-              <div
-                key={`skeleton-${i}`}
-                className="rounded-xl bg-muted/40 animate-pulse"
-                style={{ aspectRatio: i % 3 === 0 ? '3/4' : i % 3 === 1 ? '1' : '4/3', minHeight: 120 }}
-              />
-            ))}
-          </div>
+          <MasonrySkeleton minHeight={400} itemCount={12} showSpinner />
         ) : masonryItems.length > 0 ? (
           <Masonry
             items={masonryItems}
@@ -180,28 +205,32 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
             colorShiftOnHover={false}
             stagger={0.05}
             onItemClick={handleImageClick}
+            initialBatchSize={INITIAL_BATCH}
+            batchSize={BATCH_SIZE}
+            onLoadMore={loadMore}
+            hasMore={masonryItems.length < images.length}
           />
         ) : null}
       </div>
 
-      {/* Lightbox Modal */}
-      {lightboxOpen && images[currentIndex] && (
+      {/* Lightbox Modal - uses loaded masonry items */}
+      {lightboxOpen && masonryItems[currentIndex] && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm touch-none"
           onClick={() => setLightboxOpen(false)}
         >
           {/* Preload adjacent images with full quality for instant navigation */}
-          {images.length > 1 && (
+          {masonryItems.length > 1 && (
             <>
               <link 
                 rel="preload" 
                 as="image" 
-                href={getFullImageUrl(images[(currentIndex + 1) % images.length].image_url)} 
+                href={getFullImageUrl(masonryItems[(currentIndex + 1) % masonryItems.length].originalUrl ?? masonryItems[(currentIndex + 1) % masonryItems.length].img)} 
               />
               <link 
                 rel="preload" 
                 as="image" 
-                href={getFullImageUrl(images[(currentIndex - 1 + images.length) % images.length].image_url)} 
+                href={getFullImageUrl(masonryItems[(currentIndex - 1 + masonryItems.length) % masonryItems.length].originalUrl ?? masonryItems[(currentIndex - 1 + masonryItems.length) % masonryItems.length].img)} 
               />
             </>
           )}
@@ -216,7 +245,7 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
           </button>
 
           {/* Previous button - positioned for mobile touch */}
-          {images.length > 1 && (
+          {masonryItems.length > 1 && (
             <button
               onClick={(e) => {
                 e.stopPropagation()
@@ -236,8 +265,8 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={getFullImageUrl(images[currentIndex].image_url)}
-              alt={images[currentIndex].alt_text || `Gallery image ${currentIndex + 1}`}
+              src={getFullImageUrl(masonryItems[currentIndex].originalUrl ?? masonryItems[currentIndex].img)}
+              alt={images.find(i => i.image_url === (masonryItems[currentIndex].originalUrl ?? masonryItems[currentIndex].img))?.alt_text ?? `Gallery image ${currentIndex + 1}`}
               className="max-w-full max-h-full object-contain rounded-lg shadow-2xl animate-in fade-in zoom-in-95 duration-200"
               loading="eager"
               decoding="async"
@@ -246,7 +275,7 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
           </div>
 
           {/* Next button - positioned for mobile touch */}
-          {images.length > 1 && (
+          {masonryItems.length > 1 && (
             <button
               onClick={(e) => {
                 e.stopPropagation()
@@ -260,9 +289,9 @@ export default function WorkGallery({ images }: WorkGalleryProps) {
           )}
 
           {/* Image counter - positioned above bottom safe area on mobile */}
-          {images.length > 1 && (
+          {masonryItems.length > 1 && (
             <div className="absolute bottom-6 md:bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-white/10 text-white text-sm font-medium">
-              {currentIndex + 1} / {images.length}
+              {currentIndex + 1} / {masonryItems.length}
             </div>
           )}
         </div>

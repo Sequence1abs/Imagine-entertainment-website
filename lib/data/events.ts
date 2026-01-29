@@ -8,62 +8,72 @@ import { deleteFromCloudflareImages } from '@/lib/actions/cloudflare-delete'
 // Get all published events (for public /work page)
 // Optimized to only fetch needed fields for faster queries
 export async function getPublishedEvents(): Promise<Event[]> {
-  const supabase = createAdminClient()
+  try {
+    const supabase = createAdminClient()
 
-  const { data, error } = await supabase
-    .from('events')
-    .select('id, title, category, cover_image_url, event_date, location, description, is_published, created_at, updated_at')
-    .eq('is_published', true)
-    .order('event_date', { ascending: false })
+    const { data, error } = await supabase
+      .from('events')
+      .select('id, title, category, cover_image_url, event_date, location, description, is_published, created_at, updated_at')
+      .eq('is_published', true)
+      .order('event_date', { ascending: false })
 
-  if (error) {
-    console.error('Error fetching published events:', error)
+    if (error) {
+      console.error('Error fetching published events:', error)
+      return []
+    }
+
+    return (data || []) as Event[]
+  } catch (e) {
+    console.error('Error in getPublishedEvents:', e)
     return []
   }
-
-  return (data || []) as Event[]
 }
 
 // Get single event by ID (for public /work/[id] page)
 export async function getEventById(id: string): Promise<EventWithImages | null> {
-  const supabase = createAdminClient()
+  try {
+    const supabase = createAdminClient()
 
-  const { data, error } = await supabase
-    .from('events')
-    .select(`
-      *,
-      event_images (*)
-    `)
-    .eq('id', id)
-    .single()
+    const { data, error } = await supabase
+      .from('events')
+      .select(`
+        *,
+        event_images (*)
+      `)
+      .eq('id', id)
+      .single()
 
-  if (error) {
-    // Only log if it's a real error (not just "not found")
-    if (error.message && error.code !== 'PGRST116') {
-      console.error('Error fetching event:', error.message)
-    }
-    return null
-  }
-
-  if (!data) {
-    return null
-  }
-
-  // Deduplicate event_images by image_url to prevent duplicate images in gallery
-  const eventData = data as EventWithImages
-  if (eventData.event_images && eventData.event_images.length > 0) {
-    const seenUrls = new Set<string>()
-    const uniqueImages = eventData.event_images.filter((img) => {
-      if (seenUrls.has(img.image_url)) {
-        return false
+    if (error) {
+      // Only log if it's a real error (not just "not found")
+      if (error.message && error.code !== 'PGRST116') {
+        console.error('Error fetching event:', error.message)
       }
-      seenUrls.add(img.image_url)
-      return true
-    })
-    eventData.event_images = uniqueImages
-  }
+      return null
+    }
 
-  return eventData
+    if (!data) {
+      return null
+    }
+
+    // Deduplicate event_images by image_url to prevent duplicate images in gallery
+    const eventData = data as EventWithImages
+    if (eventData.event_images && eventData.event_images.length > 0) {
+      const seenUrls = new Set<string>()
+      const uniqueImages = eventData.event_images.filter((img) => {
+        if (seenUrls.has(img.image_url)) {
+          return false
+        }
+        seenUrls.add(img.image_url)
+        return true
+      })
+      eventData.event_images = uniqueImages
+    }
+
+    return eventData
+  } catch (e) {
+    console.error('Error in getEventById:', e)
+    return null
+  }
 }
 
 /**
@@ -77,31 +87,32 @@ export async function getEventById(id: string): Promise<EventWithImages | null> 
  * Deduplicates images by URL to ensure each unique image appears only once
  */
 export async function getAllGalleryImages(): Promise<string[]> {
-  const supabase = createAdminClient()
+  try {
+    const supabase = createAdminClient()
 
-  // Get standalone gallery images (uploaded via dashboard with 'gallery_' prefix)
-  const { data: galleryImages, error: galleryError } = await supabase
-    .from('gallery_images')
-    .select('image_url, created_at')
-    .order('created_at', { ascending: false })
+    // Get standalone gallery images (uploaded via dashboard with 'gallery_' prefix)
+    const { data: galleryImages, error: galleryError } = await supabase
+      .from('gallery_images')
+      .select('image_url, created_at')
+      .order('created_at', { ascending: false })
 
-  if (galleryError) {
-    console.error('Error fetching gallery_images:', galleryError)
-  }
+    if (galleryError) {
+      console.error('Error fetching gallery_images:', galleryError)
+    }
 
-  // Get event images from published events (uploaded via dashboard with 'event_' prefix)
-  const { data: eventImages, error: eventError } = await supabase
-    .from('event_images')
-    .select('image_url, created_at, events!inner(is_published)')
-    .eq('events.is_published', true)
-    .order('created_at', { ascending: false })
+    // Get event images from published events (uploaded via dashboard with 'event_' prefix)
+    const { data: eventImages, error: eventError } = await supabase
+      .from('event_images')
+      .select('image_url, created_at, events!inner(is_published)')
+      .eq('events.is_published', true)
+      .order('created_at', { ascending: false })
 
-  if (eventError) {
-    console.error('Error fetching event_images:', eventError)
-  }
+    if (eventError) {
+      console.error('Error fetching event_images:', eventError)
+    }
 
-  // Normalize URL to handle variations (trailing slashes, case sensitivity, Cloudflare variants, etc.)
-  const normalizeUrl = (url: string): string => {
+    // Normalize URL to handle variations (trailing slashes, case sensitivity, Cloudflare variants, etc.)
+    const normalizeUrl = (url: string): string => {
     if (!url) return '';
     try {
       const urlObj = new URL(url);
@@ -150,8 +161,12 @@ export async function getAllGalleryImages(): Promise<string[]> {
     })
   }
 
-  // Convert Map values back to array (preserves original URLs)
-  return Array.from(uniqueImageUrls.values())
+    // Convert Map values back to array (preserves original URLs)
+    return Array.from(uniqueImageUrls.values())
+  } catch (e) {
+    console.error('Error in getAllGalleryImages:', e)
+    return []
+  }
 }
 
 // ============ ADMIN OPERATIONS ============

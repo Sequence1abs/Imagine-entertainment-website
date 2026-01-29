@@ -222,7 +222,9 @@ export async function GET(request: NextRequest) {
   ) || 7;
   if (!zoneId || !apiToken) {
     console.warn("Cloudflare credentials missing in environment variables.");
-    return NextResponse.json(getEmptyData(days));
+    return NextResponse.json(getEmptyData(days), {
+      headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" },
+    });
   }
 
   try {
@@ -295,7 +297,9 @@ export async function GET(request: NextRequest) {
     const zonePrev = resCompare.data?.viewer?.zones?.[0];
 
     if (!zoneCurrent) {
-      return NextResponse.json(getEmptyData(days));
+      return NextResponse.json(getEmptyData(days), {
+        headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" },
+      });
     }
 
     // 4. Transform Data
@@ -462,20 +466,27 @@ export async function GET(request: NextRequest) {
     if (prevTotalViews > 0) pageviewsChange = ((totalPageviews - prevTotalViews) / prevTotalViews) * 100;
     if (prevTotalVisitors > 0) visitorsChange = ((totalVisitors - prevTotalVisitors) / prevTotalVisitors) * 100;
 
-    return NextResponse.json({
-      summary: {
-        pageviews: { total: totalPageviews, change: pageviewsChange },
-        visitors: { total: totalVisitors, change: visitorsChange },
-        bounceRate: { value: 0, change: 0 },
-        avgSessionDuration: { value: 0, change: 0 },
+    return NextResponse.json(
+      {
+        summary: {
+          pageviews: { total: totalPageviews, change: pageviewsChange },
+          visitors: { total: totalVisitors, change: visitorsChange },
+          bounceRate: { value: 0, change: 0 },
+          avgSessionDuration: { value: 0, change: 0 },
+        },
+        traffic: { history },
+        topPages: topPages.length > 0 ? topPages : [],
+        topCountries: topCountries.length > 0 ? topCountries : [],
+        topReferrers: topReferrersFiltered.length > 0 ? topReferrersFiltered : [],
+        devices,
+        browsers: browsers.length > 0 ? browsers : [],
       },
-      traffic: { history },
-      topPages: topPages.length > 0 ? topPages : [],
-      topCountries: topCountries.length > 0 ? topCountries : [],
-      topReferrers: topReferrersFiltered.length > 0 ? topReferrersFiltered : [],
-      devices,
-      browsers: browsers.length > 0 ? browsers : [],
-    });
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        },
+      }
+    );
 
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "Failed to load analytics";
@@ -491,6 +502,13 @@ export async function GET(request: NextRequest) {
       } catch (e) { }
     }
 
-    return NextResponse.json({ ...getEmptyData(30), error: cleanMessage }, { status: 500 });
+    // Return 200 with empty data so monitoring does not count this as an error; error details in body for debugging
+    return NextResponse.json(
+      { ...getEmptyData(30), error: cleanMessage },
+      {
+        status: 200,
+        headers: { "Cache-Control": "private, no-store, max-age=0" },
+      }
+    );
   }
 }

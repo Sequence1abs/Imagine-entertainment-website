@@ -1,4 +1,3 @@
-import { Suspense } from "react"
 import { getPublishedEvents } from "@/lib/data/events"
 import WorkPageClient from "./work-page-client"
 import { Project } from "./types"
@@ -51,13 +50,5 @@ export default async function WorkPage() {
     // Silently fall back to empty state
   }
 
-  return (
-    <Suspense fallback={
-      <main className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-muted-foreground">Loading...</div>
-      </main>
-    }>
-      <WorkPageClient initialProjects={projects} />
-    </Suspense>
-  )
+  return <WorkPageClient initialProjects={projects} />
 }

@@ -3,28 +3,34 @@
 import { useEffect } from "react"
 
 /**
- * Console signature for imaginesl.com — logged on mount with styled “Developed by Sequence Labs”.
+ * Console signature for imaginesl.com — whole signature highlighted on mount.
  */
 export function ConsoleWatermark() {
   useEffect(() => {
-    const line1 = "Imagine Entertainment (Pvt) Ltd"
-    const line2 = "https://www.imaginesl.com"
-    const line3 = "Developed by"
-    const line4 = "Sequence Labs"
-    const line5 = "© 2026 All Rights Reserved"
+    const signature = [
+      "╔══════════════════════════════════════════════════════════════╗",
+      "║     IMAGINE ENTERTAINMENT (PVT) LTD                          ║",
+      "║     https://www.imaginesl.com                               ║",
+      "║                                                              ║",
+      "║     Developed by Sequence Labs                              ║",
+      "║     © 2026 All Rights Reserved                              ║",
+      "╚══════════════════════════════════════════════════════════════╝",
+    ].join("\n")
 
-    const base = "color: #94a3b8; font-size: 11px;"
-    const highlight =
-      "color: #38bdf8; font-size: 13px; font-weight: 700; letter-spacing: 0.02em;"
+    const style = [
+      "background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);",
+      "color: #f4921f;",
+      "font-size: 14px;",
+      "font-weight: 700;",
+      "letter-spacing: 0.04em;",
+      "line-height: 1.6;",
+      "padding: 16px 20px;",
+      "border: 2px solid #f4921f;",
+      "border-radius: 8px;",
+      "text-shadow: 0 0 20px rgba(244, 146, 31, 0.3);",
+    ].join(" ")
 
-    console.log(
-      `\n%c${line1}\n%c${line2}\n\n%c${line3}\n%c${line4}\n\n%c${line5}\n`,
-      base,
-      base,
-      base,
-      highlight,
-      base
-    )
+    console.log("%c%s", style, signature)
   }, [])
 
   return null
