@@ -1,16 +1,16 @@
-import dynamic from "next/dynamic"
+import nextDynamic from "next/dynamic"
 import Hero from "@/components/hero"
 import Footer from "@/components/footer"
 import PublicLayout from "@/components/layouts/public-layout"
 import ClientsMarquee from "@/components/clients-marquee"
 
 // Dynamic imports for client components - they load in parallel after initial render
-const ServicesGrid = dynamic(() => import("@/components/home/services-grid-v2").then(mod => ({ default: mod.ServicesGrid })))
-const StatsSection = dynamic(() => import("@/components/home/stats-section").then(mod => ({ default: mod.StatsSection })))
-const ExpertiseSection = dynamic(() => import("@/components/home/expertise-section").then(mod => ({ default: mod.ExpertiseSection })))
-const StatementReveal = dynamic(() => import("@/components/home/statement-reveal").then(mod => ({ default: mod.StatementReveal })))
-const CTASection = dynamic(() => import("@/components/home/cta-section").then(mod => ({ default: mod.CTASection })))
-const Testimonials = dynamic(() => import("@/components/testimonials"))
+const ServicesGrid = nextDynamic(() => import("@/components/home/services-grid-v2").then(mod => ({ default: mod.ServicesGrid })))
+const StatsSection = nextDynamic(() => import("@/components/home/stats-section").then(mod => ({ default: mod.StatsSection })))
+const ExpertiseSection = nextDynamic(() => import("@/components/home/expertise-section").then(mod => ({ default: mod.ExpertiseSection })))
+const StatementReveal = nextDynamic(() => import("@/components/home/statement-reveal").then(mod => ({ default: mod.StatementReveal })))
+const CTASection = nextDynamic(() => import("@/components/home/cta-section").then(mod => ({ default: mod.CTASection })))
+const Testimonials = nextDynamic(() => import("@/components/testimonials"))
 
 import type { Metadata } from "next"
 
