@@ -7,6 +7,8 @@ import { AppSidebar } from "@/components/dashboard/app-sidebar"
 import { SiteHeader } from "@/components/dashboard/site-header"
 import { LoginForm } from "@/components/dashboard/login-form"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { useUploadQueue } from "@/context/upload-queue"
+import { Loader2 } from "lucide-react"
 
 interface DashboardLayoutClientProps {
   children: React.ReactNode
@@ -57,6 +59,8 @@ const loginVariants = {
 export function DashboardLayoutClient({ children, isAuthenticated, user }: DashboardLayoutClientProps) {
   const [mounted, setMounted] = React.useState(false)
   const pathname = usePathname()
+  const uploadQueue = useUploadQueue()
+  const pendingCount = uploadQueue?.jobs.filter((j) => j.status === 'pending' || j.status === 'uploading_cover' || j.status === 'uploading_gallery').length ?? 0
 
   React.useEffect(() => {
     setMounted(true)
@@ -104,6 +108,12 @@ export function DashboardLayoutClient({ children, isAuthenticated, user }: Dashb
       <SidebarInset className="p-2 overflow-hidden">
         <div className="flex h-[calc(100svh-1rem)] flex-col rounded-xl bg-background overflow-hidden">
           <SiteHeader />
+          {pendingCount > 0 && (
+            <div className="shrink-0 flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary text-sm border-b border-border">
+              <Loader2 className="size-4 animate-spin" />
+              <span>{pendingCount} event{pendingCount !== 1 ? 's' : ''} uploading in background</span>
+            </div>
+          )}
           <div className="flex-1 overflow-y-auto pl-4 pr-4 pb-4 pt-6">
             <AnimatePresence mode="wait">
               <motion.div 

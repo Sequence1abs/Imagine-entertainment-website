@@ -330,6 +330,46 @@ export async function addEventImage(eventId: string, imageUrl: string, altText?:
   return { data, error: null }
 }
 
+// Add multiple event images in one insert (batch)
+export async function addEventImagesBatch(
+  eventId: string,
+  imageUrls: string[]
+): Promise<{ data: EventImage[] | null; error: string | null }> {
+  if (imageUrls.length === 0) {
+    return { data: [], error: null }
+  }
+
+  const supabase = await createClient()
+
+  const { data: existing } = await supabase
+    .from('event_images')
+    .select('display_order')
+    .eq('event_id', eventId)
+    .order('display_order', { ascending: false })
+    .limit(1)
+
+  let nextOrder = existing && existing.length > 0 ? existing[0].display_order + 1 : 0
+
+  const rows = imageUrls.map((imageUrl) => ({
+    event_id: eventId,
+    image_url: imageUrl,
+    alt_text: null,
+    display_order: nextOrder++,
+  }))
+
+  const { data, error } = await supabase
+    .from('event_images')
+    .insert(rows)
+    .select()
+
+  if (error) {
+    console.error('Error adding event images batch:', error)
+    return { data: null, error: error.message }
+  }
+
+  return { data: (data || []) as EventImage[], error: null }
+}
+
 // Delete event image (from Cloudflare Images and database)
 export async function deleteEventImage(imageId: string): Promise<{ error: string | null }> {
   const supabase = await createClient()
