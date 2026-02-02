@@ -1,5 +1,7 @@
 import Footer from "@/components/footer"
 
+export const dynamic = 'force-static'
+
 export default function TermsOfUse() {
   return (
     <main className="min-h-screen bg-background">

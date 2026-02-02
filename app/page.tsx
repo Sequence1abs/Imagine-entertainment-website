@@ -14,6 +14,8 @@ const Testimonials = dynamic(() => import("@/components/testimonials"))
 
 import type { Metadata } from "next"
 
+export const dynamic = 'force-static'
+
 export const metadata: Metadata = {
   title: "Imagine Entertainment (Pvt) Ltd | Sri Lanka's Premier Event Production Company",
   description: "With over 37 years of excellence, Imagine Entertainment delivers world-class event production across Sri Lanka. From corporate galas, musical concerts, and awards ceremonies to television production, weddings, and stadium-scale events — we bring extraordinary visions to life.",

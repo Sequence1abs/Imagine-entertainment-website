@@ -1,5 +1,7 @@
 "use client"
 
+export const dynamic = 'force-static'
+
 import { useEffect, useState, useRef } from "react"
 import type React from "react"
 import Image from "next/image"
