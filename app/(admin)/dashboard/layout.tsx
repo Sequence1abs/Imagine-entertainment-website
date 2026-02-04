@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
 import { DashboardLayoutClient } from '@/components/dashboard/layout-client'
-import { UploadQueueProvider } from '@/context/upload-queue'
 
 export default async function DashboardLayout({
   children,
@@ -19,13 +18,11 @@ export default async function DashboardLayout({
   } : undefined
 
   return (
-    <UploadQueueProvider>
-      <DashboardLayoutClient 
-        isAuthenticated={isAuthenticated} 
-        user={userData}
-      >
-        {children}
-      </DashboardLayoutClient>
-    </UploadQueueProvider>
+    <DashboardLayoutClient 
+      isAuthenticated={isAuthenticated} 
+      user={userData}
+    >
+      {children}
+    </DashboardLayoutClient>
   )
 }

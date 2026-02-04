@@ -22,7 +22,6 @@ import { CoverUpload } from '@/components/dashboard/cover-upload'
 import { GalleryUpload } from '@/components/dashboard/gallery-upload'
 import { LocationAutocomplete } from '@/components/dashboard/location-autocomplete'
 import { toast } from 'sonner'
-import { useUploadQueue } from '@/context/upload-queue'
 
 const GALLERY_UPLOAD_CONCURRENCY = 5
 
@@ -42,8 +41,8 @@ function getCloudFolder(title: string) {
 
 export default function NewEventPage() {
   const router = useRouter()
-  const uploadQueue = useUploadQueue()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [progress, setProgress] = useState(0)
   const [mounted, setMounted] = useState(false)
   const galleryIdRef = useRef(0)
   const galleryInFlightRef = useRef<Set<number>>(new Set())
@@ -170,18 +169,27 @@ export default function NewEventPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setProgress(0)
     if (!title) {
       toast.error('Event title is required', { description: 'This is needed for the image folder.' })
       setIsSubmitting(false)
+      setProgress(0)
       return
     }
 
     const cloudFolder = getCloudFolder(title)
-    const readyGalleryUrls = galleryImages.filter((i): i is GalleryItem & { url: string } => !!i.url).map((i) => i.url)
-    const pendingCover = coverImageFile && !coverImageUrl
-    const pendingGallery = galleryImages.filter((i) => i.uploading && !i.url).map((i) => i.file)
+    let finalCoverUrl = coverImageUrl
+    const pendingGallery = galleryImages.filter((i) => i.uploading && !i.url)
 
     try {
+      if (coverImageFile && !coverImageUrl) {
+        setProgress(15)
+        finalCoverUrl = await uploadCover(coverImageFile, cloudFolder)
+        if (!finalCoverUrl) throw new Error('Cover upload failed')
+        setProgress(25)
+      }
+
+      setProgress(35)
       const response = await fetch('/api/admin/events', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -191,7 +199,7 @@ export default function NewEventPage() {
           event_date: eventDate || null,
           location: location || null,
           description: description || null,
-          cover_image_url: coverImageUrl,
+          cover_image_url: finalCoverUrl,
           is_published: isPublished,
         }),
       })
@@ -200,28 +208,44 @@ export default function NewEventPage() {
       const { event } = await response.json()
       if (!event?.id) throw new Error('No event id returned')
 
-      if (readyGalleryUrls.length > 0) {
+      let allGalleryUrls = galleryImages.filter((i): i is GalleryItem & { url: string } => !!i.url).map((i) => i.url)
+
+      if (pendingGallery.length > 0) {
+        const totalBatches = Math.ceil(pendingGallery.length / GALLERY_UPLOAD_CONCURRENCY)
+        for (let i = 0; i < pendingGallery.length; i += GALLERY_UPLOAD_CONCURRENCY) {
+          const batchIndex = Math.floor(i / GALLERY_UPLOAD_CONCURRENCY)
+          setProgress(45 + Math.round((batchIndex / totalBatches) * 40))
+          const batch = pendingGallery.slice(i, i + GALLERY_UPLOAD_CONCURRENCY)
+          const results = await Promise.all(
+            batch.map((item) =>
+              fetch('/api/upload', {
+                method: 'POST',
+                body: (() => {
+                  const fd = new FormData()
+                  fd.append('file', item.file)
+                  fd.append('prefix', 'event_')
+                  fd.append('folder', cloudFolder)
+                  return fd
+                })(),
+              }).then(async (res) => (res.ok ? (await res.json())?.url ?? null : null))
+            )
+          )
+          allGalleryUrls = allGalleryUrls.concat(results.filter((u): u is string => u != null))
+        }
+      }
+
+      setProgress(90)
+      if (allGalleryUrls.length > 0) {
         const batchRes = await fetch('/api/admin/events/images', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ event_id: event.id, image_urls: readyGalleryUrls }),
+          body: JSON.stringify({ event_id: event.id, image_urls: allGalleryUrls }),
         })
         if (!batchRes.ok) toast.warning('Some gallery images could not be attached')
       }
 
-      if (pendingCover || pendingGallery.length > 0) {
-        uploadQueue?.addJob({
-          eventId: event.id,
-          eventTitle: title,
-          cloudFolder,
-          coverFile: pendingCover ? coverImageFile! : undefined,
-          galleryFiles: pendingGallery,
-        })
-        toast.success('Event created! Cover and gallery uploading in background.')
-      } else {
-        toast.success('Event created successfully!')
-      }
-
+      setProgress(100)
+      toast.success('Event created successfully!')
       router.push('/dashboard/events')
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Something went wrong', {
@@ -229,6 +253,7 @@ export default function NewEventPage() {
       })
     } finally {
       setIsSubmitting(false)
+      setProgress(0)
     }
   }
 
@@ -377,8 +402,11 @@ export default function NewEventPage() {
               </label>
             </div>
             <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+              {isSubmitting && (
+                <span className="text-sm text-muted-foreground tabular-nums">{progress}%</span>
+              )}
               <Link href="/dashboard/events">
-                <Button type="button" variant="outline" size="lg">Cancel</Button>
+                <Button type="button" variant="outline" size="lg" disabled={isSubmitting}>Cancel</Button>
               </Link>
               <Button type="submit" disabled={isSubmitting || !title} size="lg" className="gap-2">
                 {isSubmitting ? (

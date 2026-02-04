@@ -22,7 +22,6 @@ import { GalleryUpload } from '@/components/dashboard/gallery-upload'
 import { LocationAutocomplete } from '@/components/dashboard/location-autocomplete'
 import { toast } from 'sonner'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
-import { useUploadQueue } from '@/context/upload-queue'
 
 const GALLERY_UPLOAD_CONCURRENCY = 5
 
@@ -38,11 +37,11 @@ interface EventEditFormProps {
 
 export function EventEditForm({ event }: EventEditFormProps) {
   const router = useRouter()
-  const uploadQueue = useUploadQueue()
   const galleryIdRef = useRef(0)
   const galleryInFlightRef = useRef<Set<number>>(new Set())
 
   const [loading, setLoading] = useState(false)
+  const [progress, setProgress] = useState(0)
   const [title, setTitle] = useState(event.title)
   const [isPublished, setIsPublished] = useState(event.is_published)
   const [category, setCategory] = useState<EventCategory>(event.category as EventCategory)
@@ -141,13 +140,15 @@ export function EventEditForm({ event }: EventEditFormProps) {
       return
     }
     const cloudFolder = getCloudFolder(formTitle)
-    const readyNewUrls = newGalleryImages.filter((i): i is NewGalleryItem & { url: string } => !!i.url).map((i) => i.url)
-    const pendingGallery = newGalleryImages.filter((i) => i.uploading && !i.url).map((i) => i.file)
+    let allNewUrls = newGalleryImages.filter((i): i is NewGalleryItem & { url: string } => !!i.url).map((i) => i.url)
+    const pendingGallery = newGalleryImages.filter((i) => i.uploading && !i.url)
 
     try {
+      setProgress(0)
       let coverImageUrl = coverImage
       if (coverImageFile) {
         setIsUploadingCover(true)
+        setProgress(10)
         try {
           const uploadFormData = new FormData()
           uploadFormData.append('file', coverImageFile)
@@ -164,12 +165,15 @@ export function EventEditForm({ event }: EventEditFormProps) {
           console.error('Cover upload failed:', error)
           toast.error(error instanceof Error ? error.message : 'Failed to upload cover image')
           setLoading(false)
+          setProgress(0)
           return
         } finally {
           setIsUploadingCover(false)
         }
+        setProgress(25)
       }
 
+      setProgress(35)
       const data = {
         title: formTitle,
         category: category,
@@ -187,33 +191,51 @@ export function EventEditForm({ event }: EventEditFormProps) {
       })
       const result = await response.json()
       if (!response.ok) throw new Error(result.error || 'Failed to update event')
+      setProgress(50)
 
-      if (readyNewUrls.length > 0) {
+      if (pendingGallery.length > 0) {
+        const totalBatches = Math.ceil(pendingGallery.length / GALLERY_UPLOAD_CONCURRENCY)
+        for (let i = 0; i < pendingGallery.length; i += GALLERY_UPLOAD_CONCURRENCY) {
+          const batchIndex = Math.floor(i / GALLERY_UPLOAD_CONCURRENCY)
+          setProgress(50 + Math.round((batchIndex / totalBatches) * 35))
+          const batch = pendingGallery.slice(i, i + GALLERY_UPLOAD_CONCURRENCY)
+          const results = await Promise.all(
+            batch.map((item) =>
+              fetch('/api/upload', {
+                method: 'POST',
+                body: (() => {
+                  const fd = new FormData()
+                  fd.append('file', item.file)
+                  fd.append('prefix', 'event_')
+                  fd.append('folder', cloudFolder)
+                  return fd
+                })(),
+              }).then(async (res) => (res.ok ? (await res.json())?.url ?? null : null))
+            )
+          )
+          allNewUrls = allNewUrls.concat(results.filter((u): u is string => u != null))
+        }
+      }
+
+      setProgress(90)
+      if (allNewUrls.length > 0) {
         const batchRes = await fetch('/api/admin/events/images', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ event_id: event.id, image_urls: readyNewUrls }),
+          body: JSON.stringify({ event_id: event.id, image_urls: allNewUrls }),
         })
         if (!batchRes.ok) toast.warning('Some gallery images could not be attached')
       }
 
-      if (pendingGallery.length > 0) {
-        uploadQueue?.addJob({
-          eventId: event.id,
-          eventTitle: formTitle,
-          cloudFolder,
-          galleryFiles: pendingGallery,
-        })
-        toast.success('Event updated! Remaining images uploading in background.')
-      } else {
-        toast.success('Event updated successfully')
-      }
+      setProgress(100)
+      toast.success('Event updated successfully')
       setNewGalleryImages([])
       router.refresh()
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Something went wrong')
     } finally {
       setLoading(false)
+      setProgress(0)
     }
   }
 
@@ -390,6 +412,9 @@ export function EventEditForm({ event }: EventEditFormProps) {
             </div>
 
             <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+              {loading && (
+                <span className="text-sm text-muted-foreground tabular-nums">{progress}%</span>
+              )}
               <Button type="submit" disabled={loading || isUploadingCover} size="lg" className="gap-2">
                 {loading || isUploadingCover ? (
                   <>
